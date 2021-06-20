@@ -2,7 +2,7 @@
 
 namespace Research_Repository.Migrations
 {
-    public partial class addThemeToDatabase : Migration
+    public partial class AddedThemeModel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
