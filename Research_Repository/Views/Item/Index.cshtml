@@ -1,9 +1,9 @@
-﻿@model IEnumerable<Research_Repository.Models.Theme>
+﻿@model IEnumerable<Research_Repository.Models.Item>
 
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Theme List</h2>
+            <h2 class="text-primary">Item List</h2>
         </div>
         <div class="col-6 text-right">
             <a asp-action="Upsert" class="btn btn-primary">
@@ -28,7 +28,7 @@
                 @foreach (var obj in Model)
                 {
                     <tr>
-                        <td width="50%">@obj.Name</td>
+                        <td width="50%">@obj.Title</td>
                         <td class="text-center">
                             <div class="w-75 btn-group" role="group">
                                 <a asp-action="Upsert" asp-route-Id="@obj.Id" class="btn btn-primary mx-2">
@@ -46,6 +46,7 @@
     }
     else
     {
-        <p>No theme exists.</p>
+        <p>No item exists.</p>
     }
 </div>
+

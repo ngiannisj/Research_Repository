@@ -9,8 +9,8 @@ using Research_Repository.Data;
 namespace Research_Repository.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210614055859_addThemeToDatabase")]
-    partial class addThemeToDatabase
+    [Migration("20210615032901_AddedThemeModel")]
+    partial class AddedThemeModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
