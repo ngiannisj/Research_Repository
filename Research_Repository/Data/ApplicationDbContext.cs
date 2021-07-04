@@ -15,8 +15,17 @@ namespace Research_Repository.Data
 
         }
 
-        public DbSet<Theme> Theme { get; set; }
-        public DbSet<Item> Item { get; set; }
-        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<Theme> Themes { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<ItemTag> ItemTags { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<ItemTag>()
+                .HasKey(i => new { i.ItemId, i.TagId });
+        }
     }
 }

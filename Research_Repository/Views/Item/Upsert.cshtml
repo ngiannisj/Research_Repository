@@ -1,4 +1,5 @@
-﻿@model Research_Repository.Models.ViewModels.ItemVM
+﻿@using Research_Repository.Models.ViewModels;
+@model Research_Repository.Models.ViewModels.ItemVM
 
 @{
     var title = "Create Item";
@@ -7,8 +8,8 @@
 <form method="post" enctype="multipart/form-data">
     @if (Model.Item.Id != 0)
     {
-    title = "Edit Item";
-    <input asp-for="Item.Id" hidden />
+        title = "Edit Item";
+        <input asp-for="Item.Id" hidden />
     }
 
     <div class="border p-3">
@@ -39,6 +40,20 @@
                     </div>
                     <span asp-validation-for="Item.ThemeId"></span>
                 </div>
+
+                <div class="form-group row">
+                    <div class="col-8 row">
+                        @for (int i = 0; i < Model.TagList.Count; i++)
+                        {
+                        <label>@Model.TagList[i].Name</label>
+                            <input asp-for="@Model.TagList[i].Checked" />
+                            <input asp-for="@Model.TagList[i].TagId" hidden/>
+                        }
+
+                    </div>
+                    <span asp-validation-for="TagList"></span>
+                </div>
+
                 <div class="form-group row">
                     <div class="col-8 offset-4 row">
 
@@ -70,7 +85,7 @@
 @section Scripts {
 
     @{
-<partial name="_ValidationScriptsPartial" />
+        <partial name="_ValidationScriptsPartial" />
 
     }
 }

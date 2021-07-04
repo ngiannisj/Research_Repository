@@ -27,7 +27,7 @@ namespace Research_Repository.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Theme> objList = _db.Theme;
+            IEnumerable<Theme> objList = _db.Themes;
             return View(objList);
         }
 
@@ -43,7 +43,7 @@ namespace Research_Repository.Controllers
             }
             else
             {
-                theme = _db.Theme.Find(id);
+                theme = _db.Themes.Find(id);
                 if (theme == null)
                 {
                     return NotFound();
@@ -60,29 +60,31 @@ namespace Research_Repository.Controllers
 
             if (ModelState.IsValid)
             {
-                var files = HttpContext.Request.Form.Files;
+                 var files = HttpContext.Request.Form.Files;
                 string webRootPath = _webHostEnvironment.WebRootPath;
 
                 if(obj.Id == 0)
                 {
                     //Creating
-                    //Upload image
-                    string upload = webRootPath + WC.ImagePath;
-                    string fileName = Guid.NewGuid().ToString();
-                    string extension = Path.GetExtension(files[0].FileName);
+                    if (files.Count != 0) {
+                        //Upload image
+                        string upload = webRootPath + WC.ImagePath;
+                        string fileName = Guid.NewGuid().ToString();
+                        string extension = Path.GetExtension(files[0].FileName);
 
-                    using(var fileStream = new FileStream(Path.Combine(upload,fileName+extension),FileMode.Create))
-                    {
-                        files[0].CopyTo(fileStream);
+                        using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                        {
+                            files[0].CopyTo(fileStream);
+                        }
+
+                        obj.Image = fileName + extension;
                     }
 
-                    obj.Image = fileName + extension;
-
-                    _db.Theme.Add(obj);
+                    _db.Themes.Add(obj);
                 } else
                 {
                     //Updating
-                    var objFromDb = _db.Theme.AsNoTracking().FirstOrDefault(u => u.Id == obj.Id);
+                    var objFromDb = _db.Themes.AsNoTracking().FirstOrDefault(u => u.Id == obj.Id);
 
                     if(files.Count > 0)
                     {
@@ -111,7 +113,7 @@ namespace Research_Repository.Controllers
                     {
                         obj.Image = objFromDb.Image;
                     }
-                    _db.Theme.Update(obj);
+                    _db.Themes.Update(obj);
                 }
 
                 _db.SaveChanges();
@@ -128,7 +130,7 @@ namespace Research_Repository.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.Theme.Find(id);
+            var obj = _db.Themes.Find(id);
             if (obj == null)
             {
                 return NotFound();
@@ -147,7 +149,7 @@ namespace Research_Repository.Controllers
                     }
                 }
             }
-            _db.Theme.Remove(obj);
+            _db.Themes.Remove(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }

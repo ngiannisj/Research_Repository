@@ -27,7 +27,7 @@ namespace Research_Repository.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Item> objList = _db.Item.Include(u => u.Theme);
+            IEnumerable<Item> objList = _db.Items.Include(u => u.Theme);
             return View(objList);
         }
 
@@ -35,15 +35,31 @@ namespace Research_Repository.Controllers
         //GET - UPSERT
         public IActionResult Upsert(int? id)
         {
+            ICollection<int> selectedTagIds = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == id).Select(i => i.TagId).ToList();
             ItemVM itemVM = new ItemVM()
             {
                 Item = new Item(),
-                ThemeSelectList = _db.Theme.Select(i => new SelectListItem
+                ThemeSelectList = _db.Themes.AsNoTracking().Select(i => new SelectListItem
                 {
                     Text = i.Name,
                     Value = i.Id.ToString()
-                })
+                }),
+                TagList = _db.Tags.AsNoTracking().Select(i => new TagListVM
+                {
+                    TagId = i.Id,
+                    Name = i.Name,
+                    Checked = selectedTagIds.Contains(i.Id)
+                }).ToList()
             };
+
+            //foreach(TagListVM tag in itemVM.TagList)
+            //{
+            //    if(selectedTagIds.Contains(tag.TagId))
+            //    {
+            //        tag.Checked = true;
+            //    }
+            //}
+
             if (id == null)
             {
                 //Creating
@@ -52,7 +68,7 @@ namespace Research_Repository.Controllers
             else
             {
                 //Updating
-                itemVM.Item = _db.Item.Find(id);
+                itemVM.Item = _db.Items.Find(id);
                 if (itemVM.Item == null)
                 {
                     return NotFound();
@@ -60,6 +76,35 @@ namespace Research_Repository.Controllers
                 return View(itemVM);
             }
         }
+
+        private void UpdateItemTagsList(ItemVM itemVM)
+        {
+            ICollection<ItemTag> ItemTagsList = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == itemVM.Item.Id).ToList();
+            ICollection<int> ItemTagsIdList = ItemTagsList.Select(i => i.TagId).ToList();
+
+            foreach (TagListVM tag in itemVM.TagList)
+            {
+                if (tag.Checked)
+                {
+                    if (!ItemTagsIdList.Contains(tag.TagId))
+                    {
+                        _db.ItemTags.Add(new ItemTag
+                        {
+                            ItemId = itemVM.Item.Id,
+                            TagId = tag.TagId
+                        });
+                    }
+                }
+                else
+                {
+                    if (ItemTagsIdList.Contains(tag.TagId))
+                    {
+                        _db.ItemTags.Remove(ItemTagsList.FirstOrDefault(i => i.TagId == tag.TagId));
+                    }
+                }
+            }
+        }
+       
 
         //POST - UPSERT
         [HttpPost]
@@ -73,12 +118,16 @@ namespace Research_Repository.Controllers
                 if (itemVM.Item.Id == 0)
                 {
                     //Creating
-                    _db.Item.Add(itemVM.Item);
+                    _db.Items.Add(itemVM.Item);
+                    _db.SaveChanges();
+                    UpdateItemTagsList(itemVM);
                 }
                 else
                 {
                     //Updating
-                    _db.Item.Update(itemVM.Item);
+
+                    _db.Items.Update(itemVM.Item);
+                    UpdateItemTagsList(itemVM);
                 }
 
                 _db.SaveChanges();
@@ -95,12 +144,12 @@ namespace Research_Repository.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.Item.Find(id);
+            var obj = _db.Items.Find(id);
             if (obj == null)
             {
                 return NotFound();
             }
-            _db.Item.Remove(obj);
+            _db.Items.Remove(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }

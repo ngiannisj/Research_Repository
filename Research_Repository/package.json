@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "typescript": "*",
+    "gulp": "*",
+    "sass": "*",
+    "gulp-sass": "*",
+    "gulp-typescript": "*",
+    "gulp-uglify": "*",
+    "gulp-concat": "*",
+    "gulp-rename": "*"
+  }
+}

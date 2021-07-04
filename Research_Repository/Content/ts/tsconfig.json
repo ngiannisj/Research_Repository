@@ -1,0 +1,10 @@
+{
+  "noImplicitAny": true,
+  "target": "es6",
+  "removeComments": true,
+  "experimentalAsyncFunctions": true,
+  "exclude": [
+    "node_modules",
+    "wwwroot"
+  ]
+}

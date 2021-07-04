@@ -20,5 +20,7 @@ namespace Research_Repository.Models
 
         [ForeignKey("ThemeId")]
         public virtual Theme Theme { get; set; }
+
+        public ICollection<ItemTag> ItemTags { get; set; }
     }
 }

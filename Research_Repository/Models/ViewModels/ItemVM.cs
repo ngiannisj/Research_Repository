@@ -11,5 +11,7 @@ namespace Research_Repository.Models.ViewModels
         public Item Item { get; set; }
 
         public IEnumerable<SelectListItem> ThemeSelectList { get; set; }
+
+        public IList<TagListVM> TagList { get; set; }
     }
 }
