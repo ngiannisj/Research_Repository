@@ -92,7 +92,7 @@ namespace Research_Repository.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    if (User.IsInRole(WC.LibrarianRole))
+                    if (User.IsInRole(WC.LibrarianRole) || _userManager.Users.Count() == 1)
                     {
                         //An admin user is logged in and tries to login
                         await _userManager.AddToRoleAsync(user, WC.LibrarianRole);

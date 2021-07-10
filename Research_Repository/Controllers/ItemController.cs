@@ -82,29 +82,32 @@ namespace Research_Repository.Controllers
             ICollection<ItemTag> ItemTagsList = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == itemVM.Item.Id).ToList();
             ICollection<int> ItemTagsIdList = ItemTagsList.Select(i => i.TagId).ToList();
 
-            foreach (TagListVM tag in itemVM.TagList)
+            if (itemVM.TagList != null)
             {
-                if (tag.Checked)
+                foreach (TagListVM tag in itemVM.TagList)
                 {
-                    if (!ItemTagsIdList.Contains(tag.TagId))
+                    if (tag.Checked)
                     {
-                        _db.ItemTags.Add(new ItemTag
+                        if (!ItemTagsIdList.Contains(tag.TagId))
                         {
-                            ItemId = itemVM.Item.Id,
-                            TagId = tag.TagId
-                        });
+                            _db.ItemTags.Add(new ItemTag
+                            {
+                                ItemId = itemVM.Item.Id,
+                                TagId = tag.TagId
+                            });
+                        }
                     }
-                }
-                else
-                {
-                    if (ItemTagsIdList.Contains(tag.TagId))
+                    else
                     {
-                        _db.ItemTags.Remove(ItemTagsList.FirstOrDefault(i => i.TagId == tag.TagId));
+                        if (ItemTagsIdList.Contains(tag.TagId))
+                        {
+                            _db.ItemTags.Remove(ItemTagsList.FirstOrDefault(i => i.TagId == tag.TagId));
+                        }
                     }
                 }
             }
         }
-       
+
 
         //POST - UPSERT
         [HttpPost]

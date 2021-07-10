@@ -30,7 +30,8 @@ gulp.task(sassAction, () => {
             suffix: ".min",
             extname: ".css"
         }))
-        .pipe(gulp.dest(filePaths.sassOutputPath));});
+        .pipe(gulp.dest(filePaths.sassOutputPath));
+});
 
 gulp.task(tsAction, () => {
     return gulp.src(filePaths.tsInputPath)
@@ -42,11 +43,7 @@ gulp.task(tsAction, () => {
             suffix: ".min",
             extname: ".js"
         }))
-        .pipe(gulp.dest(filePaths.tsOutputPath))});
-
-gulp.task(watchAction, () => {
-    gulp.watch(filePaths.sassInputPath, gulp.series(sassAction));
-    gulp.watch(filePaths.tsInputPath, gulp.series(tsAction))
+        .pipe(gulp.dest(filePaths.tsOutputPath))
 });
 
-exports.default = gulp.series([sassAction, tsAction, watchAction]);
+exports.default = gulp.series([sassAction, tsAction]);
