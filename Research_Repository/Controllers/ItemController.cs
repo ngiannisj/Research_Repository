@@ -52,14 +52,6 @@ namespace Research_Repository.Controllers
                 }).ToList()
             };
 
-            //foreach(TagListVM tag in itemVM.TagList)
-            //{
-            //    if(selectedTagIds.Contains(tag.TagId))
-            //    {
-            //        tag.Checked = true;
-            //    }
-            //}
-
             if (id == null)
             {
                 //Creating
@@ -155,6 +147,21 @@ namespace Research_Repository.Controllers
             _db.Items.Remove(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        //GET - GetAssignedTags
+        public ICollection<TagListVM> GetAssignedTags(int id)
+        {
+            ICollection<int> selectedTagIds = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == id).Select(i => i.TagId).ToList();
+
+            ICollection<TagListVM> AssignedTags = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == id).Include(i => i.Tag).Select(i => new TagListVM
+            {
+                TagId = i.TagId,
+                Name = i.Tag.Name,
+                Checked = selectedTagIds.Contains(i.TagId)
+            }).ToList();
+
+            return AssignedTags;
         }
     }
 }

@@ -4,19 +4,16 @@ let gulp_sass = require('gulp-sass')(require('sass'));
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 let rename = require('gulp-rename');
-var gulp_typescript = require('gulp-typescript');
-let tsProject = gulp_typescript.createProject('tsconfig.json'); //Uses tsconfig.json file for ts file configuration
 
 //Constants
 const sassAction = "build-sass";
-const tsAction = "build-ts";
-const watchAction = "watch"
+const jsAction = "build-js";
 
 let filePaths = {
     sassInputPath: "./Content/sass/**/*.scss",
     sassOutputPath: "./wwwroot/css",
-    tsInputPath: "./Content/ts/**/*.ts",
-    tsOutputPath: "./wwwroot/js"
+    jsInputPath: "./Content/js/**/*.js",
+    jsOutputPath: "./wwwroot/js"
 };
 
 gulp.task(sassAction, () => {
@@ -33,9 +30,8 @@ gulp.task(sassAction, () => {
         .pipe(gulp.dest(filePaths.sassOutputPath));
 });
 
-gulp.task(tsAction, () => {
-    return gulp.src(filePaths.tsInputPath)
-        .pipe(tsProject())
+gulp.task(jsAction, () => {
+    return gulp.src(filePaths.jsInputPath )
         .pipe(concat('scripts.js'))
         .pipe(uglify())
         .pipe(rename({
@@ -43,7 +39,7 @@ gulp.task(tsAction, () => {
             suffix: ".min",
             extname: ".js"
         }))
-        .pipe(gulp.dest(filePaths.tsOutputPath))
+        .pipe(gulp.dest(filePaths.jsOutputPath))
 });
 
-exports.default = gulp.series([sassAction, tsAction]);
+exports.default = gulp.series([sassAction, jsAction]);

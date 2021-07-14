@@ -19,6 +19,7 @@ namespace Research_Repository.Data
         public DbSet<Item> Items { get; set; }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<ItemTag> ItemTags { get; set; }
+        public DbSet<ThemeTag> ThemeTags { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,6 +27,9 @@ namespace Research_Repository.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ItemTag>()
                 .HasKey(i => new { i.ItemId, i.TagId });
+
+            modelBuilder.Entity<ThemeTag>()
+                .HasKey(i => new { i.ThemeId, i.TagId });
         }
     }
 }

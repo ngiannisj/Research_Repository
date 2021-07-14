@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Research_Repository.Data;
 using Research_Repository.Models;
+using Research_Repository.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,27 +36,69 @@ namespace Research_Repository.Controllers
         //GET - UPSERT
         public IActionResult Upsert(int? id)
         {
-            Theme theme = new Theme();
+            ICollection<int> selectedTagIds = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == id).Select(i => i.TagId).ToList();
+            ThemeVM themeVM = new ThemeVM()
+            {
+                TagList = _db.Tags.AsNoTracking().Select(i => new TagListVM
+                {
+                    TagId = i.Id,
+                    Name = i.Name,
+                    Checked = selectedTagIds.Contains(i.Id)
+                }).ToList()
+            };
             if (id == null)
             {
+                themeVM.Theme = new Theme();
                 //this is for create
-                return View(theme);
+                return View(themeVM);
             }
             else
             {
-                theme = _db.Themes.Find(id);
-                if (theme == null)
+                themeVM.Theme = _db.Themes.AsNoTracking().FirstOrDefault(i => i.Id == id);
+                if (themeVM.Theme == null)
                 {
                     return NotFound();
                 }
-                return View(theme);
+                return View(themeVM);
+            }
+        }
+
+
+        private void UpdateThemeTagsList(ThemeVM themeVM)
+        {
+            ICollection<ThemeTag> ThemeTagsList = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == themeVM.Theme.Id).ToList();
+            ICollection<int> ThemeTagsIdList = ThemeTagsList.Select(i => i.TagId).ToList();
+
+            if (themeVM.TagList != null)
+            {
+                foreach (TagListVM tag in themeVM.TagList)
+                {
+                    if (tag.Checked)
+                    {
+                        if (!ThemeTagsIdList.Contains(tag.TagId))
+                        {
+                            _db.ThemeTags.Add(new ThemeTag
+                            {
+                                ThemeId = themeVM.Theme.Id,
+                                TagId = tag.TagId
+                            });
+                        }
+                    }
+                    else
+                    {
+                        if (ThemeTagsIdList.Contains(tag.TagId))
+                        {
+                            _db.ThemeTags.Remove(ThemeTagsList.FirstOrDefault(i => i.TagId == tag.TagId));
+                        }
+                    }
+                }
             }
         }
 
         //POST - UPSERT
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(Theme obj)
+        public IActionResult Upsert(ThemeVM obj)
         {
 
             if (ModelState.IsValid)
@@ -63,7 +106,7 @@ namespace Research_Repository.Controllers
                  var files = HttpContext.Request.Form.Files;
                 string webRootPath = _webHostEnvironment.WebRootPath;
 
-                if(obj.Id == 0)
+                if(obj.Theme.Id == 0)
                 {
                     //Creating
                     if (files.Count != 0) {
@@ -77,14 +120,16 @@ namespace Research_Repository.Controllers
                             files[0].CopyTo(fileStream);
                         }
 
-                        obj.Image = fileName + extension;
+                        obj.Theme.Image = fileName + extension;
                     }
 
-                    _db.Themes.Add(obj);
+                    _db.Themes.Add(obj.Theme);
+                    _db.SaveChanges();
+                    UpdateThemeTagsList(obj);
                 } else
                 {
                     //Updating
-                    var objFromDb = _db.Themes.AsNoTracking().FirstOrDefault(u => u.Id == obj.Id);
+                    var objFromDb = _db.Themes.AsNoTracking().FirstOrDefault(u => u.Id == obj.Theme.Id);
 
                     if(files.Count > 0)
                     {
@@ -107,19 +152,20 @@ namespace Research_Repository.Controllers
                             files[0].CopyTo(fileStream);
                         }
 
-                        obj.Image = fileName + extension;
+                        obj.Theme.Image = fileName + extension;
                     }
                     else
                     {
-                        obj.Image = objFromDb.Image;
+                        obj.Theme.Image = objFromDb.Image;
                     }
-                    _db.Themes.Update(obj);
+                    _db.Themes.Update(obj.Theme);
+                    UpdateThemeTagsList(obj);
                 }
 
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(obj);
+            return View(obj.Theme);
         }
 
 

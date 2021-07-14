@@ -10,5 +10,6 @@ namespace Research_Repository.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public ICollection<ItemTag> ItemTags  { get; set; }
+        public ICollection<ThemeTag> ThemeTags { get; set; }
     }
 }

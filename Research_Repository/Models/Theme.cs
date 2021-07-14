@@ -15,5 +15,7 @@ namespace Research_Repository.Models
         [DisplayName("Name")]
         public string Name { get; set; }
         public string Image { get; set; }
+
+        public ICollection<ThemeTag> ThemeTags { get; set; }
     }
 }
