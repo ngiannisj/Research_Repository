@@ -63,7 +63,7 @@
                         @for (int i = 0; i < Model.TagList.Count; i++)
                         {
                             <label>@Model.TagList[i].Name</label>
-                            <input asp-for="@Model.TagList[i].Checked" />
+                            <input asp-for="@Model.TagList[i].CheckedState" />
                             <input asp-for="@Model.TagList[i].TagId" hidden />
                         }
 

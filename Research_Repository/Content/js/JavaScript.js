@@ -2,7 +2,6 @@
     let selectedThemeId = "";
     $("#theme-selector").change(function () {
         selectedThemeId = parseInt($(this).find(":selected").attr("value"));
-        console.log(selectedThemeId);
         $.ajax({
             type: "GET",
             url: "/Item/GetAssignedTags",
@@ -10,7 +9,10 @@
             dataType: "json",
             contentType: 'application/json; charset=utf-8',
             success: function (data) {
-                //hide non-applicable checkboxes
+                $("#checkboxes label").hide();
+                for (let i = 0; i <= data.length; i++) {
+                    $("#tag-input-id-" + [i]).parent().show();
+                }
             },
             error: function () {
                 alert("Error occured!!")

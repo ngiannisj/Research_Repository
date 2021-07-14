@@ -48,7 +48,7 @@ namespace Research_Repository.Controllers
                 {
                     TagId = i.Id,
                     Name = i.Name,
-                    Checked = selectedTagIds.Contains(i.Id)
+                    CheckedState = selectedTagIds.Contains(i.Id)
                 }).ToList()
             };
 
@@ -71,16 +71,19 @@ namespace Research_Repository.Controllers
 
         private void UpdateItemTagsList(ItemVM itemVM)
         {
+            ICollection<int> ThemeTagIdsList = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == itemVM.Item.ThemeId).Select(i => i.TagId).ToList();
             ICollection<ItemTag> ItemTagsList = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == itemVM.Item.Id).ToList();
-            ICollection<int> ItemTagsIdList = ItemTagsList.Select(i => i.TagId).ToList();
+            ICollection<int> ItemTagIdsList = ItemTagsList.Select(i => i.TagId).ToList();
 
             if (itemVM.TagList != null)
             {
                 foreach (TagListVM tag in itemVM.TagList)
                 {
-                    if (tag.Checked)
+                    //If the checkbox is checked and the tag is available in the selected theme
+                    if (tag.CheckedState && ThemeTagIdsList.Contains(tag.TagId))
                     {
-                        if (!ItemTagsIdList.Contains(tag.TagId))
+                        //If the entry in the join table does not already exist
+                        if (!ItemTagIdsList.Contains(tag.TagId))
                         {
                             _db.ItemTags.Add(new ItemTag
                             {
@@ -91,7 +94,7 @@ namespace Research_Repository.Controllers
                     }
                     else
                     {
-                        if (ItemTagsIdList.Contains(tag.TagId))
+                        if (ItemTagIdsList.Contains(tag.TagId))
                         {
                             _db.ItemTags.Remove(ItemTagsList.FirstOrDefault(i => i.TagId == tag.TagId));
                         }
@@ -150,18 +153,13 @@ namespace Research_Repository.Controllers
         }
 
         //GET - GetAssignedTags
-        public ICollection<TagListVM> GetAssignedTags(int id)
+        public ICollection<int> GetAssignedTags(int id)
         {
             ICollection<int> selectedTagIds = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == id).Select(i => i.TagId).ToList();
 
-            ICollection<TagListVM> AssignedTags = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == id).Include(i => i.Tag).Select(i => new TagListVM
-            {
-                TagId = i.TagId,
-                Name = i.Tag.Name,
-                Checked = selectedTagIds.Contains(i.TagId)
-            }).ToList();
+            ICollection<int> AssignedTagIds = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == id).Include(i => i.Tag).Select(i => i.TagId).ToList();
 
-            return AssignedTags;
+            return AssignedTagIds;
         }
     }
 }

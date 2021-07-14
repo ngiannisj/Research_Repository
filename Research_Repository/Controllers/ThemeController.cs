@@ -43,7 +43,7 @@ namespace Research_Repository.Controllers
                 {
                     TagId = i.Id,
                     Name = i.Name,
-                    Checked = selectedTagIds.Contains(i.Id)
+                    CheckedState = selectedTagIds.Contains(i.Id)
                 }).ToList()
             };
             if (id == null)
@@ -73,7 +73,7 @@ namespace Research_Repository.Controllers
             {
                 foreach (TagListVM tag in themeVM.TagList)
                 {
-                    if (tag.Checked)
+                    if (tag.CheckedState)
                     {
                         if (!ThemeTagsIdList.Contains(tag.TagId))
                         {
