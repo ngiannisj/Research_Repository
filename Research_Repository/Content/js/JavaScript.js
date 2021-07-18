@@ -4,7 +4,7 @@
         selectedThemeId = parseInt($(this).find(":selected").attr("value"));
         $.ajax({
             type: "GET",
-            url: "/Item/GetAssignedTags",
+            url: "/Item/GetThemeTags",
             data: { "id": selectedThemeId },
             dataType: "json",
             contentType: 'application/json; charset=utf-8',

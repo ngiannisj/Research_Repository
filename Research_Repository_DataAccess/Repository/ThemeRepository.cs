@@ -68,12 +68,6 @@ namespace Research_Repository_DataAccess.Repository
             return themeVM;
         }
 
-
-
-
-
-
-
         public void Update(Theme obj)
         {
             _db.Themes.Update(obj);

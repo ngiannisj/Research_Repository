@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Research_Repository.Data;
+using Research_Repository_DataAccess.Repository.IRepository;
 using Research_Repository_Models;
 using Research_Repository_Models.ViewModels;
 using Research_Repository_Utility;
@@ -19,16 +20,16 @@ namespace Research_Repository.Controllers
     public class TagController : Controller
     {
 
-        private readonly ApplicationDbContext _db;
+        private readonly ITagRepository _tagRepo;
 
-        public TagController(ApplicationDbContext db)
+        public TagController(ITagRepository tagRepo)
         {
-            _db = db;
+            _tagRepo = tagRepo;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Tag> objList = _db.Tags;
+            IEnumerable<Tag> objList = _tagRepo.GetAll();
             return View(objList);
         }
 
@@ -45,7 +46,7 @@ namespace Research_Repository.Controllers
             else
             {
                 //Updating
-                tag = _db.Tags.Find(id);
+                tag = _tagRepo.Find(id.GetValueOrDefault());
                 if (tag == null)
                 {
                     return NotFound();
@@ -66,15 +67,15 @@ namespace Research_Repository.Controllers
                 if (tag.Id == 0)
                 {
                     //Creating
-                    _db.Tags.Add(tag);
+                    _tagRepo.Add(tag);
                 }
                 else
                 {
                     //Updating
-                    _db.Tags.Update(tag);
+                    _tagRepo.Update(tag);
                 }
 
-                _db.SaveChanges();
+                _tagRepo.Save();
                 return RedirectToAction("Index");
             }
             return View(tag);
@@ -88,13 +89,13 @@ namespace Research_Repository.Controllers
             {
                 return NotFound();
             }
-            var tag = _db.Tags.Find(id);
+            var tag = _tagRepo.Find(id.GetValueOrDefault());
             if (tag == null)
             {
                 return NotFound();
             }
-            _db.Tags.Remove(tag);
-            _db.SaveChanges();
+            _tagRepo.Remove(tag);
+            _tagRepo.Save();
             return RedirectToAction("Index");
         }
     }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Research_Repository.Data;
+using Research_Repository_DataAccess.Repository.IRepository;
 using Research_Repository_Models;
 using Research_Repository_Models.ViewModels;
 using Research_Repository_Utility;
@@ -19,16 +20,16 @@ namespace Research_Repository.Controllers
     public class ItemController : Controller
     {
 
-        private readonly ApplicationDbContext _db;
+        private readonly IItemRepository _itemRepo;
 
-        public ItemController(ApplicationDbContext db)
+        public ItemController(IItemRepository itemRepo)
         {
-            _db = db;
+            _itemRepo = itemRepo;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Item> objList = _db.Items.Include(u => u.Theme);
+            IEnumerable<Item> objList = _itemRepo.GetAll(includeProperties: WC.ThemeName);
             return View(objList);
         }
 
@@ -36,22 +37,8 @@ namespace Research_Repository.Controllers
         //GET - UPSERT
         public IActionResult Upsert(int? id)
         {
-            ICollection<int> selectedTagIds = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == id).Select(i => i.TagId).ToList();
-            ItemVM itemVM = new ItemVM()
-            {
-                Item = new Item(),
-                ThemeSelectList = _db.Themes.AsNoTracking().Select(i => new SelectListItem
-                {
-                    Text = i.Name,
-                    Value = i.Id.ToString()
-                }),
-                TagList = _db.Tags.AsNoTracking().Select(i => new TagListVM
-                {
-                    TagId = i.Id,
-                    Name = i.Name,
-                    CheckedState = selectedTagIds.Contains(i.Id)
-                }).ToList()
-            };
+
+            ItemVM itemVM = _itemRepo.GetItemVM(id);
 
             if (id == null)
             {
@@ -61,46 +48,12 @@ namespace Research_Repository.Controllers
             else
             {
                 //Updating
-                itemVM.Item = _db.Items.Find(id);
+                itemVM.Item = _itemRepo.Find(id.GetValueOrDefault());
                 if (itemVM.Item == null)
                 {
                     return NotFound();
                 }
                 return View(itemVM);
-            }
-        }
-
-        private void UpdateItemTagsList(ItemVM itemVM)
-        {
-            ICollection<int> ThemeTagIdsList = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == itemVM.Item.ThemeId).Select(i => i.TagId).ToList();
-            ICollection<ItemTag> ItemTagsList = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == itemVM.Item.Id).ToList();
-            ICollection<int> ItemTagIdsList = ItemTagsList.Select(i => i.TagId).ToList();
-
-            if (itemVM.TagList != null)
-            {
-                foreach (TagListVM tag in itemVM.TagList)
-                {
-                    //If the checkbox is checked and the tag is available in the selected theme
-                    if (tag.CheckedState && ThemeTagIdsList.Contains(tag.TagId))
-                    {
-                        //If the entry in the join table does not already exist
-                        if (!ItemTagIdsList.Contains(tag.TagId))
-                        {
-                            _db.ItemTags.Add(new ItemTag
-                            {
-                                ItemId = itemVM.Item.Id,
-                                TagId = tag.TagId
-                            });
-                        }
-                    }
-                    else
-                    {
-                        if (ItemTagIdsList.Contains(tag.TagId))
-                        {
-                            _db.ItemTags.Remove(ItemTagsList.FirstOrDefault(i => i.TagId == tag.TagId));
-                        }
-                    }
-                }
             }
         }
 
@@ -117,19 +70,19 @@ namespace Research_Repository.Controllers
                 if (itemVM.Item.Id == 0)
                 {
                     //Creating
-                    _db.Items.Add(itemVM.Item);
-                    _db.SaveChanges();
-                    UpdateItemTagsList(itemVM);
+                    _itemRepo.Add(itemVM.Item);
+                    _itemRepo.Save();
+                    _itemRepo.UpdateItemTagsList(itemVM);
                 }
                 else
                 {
                     //Updating
 
-                    _db.Items.Update(itemVM.Item);
-                    UpdateItemTagsList(itemVM);
+                    _itemRepo.Update(itemVM.Item);
+                    _itemRepo.UpdateItemTagsList(itemVM);
                 }
 
-                _db.SaveChanges();
+                _itemRepo.Save();
                 return RedirectToAction("Index");
             }
             return View(itemVM);
@@ -143,24 +96,20 @@ namespace Research_Repository.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.Items.Find(id);
+            var obj = _itemRepo.Find(id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
             }
-            _db.Items.Remove(obj);
-            _db.SaveChanges();
+            _itemRepo.Remove(obj);
+            _itemRepo.Save();
             return RedirectToAction("Index");
         }
 
-        //GET - GetAssignedTags
-        public ICollection<int> GetAssignedTags(int id)
+        //GET - GETTHEMETAGS (AJAX CALL)
+        public ICollection<int> GetThemeTags(int id)
         {
-            ICollection<int> selectedTagIds = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == id).Select(i => i.TagId).ToList();
-
-            ICollection<int> AssignedTagIds = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == id).Include(i => i.Tag).Select(i => i.TagId).ToList();
-
-            return AssignedTagIds;
+            return _itemRepo.GetAssignedTags(id);
         }
     }
 }

@@ -13,8 +13,8 @@ namespace Research_Repository_Utility
         public const string LibrarianRole = "Librarian";
         public const string UploaderRole = "Uploader";
 
-        public const string TagName = "Tags"; 
-        public const string ThemeTagName = "ThemeTags";
+        //Database tables
+        public const string ThemeName = "Theme";
 
     }
 }

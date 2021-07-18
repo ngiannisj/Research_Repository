@@ -36,6 +36,8 @@ namespace Research_Repository
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddScoped<IThemeRepository, ThemeRepository>();
+            services.AddScoped<ITagRepository, TagRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
 
             services.AddControllersWithViews();
         }
