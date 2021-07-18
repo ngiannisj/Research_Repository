@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Research_Repository.Data;
-using Research_Repository.Models;
-using Research_Repository.Models.ViewModels;
+using Research_Repository_DataAccess.Repository.IRepository;
+using Research_Repository_Models;
+using Research_Repository_Models.ViewModels;
+using Research_Repository_Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,18 +19,18 @@ namespace Research_Repository.Controllers
     public class ThemeController : Controller
     {
 
-        private readonly ApplicationDbContext _db;
+        private readonly IThemeRepository _themeRepo;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ThemeController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
+        public ThemeController(IThemeRepository themeRepo, IWebHostEnvironment webHostEnvironment)
         {
-            _db = db;
+            _themeRepo = themeRepo;
             _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Theme> objList = _db.Themes;
+            IEnumerable<Theme> objList = _themeRepo.GetAll();
             return View(objList);
         }
 
@@ -36,16 +38,8 @@ namespace Research_Repository.Controllers
         //GET - UPSERT
         public IActionResult Upsert(int? id)
         {
-            ICollection<int> selectedTagIds = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == id).Select(i => i.TagId).ToList();
-            ThemeVM themeVM = new ThemeVM()
-            {
-                TagList = _db.Tags.AsNoTracking().Select(i => new TagListVM
-                {
-                    TagId = i.Id,
-                    Name = i.Name,
-                    CheckedState = selectedTagIds.Contains(i.Id)
-                }).ToList()
-            };
+           ThemeVM themeVM = _themeRepo.CreateThemeVM(id);
+
             if (id == null)
             {
                 themeVM.Theme = new Theme();
@@ -54,44 +48,12 @@ namespace Research_Repository.Controllers
             }
             else
             {
-                themeVM.Theme = _db.Themes.AsNoTracking().FirstOrDefault(i => i.Id == id);
+                themeVM.Theme = _themeRepo.FirstOrDefault(filter: u => u.Id == id, isTracking: false);
                 if (themeVM.Theme == null)
                 {
                     return NotFound();
                 }
                 return View(themeVM);
-            }
-        }
-
-
-        private void UpdateThemeTagsList(ThemeVM themeVM)
-        {
-            ICollection<ThemeTag> ThemeTagsList = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == themeVM.Theme.Id).ToList();
-            ICollection<int> ThemeTagsIdList = ThemeTagsList.Select(i => i.TagId).ToList();
-
-            if (themeVM.TagList != null)
-            {
-                foreach (TagListVM tag in themeVM.TagList)
-                {
-                    if (tag.CheckedState)
-                    {
-                        if (!ThemeTagsIdList.Contains(tag.TagId))
-                        {
-                            _db.ThemeTags.Add(new ThemeTag
-                            {
-                                ThemeId = themeVM.Theme.Id,
-                                TagId = tag.TagId
-                            });
-                        }
-                    }
-                    else
-                    {
-                        if (ThemeTagsIdList.Contains(tag.TagId))
-                        {
-                            _db.ThemeTags.Remove(ThemeTagsList.FirstOrDefault(i => i.TagId == tag.TagId));
-                        }
-                    }
-                }
             }
         }
 
@@ -123,13 +85,13 @@ namespace Research_Repository.Controllers
                         obj.Theme.Image = fileName + extension;
                     }
 
-                    _db.Themes.Add(obj.Theme);
-                    _db.SaveChanges();
-                    UpdateThemeTagsList(obj);
+                    _themeRepo.Add(obj.Theme);
+                    _themeRepo.Save();
+                    _themeRepo.UpdateThemeTagsList(obj);
                 } else
                 {
                     //Updating
-                    var objFromDb = _db.Themes.AsNoTracking().FirstOrDefault(u => u.Id == obj.Theme.Id);
+                    var objFromDb = _themeRepo.FirstOrDefault(filter: u => u.Id == obj.Theme.Id, isTracking: false);
 
                     if(files.Count > 0)
                     {
@@ -158,11 +120,11 @@ namespace Research_Repository.Controllers
                     {
                         obj.Theme.Image = objFromDb.Image;
                     }
-                    _db.Themes.Update(obj.Theme);
-                    UpdateThemeTagsList(obj);
+                    _themeRepo.Update(obj.Theme);
+                    _themeRepo.UpdateThemeTagsList(obj);
                 }
 
-                _db.SaveChanges();
+                _themeRepo.Save();
                 return RedirectToAction("Index");
             }
             return View(obj.Theme);
@@ -176,7 +138,7 @@ namespace Research_Repository.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.Themes.Find(id);
+            var obj = _themeRepo.Find(id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
@@ -195,8 +157,8 @@ namespace Research_Repository.Controllers
                     }
                 }
             }
-            _db.Themes.Remove(obj);
-            _db.SaveChanges();
+            _themeRepo.Remove(obj);
+            _themeRepo.Save();
             return RedirectToAction("Index");
         }
     }

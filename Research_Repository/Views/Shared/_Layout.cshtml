@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Research_Repository_Utility;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -55,7 +57,7 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script src="~/js/scripts.min.js" asp-append-version="true"></script>
     <link rel="stylesheet" href="~/css/styles.min.css">
     @await RenderSectionAsync("Scripts", required: false)

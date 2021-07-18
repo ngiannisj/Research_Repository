@@ -1,93 +1,93 @@
-﻿@model Research_Repository.Models.ViewModels.ThemeVM
-
-
-@{
-    var title = "Create Theme";
-}
-
-<form method="post" enctype="multipart/form-data">
-    @if (Model.Theme.Id != 0)
-    {
-        title = "Edit Theme";
-        <input asp-for="Theme.Id" hidden />
-    }
-
-    <div class="border p-3">
-        <div class="form-group row">
-            <h2 class="text-info pl-3">@title</h2>
-        </div>
-
-        <div class="row">
-            <div class="col-8">
-                <div class="form-group row">
-                    <div class="col-4">
-                        <label asp-for="Theme.Name"></label>
-                    </div>
-                    <div class="col-8">
-                        <input asp-for="Theme.Name" class="form-control" />
-                        <span asp-validation-for="Theme.Name" class="text-danger"></span>
-                    </div>
-
-                </div>
-                <div class="form-group row">
-                    <div class="col-4">
-                        <label asp-for="Theme.Image"></label>
-                    </div>
-                    <div class="col-8">
-                        <input type="file" name="files" id="uploadbox" multiple asp-for="Theme.Image" class="form-control" />
-                    </div>
-
-                </div>
-                <div class="form-group row">
-                    <div class="col-8 offset-4 row">
-
-                        <div class="col">
-                            @if (Model.Theme.Id != 0)
-                            {
-                                <input type="submit" class="btn btn-info w-100" value="Update" />
-                            }
-                            else
-                            {
-                                <input type="submit" class="btn btn-primary w-100" value="Create" />
-                            }
-                        </div>
-                        <div class="col">
-                            <a asp-action="Index" class="btn btn-success w-100">
-                                Back
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-8 row">
-                        @for (int i = 0; i < Model.TagList.Count; i++)
-                        {
-                            <label>@Model.TagList[i].Name</label>
-                            <input asp-for="@Model.TagList[i].CheckedState" />
-                            <input asp-for="@Model.TagList[i].TagId" hidden />
-                        }
-
-                    </div>
-                    <span asp-validation-for="TagList"></span>
-                </div>
-            </div>
-            <div class="col-4">
-                @if (Model.Theme.Id != 0 && Model.Theme.Image != null)
-                {
-                    <img src="@WC.ImagePath@Model.Theme.Image" class="w-100" />
-                }
-            </div>
-        </div>
-    </div>
-</form>
-
-@section Scripts {
+﻿@model Research_Repository_Models.ViewModels.ThemeVM
+@using Research_Repository_Utility;
 
     @{
-        <partial name="_ValidationScriptsPartial" />
-
+        var title = "Create Theme";
     }
-}
+
+    <form method="post" enctype="multipart/form-data">
+        @if (Model.Theme.Id != 0)
+        {
+            title = "Edit Theme";
+            <input asp-for="Theme.Id" hidden />
+        }
+
+        <div class="border p-3">
+            <div class="form-group row">
+                <h2 class="text-info pl-3">@title</h2>
+            </div>
+
+            <div class="row">
+                <div class="col-8">
+                    <div class="form-group row">
+                        <div class="col-4">
+                            <label asp-for="Theme.Name"></label>
+                        </div>
+                        <div class="col-8">
+                            <input asp-for="Theme.Name" class="form-control" />
+                            <span asp-validation-for="Theme.Name" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-4">
+                            <label asp-for="Theme.Image"></label>
+                        </div>
+                        <div class="col-8">
+                            <input type="file" name="files" id="uploadbox" multiple asp-for="Theme.Image" class="form-control" />
+                        </div>
+
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-8 offset-4 row">
+
+                            <div class="col">
+                                @if (Model.Theme.Id != 0)
+                                {
+                                    <input type="submit" class="btn btn-info w-100" value="Update" />
+                                }
+                                else
+                                {
+                                    <input type="submit" class="btn btn-primary w-100" value="Create" />
+                                }
+                            </div>
+                            <div class="col">
+                                <a asp-action="Index" class="btn btn-success w-100">
+                                    Back
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-8 row">
+                            @for (int i = 0; i < Model.TagList.Count; i++)
+                            {
+                                <label>@Model.TagList[i].Name</label>
+                                <input asp-for="@Model.TagList[i].CheckedState" />
+                                <input asp-for="@Model.TagList[i].TagId" hidden />
+                            }
+
+                        </div>
+                        <span asp-validation-for="TagList"></span>
+                    </div>
+                </div>
+                <div class="col-4">
+                    @if (Model.Theme.Id != 0 && Model.Theme.Image != null)
+                    {
+                        <img src="@WC.ImagePath@Model.Theme.Image" class="w-100" />
+                    }
+                </div>
+            </div>
+        </div>
+    </form>
+
+    @section Scripts {
+
+        @{
+            <partial name="_ValidationScriptsPartial" />
+
+        }
+    }
 
 
 

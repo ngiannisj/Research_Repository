@@ -13,7 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using Research_Repository.Models;
+using Research_Repository_Models;
+using Research_Repository_Utility;
 
 namespace Research_Repository.Areas.Identity.Pages.Account
 {

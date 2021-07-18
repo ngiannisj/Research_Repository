@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Research_Repository.Data;
+using Research_Repository_DataAccess.Repository;
+using Research_Repository_DataAccess.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +34,8 @@ namespace Research_Repository
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddDefaultTokenProviders().AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddScoped<IThemeRepository, ThemeRepository>();
 
             services.AddControllersWithViews();
         }

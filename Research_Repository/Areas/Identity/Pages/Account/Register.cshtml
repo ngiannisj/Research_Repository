@@ -1,7 +1,8 @@
 ﻿@page
 @model RegisterModel
+@using Research_Repository_Utility;
 
-@if (User.IsInRole(Research_Repository.WC.LibrarianRole))
+@if (User.IsInRole(WC.LibrarianRole))
 {
     <h1>Register an Admin Account</h1>
 }
@@ -41,7 +42,7 @@ else
                 <input asp-for="Input.ConfirmPassword" class="form-control" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            @if (User.IsInRole(Research_Repository.WC.LibrarianRole))
+            @if (User.IsInRole(WC.LibrarianRole))
             {
                 <button type="submit" class="btn btn-warning">Register new librarian</button>
             }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Research_Repository.Models;
+using Research_Repository_Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
