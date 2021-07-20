@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Research_Repository.Data;
 using Research_Repository_DataAccess.Repository.IRepository;
 using System;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Research_Repository_DataAccess.Repository
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : ControllerBase, IRepository<T> where T : class
     {
 
         private readonly ApplicationDbContext _db;

@@ -34,7 +34,7 @@
                             <label asp-for="Theme.Image"></label>
                         </div>
                         <div class="col-8">
-                            <input type="file" name="files" id="uploadbox" multiple asp-for="Theme.Image" class="form-control" />
+                            <input type="file" name="files" id="uploadbox" asp-for="Theme.Image" class="form-control" />
                         </div>
 
                     </div>
@@ -74,7 +74,9 @@
                 <div class="col-4">
                     @if (Model.Theme.Id != 0 && Model.Theme.Image != null)
                     {
+                    <a href="/Theme/GetDownloadedFile/?filePath=@WC.ImagePath@Model.Theme.Image">
                         <img src="@WC.ImagePath@Model.Theme.Image" class="w-100" />
+                    </a>
                     }
                 </div>
             </div>

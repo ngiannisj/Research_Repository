@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Research_Repository.Data;
 using Research_Repository_DataAccess.Repository.IRepository;
@@ -7,6 +8,7 @@ using Research_Repository_Models.ViewModels;
 using Research_Repository_Utility;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,8 +57,6 @@ namespace Research_Repository_DataAccess.Repository
         public ThemeVM CreateThemeVM(int? id)
         {
             ThemeVM themeVM = new ThemeVM();
-            if (id != null)
-            {
                 ICollection<int> selectedTagIds = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == id).Select(i => i.TagId).ToList();
                 themeVM.TagList = _db.Tags.AsNoTracking().Select(i => new TagListVM
                 {
@@ -64,13 +64,28 @@ namespace Research_Repository_DataAccess.Repository
                     Name = i.Name,
                     CheckedState = selectedTagIds.Contains(i.Id)
                 }).ToList();
-            }
             return themeVM;
         }
 
         public void Update(Theme obj)
         {
             _db.Themes.Update(obj);
+        }
+
+        public async Task<IActionResult> DownloadFile(string filePath)
+        {
+            var path = Directory.GetCurrentDirectory() + "\\wwwroot" + filePath;
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            var contentType = "APPLICATION/octet-stream";
+            var fileName = Path.GetFileName(path);
+
+            return File(memory, contentType, fileName);
         }
     }
 }

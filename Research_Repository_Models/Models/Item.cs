@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,5 +23,7 @@ namespace Research_Repository_Models
         public virtual Theme Theme { get; set; }
 
         public ICollection<ItemTag> ItemTags { get; set; }
+
+        public string Files { get; set; }
     }
 }

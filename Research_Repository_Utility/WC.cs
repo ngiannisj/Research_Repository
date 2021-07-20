@@ -7,7 +7,9 @@ namespace Research_Repository_Utility
 {
     public static class WC
     {
-        public const string ImagePath = @"\images\theme\";
+        //File paths
+        public const string ImagePath = @"\files\images\themes\";
+        public const string ItemFilePath = @"\files\documents\items\";
 
         //Roles
         public const string LibrarianRole = "Librarian";
@@ -15,6 +17,7 @@ namespace Research_Repository_Utility
 
         //Database tables
         public const string ThemeName = "Theme";
+        public const string ItemName = "Item";
 
     }
 }

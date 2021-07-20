@@ -20,10 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\theme\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Research_Repository_DataAccess\Research_Repository_DataAccess.csproj" />
     <ProjectReference Include="..\Research_Repository_Models\Research_Repository_Models.csproj" />
     <ProjectReference Include="..\Research_Repository_Utility\Research_Repository_Utility.csproj" />

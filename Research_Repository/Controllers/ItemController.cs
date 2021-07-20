@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +22,12 @@ namespace Research_Repository.Controllers
     {
 
         private readonly IItemRepository _itemRepo;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ItemController(IItemRepository itemRepo)
+        public ItemController(IItemRepository itemRepo, IWebHostEnvironment webHostEnvironment)
         {
             _itemRepo = itemRepo;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -66,17 +69,50 @@ namespace Research_Repository.Controllers
 
             if (ModelState.IsValid)
             {
+                var files = HttpContext.Request.Form.Files;
+                string webRootPath = _webHostEnvironment.WebRootPath;
 
                 if (itemVM.Item.Id == 0)
                 {
+
                     //Creating
                     _itemRepo.Add(itemVM.Item);
                     _itemRepo.Save();
+
+                    string fileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
+                    if (files.Count != 0)
+                    {
+                        //Upload Image
+                        itemVM.Item.Files = FileHelper.UploadFiles(files, webRootPath, fileLocation);
+                    }
+
                     _itemRepo.UpdateItemTagsList(itemVM);
                 }
                 else
                 {
+                    string fileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
                     //Updating
+                    var objFromDb = _itemRepo.FirstOrDefault(filter: u => u.Id == itemVM.Item.Id, isTracking: false);
+
+                    if (files.Count > 0)
+                    {
+
+                        if (objFromDb.Files != null)
+                        {
+                            List<string> filesArray = objFromDb.Files.Split(',').ToList();
+                            foreach (string file in filesArray)
+                            {
+                                FileHelper.DeleteFile(webRootPath, file, fileLocation);
+                            }
+                            
+                        }
+
+                        itemVM.Item.Files = FileHelper.UploadFiles(files, webRootPath, fileLocation);
+                    }
+                    else
+                    {
+                        itemVM.Item.Files = objFromDb.Files;
+                    }
 
                     _itemRepo.Update(itemVM.Item);
                     _itemRepo.UpdateItemTagsList(itemVM);
@@ -101,10 +137,22 @@ namespace Research_Repository.Controllers
             {
                 return NotFound();
             }
+            if (obj.Files != null)
+            {
+                string webRootPath = _webHostEnvironment.WebRootPath;
+                string fileLocation = WC.ItemFilePath + obj.Id + "\\";
+
+                List<string> filesArray = obj.Files.Split(',').ToList();
+                foreach (string file in filesArray)
+                {
+                    FileHelper.DeleteFile(webRootPath, file, fileLocation);
+                }
+            }
             _itemRepo.Remove(obj);
             _itemRepo.Save();
             return RedirectToAction("Index");
         }
+
 
         //GET - GETTHEMETAGS (AJAX CALL)
         public ICollection<int> GetThemeTags(int id)

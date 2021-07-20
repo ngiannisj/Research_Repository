@@ -65,24 +65,15 @@ namespace Research_Repository.Controllers
 
             if (ModelState.IsValid)
             {
-                 var files = HttpContext.Request.Form.Files;
+                var files = HttpContext.Request.Form.Files;
                 string webRootPath = _webHostEnvironment.WebRootPath;
 
                 if(obj.Theme.Id == 0)
                 {
                     //Creating
                     if (files.Count != 0) {
-                        //Upload image
-                        string upload = webRootPath + WC.ImagePath;
-                        string fileName = Guid.NewGuid().ToString();
-                        string extension = Path.GetExtension(files[0].FileName);
-
-                        using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
-                        {
-                            files[0].CopyTo(fileStream);
-                        }
-
-                        obj.Theme.Image = fileName + extension;
+                        //Upload Image
+                        obj.Theme.Image = FileHelper.UploadFiles(files, webRootPath, WC.ImagePath);
                     }
 
                     _themeRepo.Add(obj.Theme);
@@ -95,26 +86,14 @@ namespace Research_Repository.Controllers
 
                     if(files.Count > 0)
                     {
-                        string upload = webRootPath + WC.ImagePath;
-                        string fileName = Guid.NewGuid().ToString();
-                        string extension = Path.GetExtension(files[0].FileName);
 
                         if(objFromDb.Image != null)
                         {
-                            var oldFile = Path.Combine(upload, objFromDb.Image);
-
-                            if (System.IO.File.Exists(oldFile))
-                            {
-                                System.IO.File.Delete(oldFile);
-                            }
+                            List<string> filesArray = objFromDb.Image.Split(',').ToList();
+                            FileHelper.DeleteFile(webRootPath, filesArray[0], WC.ImagePath);
                         }
 
-                        using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
-                        {
-                            files[0].CopyTo(fileStream);
-                        }
-
-                        obj.Theme.Image = fileName + extension;
+                        obj.Theme.Image = FileHelper.UploadFiles(files, webRootPath, WC.ImagePath);
                     }
                     else
                     {
@@ -146,20 +125,21 @@ namespace Research_Repository.Controllers
             {
                 if (obj.Image != null)
                 {
+                    string webRootPath = _webHostEnvironment.WebRootPath;
 
-                    string upload = _webHostEnvironment.WebRootPath + WC.ImagePath;
-
-                    var oldFile = Path.Combine(upload, obj.Image);
-
-                    if (System.IO.File.Exists(oldFile))
-                    {
-                        System.IO.File.Delete(oldFile);
-                    }
+                    List<string> filesArray = obj.Image.Split(',').ToList();
+                    FileHelper.DeleteFile(webRootPath, filesArray[0], WC.ImagePath);
                 }
             }
             _themeRepo.Remove(obj);
             _themeRepo.Save();
             return RedirectToAction("Index");
+        }
+
+        //GET - DOWNLOAD FILE
+        public IActionResult GetDownloadedFile(string filePath)
+        {
+            return FileHelper.DownloadFile(filePath);
         }
     }
 }
