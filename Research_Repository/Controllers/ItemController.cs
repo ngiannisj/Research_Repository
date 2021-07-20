@@ -99,7 +99,7 @@ namespace Research_Repository.Controllers
 
                         if (objFromDb.Files != null)
                         {
-                            List<string> filesArray = objFromDb.Files.Split(',').ToList();
+                            List<string> filesArray = objFromDb.Files.Split(',').Where(u => !string.IsNullOrWhiteSpace(u)).ToList();
                             foreach (string file in filesArray)
                             {
                                 FileHelper.DeleteFile(webRootPath, file, fileLocation);
@@ -142,7 +142,7 @@ namespace Research_Repository.Controllers
                 string webRootPath = _webHostEnvironment.WebRootPath;
                 string fileLocation = WC.ItemFilePath + obj.Id + "\\";
 
-                List<string> filesArray = obj.Files.Split(',').ToList();
+                List<string> filesArray = obj.Files.Split(',').Where(u => !string.IsNullOrWhiteSpace(u)).ToList();
                 foreach (string file in filesArray)
                 {
                     FileHelper.DeleteFile(webRootPath, file, fileLocation);
