@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Research_Repository.Data;
 
 namespace Research_Repository_DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210721010846_Revert")]
+    partial class Revert
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,12 +236,6 @@ namespace Research_Repository_DataAccess.Migrations
                     b.Property<string>("Files")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ThemeId")
                         .HasColumnType("int");
 
@@ -248,10 +244,6 @@ namespace Research_Repository_DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("TeamId");
 
                     b.HasIndex("ThemeId");
 
@@ -273,26 +265,6 @@ namespace Research_Repository_DataAccess.Migrations
                     b.ToTable("ItemTags");
                 });
 
-            modelBuilder.Entity("Research_Repository_Models.Project", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TeamId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("Projects");
-                });
-
             modelBuilder.Entity("Research_Repository_Models.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -306,22 +278,6 @@ namespace Research_Repository_DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tags");
-                });
-
-            modelBuilder.Entity("Research_Repository_Models.Team", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("Research_Repository_Models.Theme", b =>
@@ -421,25 +377,11 @@ namespace Research_Repository_DataAccess.Migrations
 
             modelBuilder.Entity("Research_Repository_Models.Item", b =>
                 {
-                    b.HasOne("Research_Repository_Models.Project", "Project")
-                        .WithMany("Items")
-                        .HasForeignKey("ProjectId");
-
-                    b.HasOne("Research_Repository_Models.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Research_Repository_Models.Theme", "Theme")
                         .WithMany("Items")
                         .HasForeignKey("ThemeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Project");
-
-                    b.Navigation("Team");
 
                     b.Navigation("Theme");
                 });
@@ -461,17 +403,6 @@ namespace Research_Repository_DataAccess.Migrations
                     b.Navigation("Item");
 
                     b.Navigation("Tag");
-                });
-
-            modelBuilder.Entity("Research_Repository_Models.Project", b =>
-                {
-                    b.HasOne("Research_Repository_Models.Team", "Team")
-                        .WithMany("Projects")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("Research_Repository_Models.ThemeTag", b =>
@@ -498,21 +429,11 @@ namespace Research_Repository_DataAccess.Migrations
                     b.Navigation("ItemTags");
                 });
 
-            modelBuilder.Entity("Research_Repository_Models.Project", b =>
-                {
-                    b.Navigation("Items");
-                });
-
             modelBuilder.Entity("Research_Repository_Models.Tag", b =>
                 {
                     b.Navigation("ItemTags");
 
                     b.Navigation("ThemeTags");
-                });
-
-            modelBuilder.Entity("Research_Repository_Models.Team", b =>
-                {
-                    b.Navigation("Projects");
                 });
 
             modelBuilder.Entity("Research_Repository_Models.Theme", b =>

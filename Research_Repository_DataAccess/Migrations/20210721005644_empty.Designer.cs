@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Research_Repository.Data;
 
 namespace Research_Repository_DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210721005644_empty")]
+    partial class empty
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,10 +236,7 @@ namespace Research_Repository_DataAccess.Migrations
                     b.Property<string>("Files")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TeamId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
                     b.Property<int>("ThemeId")
@@ -250,8 +249,6 @@ namespace Research_Repository_DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
-
-                    b.HasIndex("TeamId");
 
                     b.HasIndex("ThemeId");
 
@@ -283,14 +280,14 @@ namespace Research_Repository_DataAccess.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TeamId")
+                    b.Property<int?>("TeamId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Project");
                 });
 
             modelBuilder.Entity("Research_Repository_Models.Tag", b =>
@@ -321,7 +318,7 @@ namespace Research_Repository_DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Teams");
+                    b.ToTable("Team");
                 });
 
             modelBuilder.Entity("Research_Repository_Models.Theme", b =>
@@ -423,11 +420,7 @@ namespace Research_Repository_DataAccess.Migrations
                 {
                     b.HasOne("Research_Repository_Models.Project", "Project")
                         .WithMany("Items")
-                        .HasForeignKey("ProjectId");
-
-                    b.HasOne("Research_Repository_Models.Team", "Team")
-                        .WithMany()
-                        .HasForeignKey("TeamId")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -438,8 +431,6 @@ namespace Research_Repository_DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Project");
-
-                    b.Navigation("Team");
 
                     b.Navigation("Theme");
                 });
@@ -467,9 +458,7 @@ namespace Research_Repository_DataAccess.Migrations
                 {
                     b.HasOne("Research_Repository_Models.Team", "Team")
                         .WithMany("Projects")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TeamId");
 
                     b.Navigation("Team");
                 });

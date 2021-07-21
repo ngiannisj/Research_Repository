@@ -37,6 +37,16 @@ namespace Research_Repository_DataAccess.Repository
                 {
                     Text = i.Name,
                     Value = i.Id.ToString()
+                }),
+                TeamSelectList = _db.Teams.AsNoTracking().Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                }),
+                ProjectSelectList = _db.Projects.AsNoTracking().Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
                 })
             };
             return itemVM;
@@ -85,6 +95,14 @@ namespace Research_Repository_DataAccess.Repository
             ICollection<int> AssignedTagIds = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == id).Include(i => i.Tag).Select(i => i.TagId).ToList();
 
             return AssignedTagIds;
+        }
+
+        //GET - GetAssignedProjects
+        public ICollection<int> GetAssignedProjects(int id)
+        {
+            ICollection<int> AssignedProjectIds = _db.Projects.AsNoTracking().Where(i => i.TeamId == id).Select(i => i.Id).ToList();
+
+            return AssignedProjectIds;
         }
 
         public void Update(Item obj)

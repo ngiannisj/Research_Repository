@@ -82,7 +82,6 @@ namespace Research_Repository.Controllers
                     string fileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
                     if (files.Count != 0)
                     {
-                        //Upload Image
                         itemVM.Item.Files = FileHelper.UploadFiles(files, webRootPath, fileLocation);
                     }
 
@@ -153,6 +152,11 @@ namespace Research_Repository.Controllers
             return RedirectToAction("Index");
         }
 
+        //GET - GETTEAMPROJECTS (AJAX CALL)
+        public ICollection<int> GetTeamProjects(int id)
+        {
+            return _itemRepo.GetAssignedProjects(id);
+        }
 
         //GET - GETTHEMETAGS (AJAX CALL)
         public ICollection<int> GetThemeTags(int id)

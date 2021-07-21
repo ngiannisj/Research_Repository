@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Research_Repository.Data;
 
 namespace Research_Repository_DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210721080856_AddFields")]
+    partial class AddFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,7 +236,7 @@ namespace Research_Repository_DataAccess.Migrations
                     b.Property<string>("Files")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProjectId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
                     b.Property<int>("TeamId")
@@ -283,7 +285,7 @@ namespace Research_Repository_DataAccess.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TeamId")
+                    b.Property<int?>("TeamId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -423,10 +425,12 @@ namespace Research_Repository_DataAccess.Migrations
                 {
                     b.HasOne("Research_Repository_Models.Project", "Project")
                         .WithMany("Items")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Research_Repository_Models.Team", "Team")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -467,9 +471,7 @@ namespace Research_Repository_DataAccess.Migrations
                 {
                     b.HasOne("Research_Repository_Models.Team", "Team")
                         .WithMany("Projects")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TeamId");
 
                     b.Navigation("Team");
                 });
@@ -512,6 +514,8 @@ namespace Research_Repository_DataAccess.Migrations
 
             modelBuilder.Entity("Research_Repository_Models.Team", b =>
                 {
+                    b.Navigation("Items");
+
                     b.Navigation("Projects");
                 });
 

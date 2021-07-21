@@ -38,6 +38,7 @@ namespace Research_Repository
             services.AddScoped<IThemeRepository, ThemeRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<ITeamRepository, TeamRepository>();
 
             services.AddControllersWithViews();
         }
