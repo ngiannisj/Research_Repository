@@ -79,22 +79,29 @@ namespace Research_Repository.Controllers
             return View(obj);
         }
 
-
         //DELETE - DELETE
-        public IActionResult Delete(int? id)
+        public int Delete(int id)
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            var obj = _teamRepo.Find(id.GetValueOrDefault());
+            var obj = _teamRepo.Find(id);
             if (obj == null)
             {
-                return NotFound();
+                return 1;
             }
-            _teamRepo.Remove(obj);
-            _teamRepo.Save();
-            return RedirectToAction("Index");
+            else
+            {
+                if (!_teamRepo.HasProjects(obj.Id))
+                {
+                    _teamRepo.Remove(obj);
+                    _teamRepo.Save();
+                    return 2;
+                }
+                else
+                {
+                    return 3;
+                }
+
+            }
         }
+
     }
 }

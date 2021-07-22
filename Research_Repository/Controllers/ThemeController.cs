@@ -111,29 +111,32 @@ namespace Research_Repository.Controllers
 
 
         //DELETE - DELETE
-        public IActionResult Delete(int? id)
+        public int Delete(int id)
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            var obj = _themeRepo.Find(id.GetValueOrDefault());
+            var obj = _themeRepo.Find(id);
             if (obj == null)
             {
-                return NotFound();
+                return 1;
             }else
             {
-                if (obj.Image != null)
+                if(!_themeRepo.HasItems(obj.Id))
                 {
-                    string webRootPath = _webHostEnvironment.WebRootPath;
+                    if (obj.Image != null)
+                    {
+                        string webRootPath = _webHostEnvironment.WebRootPath;
 
-                    List<string> filesArray = obj.Image.Split(',').Where(u => !string.IsNullOrWhiteSpace(u)).ToList();
-                    FileHelper.DeleteFile(webRootPath, filesArray[0], WC.ImagePath);
+                        List<string> filesArray = obj.Image.Split(',').Where(u => !string.IsNullOrWhiteSpace(u)).ToList();
+                        FileHelper.DeleteFile(webRootPath, filesArray[0], WC.ImagePath);
+                    }
+                    _themeRepo.Remove(obj);
+                    _themeRepo.Save();
+                    return 2;
+                } else
+                {
+                    return 3;
                 }
+                
             }
-            _themeRepo.Remove(obj);
-            _themeRepo.Save();
-            return RedirectToAction("Index");
         }
 
         //GET - DOWNLOAD FILE

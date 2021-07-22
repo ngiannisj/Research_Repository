@@ -38,6 +38,18 @@ namespace Research_Repository_DataAccess.Repository
             return projectVM;
         }
 
+        public bool HasItems(int id)
+        {
+            if (_db.Items.FirstOrDefault(i => i.ProjectId == id) != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public void Update(Project obj)
         {
             _db.Projects.Update(obj);

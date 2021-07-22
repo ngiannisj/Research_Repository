@@ -12,6 +12,8 @@ namespace Research_Repository_DataAccess.Repository.IRepository
 {
     public interface ITeamRepository : IRepository<Team>
     {
+
+        bool HasProjects(int id);
         void Update(Team obj);
 
     }

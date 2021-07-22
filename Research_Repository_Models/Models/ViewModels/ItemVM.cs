@@ -13,7 +13,7 @@ namespace Research_Repository_Models.ViewModels
     {
         public Item Item { get; set; }
 
-        public int TeamId { get; set; }
+        public int? TeamId { get; set; }
 
         public IEnumerable<SelectListItem> TeamSelectList { get; set; }
 

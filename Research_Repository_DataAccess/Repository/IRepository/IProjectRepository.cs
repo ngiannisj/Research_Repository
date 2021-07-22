@@ -13,6 +13,9 @@ namespace Research_Repository_DataAccess.Repository.IRepository
     public interface IProjectRepository : IRepository<Project>
     {
         public ProjectVM GetProjectVM();
+
+        bool HasItems(int id);
+
         void Update(Project obj);
 
     }

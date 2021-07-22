@@ -34,9 +34,9 @@
                                 <a asp-action="Upsert" asp-route-Id="@obj.Id" class="btn btn-primary mx-2">
                                     Edit
                                 </a>
-                                <a asp-action="Delete" asp-route-Id="@obj.Id" class="btn btn-danger">
+                                <button onclick="deleteTheme('Project', @obj.Id)" class="btn btn-danger delete-theme">
                                     Delete
-                                </a>
+                                </button>
                             </div>
                         </td>
                     </tr>

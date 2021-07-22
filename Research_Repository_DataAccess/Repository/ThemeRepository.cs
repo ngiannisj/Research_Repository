@@ -67,6 +67,17 @@ namespace Research_Repository_DataAccess.Repository
             return themeVM;
         }
 
+        public bool HasItems(int id)
+        {
+            if(_db.Items.FirstOrDefault(i => i.ThemeId == id) != null)
+            {
+                return true;
+            }else
+            {
+                return false;
+            }
+        }
+
         public void Update(Theme obj)
         {
             _db.Themes.Update(obj);

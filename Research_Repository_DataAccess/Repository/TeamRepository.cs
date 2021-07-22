@@ -23,6 +23,18 @@ namespace Research_Repository_DataAccess.Repository
             _db = db;
         }
 
+        public bool HasProjects(int id)
+        {
+            if (_db.Projects.FirstOrDefault(i => i.TeamId == id) != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public void Update(Team obj)
         {
             _db.Teams.Update(obj);
