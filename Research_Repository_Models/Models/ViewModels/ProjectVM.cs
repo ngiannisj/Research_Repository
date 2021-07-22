@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Research_Repository_Models.ViewModels
 {
-    public class TeamVM
+    public class ProjectVM
     {
-        public Team Team { get; set; }
+        public Project Project { get; set; }
 
-        public IEnumerable<SelectListItem> ProjectSelectList { get; set; }
+        public IEnumerable<SelectListItem> TeamSelectList { get; set; }
     }
 
 }

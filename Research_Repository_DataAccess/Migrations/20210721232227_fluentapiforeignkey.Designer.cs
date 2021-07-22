@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Research_Repository.Data;
 
 namespace Research_Repository_DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210721232227_fluentapiforeignkey")]
+    partial class fluentapiforeignkey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,10 +236,13 @@ namespace Research_Repository_DataAccess.Migrations
                     b.Property<string>("Files")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ProjectId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ThemeId")
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ThemeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -247,6 +252,8 @@ namespace Research_Repository_DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("TeamId");
 
                     b.HasIndex("ThemeId");
 
@@ -419,14 +426,24 @@ namespace Research_Repository_DataAccess.Migrations
                     b.HasOne("Research_Repository_Models.Project", "Project")
                         .WithMany("Items")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Research_Repository_Models.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Research_Repository_Models.Theme", "Theme")
                         .WithMany("Items")
                         .HasForeignKey("ThemeId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Project");
+
+                    b.Navigation("Team");
 
                     b.Navigation("Theme");
                 });

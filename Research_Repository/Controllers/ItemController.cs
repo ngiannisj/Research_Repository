@@ -51,7 +51,8 @@ namespace Research_Repository.Controllers
             else
             {
                 //Updating
-                itemVM.Item = _itemRepo.Find(id.GetValueOrDefault());
+                itemVM.Item = _itemRepo.FirstOrDefault(filter: i => i.Id == id, includeProperties: "Project");
+                itemVM.TeamId = itemVM.Item.Project.TeamId;
                 if (itemVM.Item == null)
                 {
                     return NotFound();

@@ -3,11 +3,11 @@
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Item List</h2>
+            <h2 class="text-primary">Tag List</h2>
         </div>
         <div class="col-6 text-right">
             <a asp-action="Upsert" class="btn btn-primary">
-                Create New Theme
+                Create New Tag
             </a>
         </div>
     </div>
@@ -19,7 +19,7 @@
         <table class="table table-bordered table-striped" style="width: 100%">
             <thead>
                 <tr>
-                    <th>Theme Name</th>
+                    <th>Tag Name</th>
                     <th></th>
 
                 </tr>
@@ -46,7 +46,7 @@
     }
     else
     {
-        <p>No item exists.</p>
+        <p>No tag exists.</p>
     }
 </div>
 

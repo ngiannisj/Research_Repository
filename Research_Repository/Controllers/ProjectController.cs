@@ -16,19 +16,19 @@ using System.Threading.Tasks;
 namespace Research_Repository.Controllers
 {
     [Authorize(Roles = WC.LibrarianRole)]
-    public class TeamController : Controller
+    public class ProjectController : Controller
     {
 
-        private readonly ITeamRepository _teamRepo;
+        private readonly IProjectRepository _projectRepo;
 
-        public TeamController(ITeamRepository teamRepo)
+        public ProjectController(IProjectRepository projectRepo)
         {
-            _teamRepo = teamRepo;
+            _projectRepo = projectRepo;
         }
 
         public IActionResult Index()
         {
-            IEnumerable<Team> objList = _teamRepo.GetAll();
+            IEnumerable<Project> objList = _projectRepo.GetAll();
             return View(objList);
         }
 
@@ -36,47 +36,47 @@ namespace Research_Repository.Controllers
         //GET - UPSERT
         public IActionResult Upsert(int? id)
         {
-            Team team = new Team();
+            ProjectVM projectVM = _projectRepo.GetProjectVM();
             if (id == null)
             {
                 //this is for create
-                return View(team);
+                return View(projectVM);
             }
             else
             {
-                team = _teamRepo.FirstOrDefault(filter: u => u.Id == id, isTracking: false);
-                if (team == null)
+                projectVM.Project = _projectRepo.FirstOrDefault(filter: u => u.Id == id, isTracking: false);
+                if (projectVM.Project == null)
                 {
                     return NotFound();
                 }
-                return View(team);
+                return View(projectVM);
             }
         }
 
         //POST - UPSERT
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(Team obj)
+        public IActionResult Upsert(ProjectVM projectVM)
         {
 
             if (ModelState.IsValid)
             {
 
-                if(obj.Id == 0)
+                if(projectVM.Project.Id == 0)
                 {
-                    _teamRepo.Add(obj);
-                    _teamRepo.Save();
+                    _projectRepo.Add(projectVM.Project);
+                    _projectRepo.Save();
                 } else
                 {
                     //Updating
-                    var objFromDb = _teamRepo.FirstOrDefault(filter: u => u.Id == obj.Id, isTracking: false);
-                    _teamRepo.Update(obj);
+                    var objFromDb = _projectRepo.FirstOrDefault(filter: u => u.Id == projectVM.Project.Id, isTracking: false);
+                    _projectRepo.Update(projectVM.Project);
                 }
 
-                _teamRepo.Save();
+                _projectRepo.Save();
                 return RedirectToAction("Index");
             }
-            return View(obj);
+            return View(projectVM.Project);
         }
 
 
@@ -87,13 +87,13 @@ namespace Research_Repository.Controllers
             {
                 return NotFound();
             }
-            var obj = _teamRepo.Find(id.GetValueOrDefault());
+            var obj = _projectRepo.Find(id.GetValueOrDefault());
             if (obj == null)
             {
                 return NotFound();
             }
-            _teamRepo.Remove(obj);
-            _teamRepo.Save();
+            _projectRepo.Remove(obj);
+            _projectRepo.Save();
             return RedirectToAction("Index");
         }
     }

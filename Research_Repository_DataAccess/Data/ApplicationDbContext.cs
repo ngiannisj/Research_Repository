@@ -32,6 +32,21 @@ namespace Research_Repository.Data
 
             modelBuilder.Entity<ThemeTag>()
                 .HasKey(i => new { i.ThemeId, i.TagId });
+
+            modelBuilder.Entity<Project>()
+                .HasOne(b => b.Team)
+                .WithMany(a => a.Projects)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Item>()
+                .HasOne(b => b.Theme)
+                .WithMany(a => a.Items)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Item>()
+                .HasOne(b => b.Project)
+                .WithMany(a => a.Items)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

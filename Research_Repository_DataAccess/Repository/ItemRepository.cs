@@ -32,7 +32,6 @@ namespace Research_Repository_DataAccess.Repository
                     Name = i.Name,
                     CheckedState = selectedTagIds.Contains(i.Id)
                 }).ToList(),
-                Item = new Item(),
                 ThemeSelectList = _db.Themes.AsNoTracking().Select(i => new SelectListItem
                 {
                     Text = i.Name,
@@ -47,7 +46,8 @@ namespace Research_Repository_DataAccess.Repository
                 {
                     Text = i.Name,
                     Value = i.Id.ToString()
-                })
+                }),
+                Item = new Item()
             };
             return itemVM;
         }
@@ -87,6 +87,14 @@ namespace Research_Repository_DataAccess.Repository
             }
         }
 
+        //GET - GetAssignedProjects
+        public ICollection<int> GetAssignedProjects(int id)
+        {
+            ICollection<int> AssignedProjectIds = _db.Projects.AsNoTracking().Where(i => i.TeamId == id).Select(i => i.Id).ToList();
+
+            return AssignedProjectIds;
+        }
+
         //GET - GetAssignedTags
         public ICollection<int> GetAssignedTags(int id)
         {
@@ -95,14 +103,6 @@ namespace Research_Repository_DataAccess.Repository
             ICollection<int> AssignedTagIds = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == id).Include(i => i.Tag).Select(i => i.TagId).ToList();
 
             return AssignedTagIds;
-        }
-
-        //GET - GetAssignedProjects
-        public ICollection<int> GetAssignedProjects(int id)
-        {
-            ICollection<int> AssignedProjectIds = _db.Projects.AsNoTracking().Where(i => i.TeamId == id).Select(i => i.Id).ToList();
-
-            return AssignedProjectIds;
         }
 
         public void Update(Item obj)
