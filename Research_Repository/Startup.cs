@@ -9,6 +9,9 @@ using Microsoft.Extensions.Hosting;
 using Research_Repository.Data;
 using Research_Repository_DataAccess.Repository;
 using Research_Repository_DataAccess.Repository.IRepository;
+using Research_Repository_DataAccess.Repository.Solr;
+using Research_Repository_Models.Solr;
+using SolrNet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +45,10 @@ namespace Research_Repository
             services.AddScoped<IProjectRepository, ProjectRepository>();
 
             services.AddControllersWithViews();
+
+            //Solr
+            services.AddSolrNet<ItemSolr>($"http://localhost:8983/solr/research_repository_items");
+            services.AddScoped<ISolrIndexService<ItemSolr>, SolrIndexService<ItemSolr, ISolrOperations<ItemSolr>>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

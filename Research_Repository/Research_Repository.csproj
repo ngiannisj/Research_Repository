@@ -17,6 +17,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    <PackageReference Include="SolrNet" Version="1.0.19" />
+    <PackageReference Include="SolrNet.Microsoft.DependencyInjection" Version="1.0.19" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,11 +4,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Research_Repository.Data;
 using Research_Repository_DataAccess.Repository.IRepository;
+using Research_Repository_DataAccess.Repository.Solr;
 using Research_Repository_Models;
+using Research_Repository_Models.Models.Solr;
+using Research_Repository_Models.Solr;
 using Research_Repository_Models.ViewModels;
 using Research_Repository_Utility;
+using SolrNet;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,11 +28,13 @@ namespace Research_Repository.Controllers
 
         private readonly IItemRepository _itemRepo;
         private readonly IWebHostEnvironment _webHostEnvironment;
-
-        public ItemController(IItemRepository itemRepo, IWebHostEnvironment webHostEnvironment)
+        private readonly ISolrIndexService<ItemSolr> _solr;
+        public ItemController(IItemRepository itemRepo, IWebHostEnvironment webHostEnvironment, ISolrIndexService<ItemSolr> solr)
         {
             _itemRepo = itemRepo;
             _webHostEnvironment = webHostEnvironment;
+            _solr = solr;
+
         }
 
         public IActionResult Index()
@@ -80,6 +87,7 @@ namespace Research_Repository.Controllers
                     //Creating
                     _itemRepo.Add(itemVM.Item);
                     _itemRepo.Save();
+                    _solr.AddUpdate(new ItemSolr(itemVM.Item));
 
                     string fileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
                     if (files.Count != 0)
@@ -164,6 +172,13 @@ namespace Research_Repository.Controllers
         public ICollection<int> GetThemeTags(int id)
         {
             return _itemRepo.GetAssignedTags(id);
+        }
+
+        //GET - GETFILTEREDITEMS (AJAX CALL)
+        public SolrQueryResults<ItemSolr> PostFilteredItems(string itemQueryJson)
+        {
+            ItemQueryParams itemQueryParams = JsonConvert.DeserializeObject<ItemQueryParams>(itemQueryJson);
+            return _solr.FilterItems(itemQueryParams);
         }
     }
 }
