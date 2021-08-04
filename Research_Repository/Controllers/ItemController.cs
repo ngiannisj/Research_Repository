@@ -162,20 +162,20 @@ namespace Research_Repository.Controllers
             return RedirectToAction("Index");
         }
 
-        //GET - GETTEAMPROJECTS (AJAX CALL)
+        //GET - GETTEAMPROJECTS (FROM AJAX CALL)
         public ICollection<int> GetTeamProjects(int id)
         {
             return _itemRepo.GetAssignedProjects(id);
         }
 
-        //GET - GETTHEMETAGS (AJAX CALL)
+        //GET - GETTHEMETAGS (FROM AJAX CALL)
         public ICollection<int> GetThemeTags(int id)
         {
             return _itemRepo.GetAssignedTags(id);
         }
 
-        //GET - GETFILTEREDITEMS (AJAX CALL)
-        public SolrQueryResults<ItemSolr> PostFilteredItems(string itemQueryJson)
+        //GET - GETFILTEREDITEMS (FROM AJAX CALL)
+        public SolrQueryResults<ItemSolr> GetFilteredItems(string itemQueryJson)
         {
             ItemQueryParams itemQueryParams = JsonConvert.DeserializeObject<ItemQueryParams>(itemQueryJson);
             return _solr.FilterItems(itemQueryParams);

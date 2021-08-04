@@ -13,8 +13,8 @@
     });
     $("#filters #text-search").keypress(function () {
         $.ajax({
-            type: "POST",
-            url: "/Item/PostFilteredItems",
+            type: "GET",
+            url: "/Item/GetFilteredItems",
             data: { "itemQueryJson": queryParameters },
             success: function (data) {
                 console.log(data);
