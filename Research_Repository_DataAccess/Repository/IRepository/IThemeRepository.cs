@@ -12,7 +12,9 @@ namespace Research_Repository_DataAccess.Repository.IRepository
 {
     public interface IThemeRepository : IRepository<Theme>
     {
-        ThemeVM CreateThemeVM(int? id);
+        IList<TagListVM> GetTagList(int? id);
+
+        ThemeVM CreateThemeVM(string newId, int? id=null);
 
         void UpdateThemeTagsList(ThemeVM themeVM);
 

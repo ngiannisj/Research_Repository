@@ -18,7 +18,7 @@ function verifyDelete(controller, id) {
                 alert("Deleted successfully");
                 location.reload();
             } else {
-                alert("no object found");
+                
             }
         },
         error: function () {

@@ -19,7 +19,8 @@ namespace Research_Repository_DataAccess.Repository
     {
         private readonly ApplicationDbContext _db;
 
-        public ThemeRepository(ApplicationDbContext db) : base(db) {
+        public ThemeRepository(ApplicationDbContext db) : base(db)
+        {
             _db = db;
         }
 
@@ -54,25 +55,58 @@ namespace Research_Repository_DataAccess.Repository
             }
         }
 
-        public ThemeVM CreateThemeVM(int? id)
+        public IList<TagListVM> GetTagList(int? id)
         {
-            ThemeVM themeVM = new ThemeVM();
+            if (id != null)
+            {
                 ICollection<int> selectedTagIds = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == id).Select(i => i.TagId).ToList();
-                themeVM.TagList = _db.Tags.AsNoTracking().Select(i => new TagListVM
+                IList<TagListVM> tagList = _db.Tags.AsNoTracking().Select(i => new TagListVM
                 {
                     TagId = i.Id,
                     Name = i.Name,
                     CheckedState = selectedTagIds.Contains(i.Id)
                 }).ToList();
+                return tagList;
+            }else
+            {
+                IList<TagListVM> tagList = _db.Tags.AsNoTracking().Select(i => new TagListVM
+                {
+                    TagId = i.Id,
+                    Name = i.Name,
+                    CheckedState = false
+                }).ToList();
+                return tagList;
+            }
+        }
+        
+
+    public ThemeVM CreateThemeVM(string newId, int? id=null)
+        {
+            ThemeVM themeVM = new ThemeVM();
+
+
+            //Assign theme
+            if (id == null)
+            {
+                themeVM.Theme = new Theme();
+                themeVM.Theme.Id = Int32.Parse(newId);
+                themeVM.TagList = GetTagList(themeVM.Theme.Id);
+            }
+            else
+            {
+                themeVM.TagList = GetTagList(id);
+                themeVM.Theme = _db.Themes.AsNoTracking().FirstOrDefault(u => u.Id == id);
+            }
             return themeVM;
         }
 
         public bool HasItems(int id)
         {
-            if(_db.Items.FirstOrDefault(i => i.ThemeId == id) != null)
+            if (_db.Items.FirstOrDefault(i => i.ThemeId == id) != null)
             {
                 return true;
-            }else
+            }
+            else
             {
                 return false;
             }

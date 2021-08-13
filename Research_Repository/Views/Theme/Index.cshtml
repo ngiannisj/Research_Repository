@@ -1,51 +1,76 @@
-﻿@model IEnumerable<Research_Repository_Models.Theme>
+﻿@model IList<Research_Repository_Models.ViewModels.ThemeVM>
 
 <div class="container p-3">
-    <div class="row pt-4">
-        <div class="col-6">
-            <h2 class="text-primary">Theme List</h2>
+    <form method="post" enctype="multipart/form-data">
+        <div class="row pt-4">
+            <div class="col-6">
+                <h2 class="text-primary">Theme List</h2>
+            </div>
+            <div class="col-6 text-right">
+                <a asp-action="Upsert" class="btn btn-primary">
+                    Create New Theme
+                </a>
+            </div>
         </div>
-        <div class="col-6 text-right">
-            <a asp-action="Upsert" class="btn btn-primary">
-                Create New Theme
-            </a>
-        </div>
-    </div>
 
-    <br /><br />
+        <br /><br />
 
-    @if (Model.Count() > 0)
-    {
-        <table class="table table-bordered table-striped" style="width: 100%">
-            <thead>
-                <tr>
-                    <th>Theme Name</th>
-                    <th></th>
+            @if (Model.Count() > 0)
+            {
 
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var obj in Model)
-                {
-                    <tr>
-                        <td width="50%">@obj.Name</td>
-                        <td class="text-center">
-                            <div class="w-75 btn-group" role="group">
-                                <a asp-action="Upsert" asp-route-Id="@obj.Id" class="btn btn-primary mx-2">
-                                    Edit
-                                </a>
-                                <button onclick="verifyDelete('Theme', @obj.Id)" class="btn btn-danger delete-theme">
-                                    Delete
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No theme exists.</p>
-    }
+                <table class="table table-bordered table-striped" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>Theme Name</th>
+                            <th>Theme tags</th>
+                            <th>Buttons</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @for (int y = 0; y < Model.Count; y++)
+                        {
+                            if (Model[y].Theme != null)
+                            {
+                                <tr>
+
+                                    <td width="50%">
+                                        <input asp-for="@Model[y].Theme.Id" hidden />
+                                        <input asp-for="@Model[y].Theme.Name" class="form-control" />
+                                        <span asp-validation-for="@Model[y].Theme.Name" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        @for (int i = 0; i < Model[y].TagList.Count; i++)
+                                        {
+                                            <input asp-for="@Model[y].TagList[i].Name" hidden />
+                                            <label>@Model[y].TagList[i].Name</label>
+                                            <input asp-for="@Model[y].TagList[i].CheckedState" />
+                                            <input asp-for="@Model[y].TagList[i].TagId" hidden />
+                                        }
+                                        <span asp-validation-for="@Model[y].TagList"></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="w-75 btn-group" role="group">
+                                            <a asp-action="Upsert" asp-route-Id="@Model[y].Theme.Id" class="btn btn-primary mx-2">
+                                                Edit
+                                            </a>
+                                            <button type="submit" onclick="verifyDelete('Theme', @Model[y].Theme.Id)" class="btn btn-danger delete-theme" name="delete" value="@Model[y].Theme.Id">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+
+                        }
+
+                    </tbody>
+                </table>
+
+            }
+            else
+            {
+                <p>No theme exists.</p>
+            }
+            <input type="submit" class="btn btn-info w-100" name="save" value="Save" />
+            <input type="submit" class="btn btn-info w-100" name="add" value="Add" />
+        </form>
 </div>
