@@ -52,6 +52,7 @@ namespace Research_Repository.Controllers
                     TempData.Keep();
                     //Update first theme model with the tag select dropdown list
                     tempThemes[0].TagSelectList = _themeRepo.GetTagList();
+                    ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
                     return View(tempThemes);
                 }
             }
@@ -175,8 +176,19 @@ namespace Research_Repository.Controllers
             return RedirectToAction("Index", new { redirect = true });
         }
 
-        //GET - DOWNLOAD FILE
-        public IActionResult GetDownloadedFile(string filePath)
+        public bool UpdateThemeTags()
+        {
+            IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("key");
+            foreach(ThemeVM themeVM in tempThemes)
+            {
+                themeVM.TagCheckboxes = _themeRepo.GetTagCheckboxes(themeVM.Theme.Id, themeVM.TagCheckboxes);
+            }
+            TempData.Put("key", tempThemes);
+            return true;
+        }
+
+            //GET - DOWNLOAD FILE
+            public IActionResult GetDownloadedFile(string filePath)
         {
             return FileHelper.DownloadFile(filePath);
         }

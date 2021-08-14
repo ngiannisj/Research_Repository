@@ -11,6 +11,7 @@
     // When the user clicks the button, open the modal 
     btn.onclick = function () {
         event.preventDefault();
+        $("#tag-name-input").hide();
         $("#tag-delete-button").hide();
         $("#tag-submit-button").hide();
         $("#tag-delete-button").prop('disabled', true);
@@ -22,17 +23,28 @@
     // When the user clicks on <span> (x), close the modal
     span.onclick = function () {
         modal.style.display = "none";
-        $("#tag-delete-button").show();
-        $("#tag-submit-button").show();
-        $("#tag-delete-button").prop('disabled', false);
-        $("#tag-submit-button").prop('disabled', false);
+        $("#tag-name-input").val("");
+        $("#tag-name-input").hide();
+        $("#tag-select-dropdown").val(0);
+        $("#tag-delete-button").hide();
+        $("#tag-submit-button").hide();
+        $("#tag-delete-button").prop('disabled', true);
+        $("#tag-submit-button").prop('disabled', true);
+        updateThemeTags();
     }
 
     // When the user clicks anywhere outside of the modal, close it
     window.onclick = function (event) {
         if (event.target == modal) {
             modal.style.display = "none";
+            $("#tag-name-input").val("");
+            $("#tag-name-input").hide();
             $("#tag-select-dropdown").val(0);
+            $("#tag-delete-button").hide();
+            $("#tag-submit-button").hide();
+            $("#tag-delete-button").prop('disabled', true);
+            $("#tag-submit-button").prop('disabled', true);
+            updateThemeTags();
         }
     }
 
@@ -105,15 +117,15 @@ function populateTagNameField($this) {
                 $("#tag-submit-button").val("Add");
                 $("#tag-delete-button").hide();
                 $("#tag-delete-button").prop('disabled', true);
-                $("#tag-submit-button").prop('disabled', false);
             } else {
                 $("#tag-name-input").val(data);
                 $("#tag-submit-button").val("Update");
                 $("#tag-delete-button").show();
-                $("#tag-submit-button").show();
                 $("#tag-delete-button").prop('disabled', false);
-                $("#tag-submit-button").prop('disabled', false);
             }
+            $("#tag-name-input").show();
+            $("#tag-submit-button").show();
+            $("#tag-submit-button").prop('disabled', false);
         },
         error: function (error) {
             console.log(error);
@@ -152,6 +164,21 @@ function updateTags($this) {
             for (let i = 0; i < data.length; i++) {
                 $el.append($("<option></option>").attr("value", data[i].id).text(data[i].name));
             }
+        },
+        error: function (error) {
+            console.log(error);
+            alert("An error occurred!!!")
+        }
+    });
+}
+
+function updateThemeTags() {
+    $.ajax({
+        type: "GET",
+        url: "/Theme/UpdateThemeTags",
+        contentType: 'application/json; charset=utf-8',
+        success: function (data) {
+            window.location.replace('../theme?redirect=True');
         },
         error: function (error) {
             console.log(error);
