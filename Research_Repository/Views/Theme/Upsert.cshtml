@@ -60,15 +60,15 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-8 row">
-                            @for (int i = 0; i < Model.TagList.Count; i++)
+                            @for (int i = 0; i < Model.TagCheckboxes.Count; i++)
                             {
-                                <label>@Model.TagList[i].Name</label>
-                                <input asp-for="@Model.TagList[i].CheckedState" />
-                                <input asp-for="@Model.TagList[i].TagId" hidden />
+                                <label>@Model.TagCheckboxes[i].Name</label>
+                                <input asp-for="@Model.TagCheckboxes[i].CheckedState" />
+                                <input asp-for="@Model.TagCheckboxes[i].TagId" hidden />
                             }
 
                         </div>
-                        <span asp-validation-for="TagList"></span>
+                        <span asp-validation-for="TagCheckboxes"></span>
                     </div>
                 </div>
                 <div class="col-4">

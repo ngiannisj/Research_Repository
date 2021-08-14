@@ -1,4 +1,14 @@
 ﻿$(document).ready(function () {
+
+
+        $(":checkbox").change(function () {
+            if ($(this).is(':checked')) {
+                $(this).attr('checked', true);
+            } else {
+                $(this).attr('checked', false);
+            }
+        })
+
     //Filter tags on page load
     filterTags($("#theme-selector"));
 

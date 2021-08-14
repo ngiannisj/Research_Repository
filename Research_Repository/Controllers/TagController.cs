@@ -27,76 +27,44 @@ namespace Research_Repository.Controllers
             _tagRepo = tagRepo;
         }
 
-        public IActionResult Index()
+        //POST - UPDATE
+        public IEnumerable<Tag> UpdateTag(int id, string tagName, string actionName)
         {
-            IEnumerable<Tag> objList = _tagRepo.GetAll();
-            return View(objList);
-        }
-
-
-        //GET - UPSERT
-        public IActionResult Upsert(int? id)
-        {
-            Tag tag = new Tag();
-            if (id == null)
+            if (actionName == "Add" && id == 0)
             {
-                //Creating
-                return View(tag);
+                Tag tag = new Tag
+                {
+                    Id = 0,
+                    Name = tagName
+                };
+                _tagRepo.Add(tag);
             }
-            else
+            else if (actionName == "Update" && id != 0)
             {
-                //Updating
-                tag = _tagRepo.Find(id.GetValueOrDefault());
-                if (tag == null)
-                {
-                    return NotFound();
-                }
-                return View(tag);
+                Tag tag = _tagRepo.Find(id);
+                tag.Name = tagName;
+                _tagRepo.Update(tag);
             }
-        }
-
-        //POST - UPSERT
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Upsert(Tag tag)
-        {
-
-            if (ModelState.IsValid)
+            else if (actionName == "Delete")
             {
-
-                if (tag.Id == 0)
-                {
-                    //Creating
-                    _tagRepo.Add(tag);
-                }
-                else
-                {
-                    //Updating
-                    _tagRepo.Update(tag);
-                }
+                Tag tag = _tagRepo.Find(id);
+                _tagRepo.Remove(tag);
+            }
 
                 _tagRepo.Save();
-                return RedirectToAction("Index");
+
+            return _tagRepo.GetAll();
             }
-            return View(tag);
-        }
 
-
-        //DELETE - DELETE
-        public IActionResult Delete(int? id)
+        //GET - GETTAGNAME (FROM AJAX CALL)
+        public string GetTagName(int? id)
         {
-            if (id == null || id == 0)
+            string tagName = "newTag";
+            if (id != null)
             {
-                return NotFound();
+                tagName = _tagRepo.FirstOrDefault(i => i.Id == id, isTracking: false).Name;
             }
-            var tag = _tagRepo.Find(id.GetValueOrDefault());
-            if (tag == null)
-            {
-                return NotFound();
-            }
-            _tagRepo.Remove(tag);
-            _tagRepo.Save();
-            return RedirectToAction("Index");
+            return tagName;
         }
     }
 }

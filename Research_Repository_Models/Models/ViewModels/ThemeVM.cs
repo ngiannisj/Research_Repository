@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,8 @@ namespace Research_Repository_Models.ViewModels
     {
         public Theme Theme { get; set; }
 
-        public IList<TagListVM> TagList { get; set; }
+        public IEnumerable<SelectListItem> TagSelectList { get; set; }
+
+        public IList<TagListVM> TagCheckboxes { get; set; }
     }
 }

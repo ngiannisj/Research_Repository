@@ -6,71 +6,98 @@
             <div class="col-6">
                 <h2 class="text-primary">Theme List</h2>
             </div>
-            <div class="col-6 text-right">
-                <a asp-action="Upsert" class="btn btn-primary">
-                    Create New Theme
-                </a>
-            </div>
         </div>
 
         <br /><br />
 
-            @if (Model.Count() > 0)
-            {
+        @if (Model.Count() > 0)
+        {
 
-                <table class="table table-bordered table-striped" style="width: 100%">
-                    <thead>
-                        <tr>
-                            <th>Theme Name</th>
-                            <th>Theme tags</th>
-                            <th>Buttons</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            <table class="table table-bordered table-striped" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Theme Name</th>
+                        <th>Theme tags</th>
+                        <th>Buttons</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-                        @for (int y = 0; y < Model.Count; y++)
+                    @for (int y = 0; y < Model.Count; y++)
+                    {
+                        if (Model[y].Theme != null)
                         {
-                            if (Model[y].Theme != null)
-                            {
-                                <tr>
+                            <tr class="theme">
 
-                                    <td width="50%">
-                                        <input asp-for="@Model[y].Theme.Id" hidden />
-                                        <input asp-for="@Model[y].Theme.Name" class="form-control" />
-                                        <span asp-validation-for="@Model[y].Theme.Name" class="text-danger"></span>
-                                    </td>
-                                    <td>
-                                        @for (int i = 0; i < Model[y].TagList.Count; i++)
-                                        {
-                                            <input asp-for="@Model[y].TagList[i].Name" hidden />
-                                            <label>@Model[y].TagList[i].Name</label>
-                                            <input asp-for="@Model[y].TagList[i].CheckedState" />
-                                            <input asp-for="@Model[y].TagList[i].TagId" hidden />
-                                        }
-                                        <span asp-validation-for="@Model[y].TagList"></span>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="w-75 btn-group" role="group">
-                                            <a asp-action="Upsert" asp-route-Id="@Model[y].Theme.Id" class="btn btn-primary mx-2">
-                                                Edit
-                                            </a>
-                                            <button type="submit" onclick="verifyDelete('Theme', @Model[y].Theme.Id)" class="btn btn-danger delete-theme" name="delete" value="@Model[y].Theme.Id">Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-
+                                <td width="50%">
+                                    <input asp-for="@Model[y].Theme.Id" class="theme-id" hidden />
+                                    <input asp-for="@Model[y].Theme.Name" class="form-control theme-name" />
+                                    <span asp-validation-for="@Model[y].Theme.Name" class="text-danger"></span>
+                                </td>
+                                <td>
+                                    @for (int i = 0; i < Model[y].TagCheckboxes.Count; i++)
+                                    {
+                                    <div class="tag-checkbox">
+                                        <input asp-for="@Model[y].TagCheckboxes[i].Name" hidden class="tag-checkbox-name"/>
+                                        <label>@Model[y].TagCheckboxes[i].Name</label>
+                                        <input asp-for="@Model[y].TagCheckboxes[i].CheckedState" class="tag-checkbox-state"/>
+                                        <input asp-for="@Model[y].TagCheckboxes[i].TagId" hidden class="tag-checkbox-id"/>
+                                    </div>
+                                    }
+                                    <span asp-validation-for="@Model[y].TagCheckboxes"></span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="w-75 btn-group" role="group">
+                                        <button type="submit" asp-action="DeleteTheme" class="btn btn-danger delete-theme" name="deleteId" value="@Model[y].Theme.Id">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
                         }
 
-                    </tbody>
-                </table>
+                    }
 
-            }
-            else
-            {
-                <p>No theme exists.</p>
-            }
-            <input type="submit" class="btn btn-info w-100" name="save" value="Save" />
-            <input type="submit" class="btn btn-info w-100" name="add" value="Add" />
-        </form>
+                </tbody>
+            </table>
+
+        }
+        else
+        {
+            <p>No theme exists.</p>
+        }
+        <input type="submit" class="btn btn-info w-100" name="save" value="Save" asp-action="SaveThemes"  />
+        <input type="submit" class="btn btn-info w-100" name="add" value="Add" asp-action="AddTheme" />
+        <input type="submit" class="btn btn-info w-100" id="myBtn" name="openModal" value="Add/Edit Tags" />
+    </form>
 </div>
+
+<div id="myModal" class="modal tag-modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Some text in the Modal..</p>
+            <div class="form-group row">
+                <div class="col-8 row">
+                    <select id="tag-select-dropdown" asp-items="@Model[0].TagSelectList" class="form-control">
+                        <option disabled selected value="0">-- Select Tag --</option>
+                        <option value="newTag">New Tag</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-8 row">
+                    <input id="tag-name-input" class="form-control" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-8 row">
+                    <input type="button" id="tag-submit-button" class="btn btn-info w-100 tag-modal-btn" value="Update" />
+                    <input type="button" id="tag-delete-button" class="btn btn-info w-100 tag-modal-btn" value="Delete" />
+
+                </div>
+            </div>
+    </div>
+        </div>
