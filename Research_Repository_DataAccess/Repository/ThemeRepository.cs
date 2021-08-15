@@ -141,6 +141,11 @@ namespace Research_Repository_DataAccess.Repository
             }
         }
 
+        public IList<int> GetThemeIds(IEnumerable<Theme> themes)
+        {
+            return themes.Select(u => u.Id).ToList();
+        }
+
         public void Update(Theme obj)
         {
             _db.Themes.Update(obj);

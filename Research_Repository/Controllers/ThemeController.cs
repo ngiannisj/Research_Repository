@@ -58,7 +58,7 @@ namespace Research_Repository.Controllers
             }
             else
             {
-                return RedirectToAction("Index", themes);
+                return View(themes);
             };
         }
 
@@ -69,12 +69,19 @@ namespace Research_Repository.Controllers
 
         public IActionResult SaveThemes(IList<ThemeVM> themes)
         {
-            IList<Theme> themeListFromThemeVM = new List<Theme>();
+            IList<int> themeIdListFromThemeVM = new List<int>();
+            foreach (ThemeVM obj in themes)
+            {
+                //Get themes from themeVM
+                themeIdListFromThemeVM.Add(obj.Theme.Id);
+            }
+
             IEnumerable<Theme> dbObjList = _themeRepo.GetAll(isTracking: false);
+            IList<int> dbObjIdList = _themeRepo.GetThemeIds(dbObjList);
 
             foreach (Theme obj in dbObjList)
             {
-                if (!themeListFromThemeVM.Contains(obj))
+                if (!themeIdListFromThemeVM.Contains(obj.Id))
                 {
                     _themeRepo.Remove(obj);
                 }
@@ -82,7 +89,7 @@ namespace Research_Repository.Controllers
             foreach (ThemeVM obj in themes)
             {
 
-                if (dbObjList.Contains(obj.Theme))
+                if (dbObjIdList.Contains(obj.Theme.Id))
                 {
                     _themeRepo.Update(obj.Theme);
                 }
@@ -130,11 +137,6 @@ namespace Research_Repository.Controllers
                 //    _themeRepo.UpdateThemeTagsList(obj);
                 //}
 
-            }
-            foreach (ThemeVM obj in themes)
-            {
-                //Get themes from themeVM
-                themeListFromThemeVM.Add(obj.Theme);
             }
             _themeRepo.Save();
             ModelState.Clear(); //Solves error where inputs in the view display the incorrect values

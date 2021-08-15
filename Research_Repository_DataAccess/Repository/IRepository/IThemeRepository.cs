@@ -22,6 +22,8 @@ namespace Research_Repository_DataAccess.Repository.IRepository
 
         bool HasItems(int id);
 
+        IList<int> GetThemeIds(IEnumerable<Theme> themes);
+
         void Update(Theme obj);
 
     }

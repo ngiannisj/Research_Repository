@@ -1,52 +1,71 @@
-﻿@model IEnumerable<Research_Repository_Models.Team>
+﻿@model IList<Research_Repository_Models.Team>
 
 <div class="container p-3">
-    <div class="row pt-4">
-        <div class="col-6">
-            <h2 class="text-primary">Team List</h2>
+    <form method="post" enctype="multipart/form-data">
+        <div class="row pt-4">
+            <div class="col-6">
+                <h2 class="text-primary">Team List</h2>
+            </div>
+            <div class="col-6 text-right">
+                <a asp-action="Upsert" class="btn btn-primary">
+                    Create New Team
+                </a>
+            </div>
         </div>
-        <div class="col-6 text-right">
-            <a asp-action="Upsert" class="btn btn-primary">
-                Create New Team
-            </a>
-        </div>
-    </div>
 
-    <br /><br />
+        <br /><br />
 
-    @if (Model.Count() > 0)
-    {
-        <table class="table table-bordered table-striped" style="width: 100%">
-            <thead>
-                <tr>
-                    <th>Team Name</th>
-                    <th></th>
-
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var obj in Model)
-                {
+        @if (Model.Count() > 0)
+        {
+            <table class="table table-bordered table-striped" style="width: 100%">
+                <thead>
                     <tr>
-                        <td width="50%">@obj.Name</td>
-                        <td class="text-center">
-                            <div class="w-75 btn-group" role="group">
-                                <a asp-action="Upsert" asp-route-Id="@obj.Id" class="btn btn-primary mx-2">
-                                    Edit
-                                </a>
-                                <button onclick="verifyDelete('Team', @obj.Id)" class="btn btn-danger delete-theme">
-                                    Delete
-                                </button>
-                            </div>
-                        </td>
+                        <th>Team Name</th>
+                        <th>Team Projects</th>
+                        <th>Buttons</th>
+
                     </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No team exists.</p>
-    }
+                </thead>
+                <tbody>
+                    @for (int y = 0; y < Model.Count; y++)
+                    {
+                        if (Model[y] != null)
+                        {
+                            <tr>
+                                <td width="50%">
+                                    <input class="form-control" asp-for="@Model[y].Name" />
+                                <input asp-for="@Model[y].Id" hidden />
+                                </td>
+                                <td class="text-center">
+                                    @for (int i = 0; i < Model[y].Projects.Count; i++)
+                                    {
+                                    <div>
+                                        <input asp-for="@Model[y].Projects[i].Id" hidden />
+                                        <input asp-for="@Model[y].Projects[i].Name" hidden />
+                                        <p id="@Model[y].Projects[i].Id">@Model[y].Projects[i].Name</p>
+                                    </div>
+                                    }
+
+                                </td>
+                                <td class="text-center">
+                                    <div class="w-75 btn-group" role="group">
+                                        <button class="btn btn-danger delete-team" asp-action="DeleteTeam" name="deleteId" value="@Model[y].Id">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No team exists.</p>
+        }
+        <input type="submit" class="btn btn-info w-100" name="save" value="Save" asp-action="SaveTeams" />
+        <input type="submit" class="btn btn-info w-100" name="add" value="Add" asp-action="AddTeam" />
+    </form>
 </div>
 

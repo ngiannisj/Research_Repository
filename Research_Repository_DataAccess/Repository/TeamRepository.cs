@@ -23,6 +23,17 @@ namespace Research_Repository_DataAccess.Repository
             _db = db;
         }
 
+        public IList<Project> GetTeamProjects(int? id)
+        {
+            IList<Project> assignedProjects = new List<Project>();
+            if (id != null)
+            {
+                assignedProjects = _db.Projects.AsNoTracking().Where(i => i.TeamId == id).ToList();
+            }
+            return assignedProjects;
+        }
+
+        //Check if a team has linked projects
         public bool HasProjects(int id)
         {
             if (_db.Projects.FirstOrDefault(i => i.TeamId == id) != null)
@@ -33,6 +44,11 @@ namespace Research_Repository_DataAccess.Repository
             {
                 return false;
             }
+        }
+
+        public IList<int> GetTeamIds(IEnumerable<Team> teams)
+        {
+            return teams.Select(u => u.Id).ToList();
         }
 
         public void Update(Team obj)
