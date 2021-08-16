@@ -91,6 +91,7 @@ namespace Research_Repository.Controllers
 
                 if (dbObjIdList.Contains(obj.Theme.Id))
                 {
+                    _themeRepo.UpdateThemeTagsList(obj);
                     _themeRepo.Update(obj.Theme);
                 }
                 else
