@@ -17,48 +17,56 @@
 
         @if (Model.Count() > 0)
         {
-            <table class="table table-bordered table-striped" style="width: 100%">
-                <thead>
-                    <tr>
-                        <th>Team Name</th>
-                        <th>Team Projects</th>
-                        <th>Buttons</th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int y = 0; y < Model.Count; y++)
+        <table class="table table-bordered table-striped" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Team Name</th>
+                    <th>Team Projects</th>
+                    <th>Buttons</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @for (int y = 0; y < Model.Count; y++)
+                {
+                    if (Model[y] != null)
                     {
-                        if (Model[y] != null)
-                        {
-                            <tr>
-                                <td width="50%">
-                                    <input class="form-control" asp-for="@Model[y].Name" />
-                                <input asp-for="@Model[y].Id" hidden />
-                                </td>
-                                <td class="text-center">
-                                    @for (int i = 0; i < Model[y].Projects.Count; i++)
+
+                        <tr class="team">
+                            <td width="50%">
+                                <input class="form-control team-name" asp-for="@Model[y].Name" />
+                                <input asp-for="@Model[y].Id" class="team-id" hidden />
+                            </td>
+                            <td class="text-center">
+                                <div class="projects-container">
+                                    @if (Model[y].Projects.Count != 0 && Model[y].Projects != null)
                                     {
-                                    <div>
-                                        <input asp-for="@Model[y].Projects[i].Id" hidden />
-                                        <input asp-for="@Model[y].Projects[i].Name" hidden />
-                                        <p id="@Model[y].Projects[i].Id">@Model[y].Projects[i].Name</p>
-                                    </div>
+                                        @for (int i = 0; i < Model[y].Projects.Count; i++)
+                                        {
+                                            <div class="project">
+                                                <button id="@Model[y].Projects[i].Id" onclick="openProjectModal(this)" class="projectModalBtn">@Model[y].Projects[i].Name</button>
+                                                <input asp-for="@Model[y].Projects[i].Name" class="project-name" hidden />
+                                                <input asp-for="@Model[y].Projects[i].Id" class="project-id" hidden />
+                                            </div>
+                                        }
                                     }
 
-                                </td>
-                                <td class="text-center">
-                                    <div class="w-75 btn-group" role="group">
-                                        <button class="btn btn-danger delete-team" asp-action="DeleteTeam" name="deleteId" value="@Model[y].Id">
-                                            Delete
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
+                                </div>
+                                <div class="addProjectModalBtn">Add project</div>
+                            </td>
+                            <td class="text-center">
+                                <div class="w-75 btn-group" role="group">
+                                    <button class="btn btn-danger delete-team" asp-action="DeleteTeam" name="deleteId" value="@Model[y].Id">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
                     }
-                </tbody>
-            </table>
+                }
+            </tbody>
+        </table>
         }
         else
         {
@@ -67,5 +75,30 @@
         <input type="submit" class="btn btn-info w-100" name="save" value="Save" asp-action="SaveTeams" />
         <input type="submit" class="btn btn-info w-100" name="add" value="Add" asp-action="AddTeam" />
     </form>
+</div>
+
+<div id="myProjectModal" class="modal project-modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="projectModalClose">&times;</span>
+        <p>Some text in the Modal..</p>
+
+        <div class="form-group row">
+            <div class="col-8 row">
+                <input id="project-name-modal-input" class="form-control" />
+                <input id="project-id-modal-input" hidden class="form-control" />
+                <input id="project-teamId-modal-input" hidden class="form-control" />
+                <span class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-8 row">
+                <input type="button" id="project-submit-button" class="btn btn-info w-100 project-modal-btn" value="Update" />
+                <input type="button" id="project-delete-button" class="btn btn-info w-100 project-modal-btn" value="Delete" />
+            </div>
+        </div>
+    </div>
 </div>
 

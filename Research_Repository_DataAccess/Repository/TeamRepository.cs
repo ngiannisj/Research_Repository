@@ -51,9 +51,30 @@ namespace Research_Repository_DataAccess.Repository
             return teams.Select(u => u.Id).ToList();
         }
 
+        public void AddProjects(int teamId, IList<Project> projects)
+        {
+            if (projects != null && projects.Count() > 0)
+            {
+                IList<int> projectIdList = _db.Projects.Select(u => u.Id).ToList();
+                foreach (Project project in projects)
+                {
+                    if(!projectIdList.Contains(project.Id))
+                    {
+                        project.Id = 0;
+                        _db.Projects.Add(new Project { Name = project.Name, TeamId = teamId });
+                    }
+                }
+            }
+        }
+        
         public void Update(Team obj)
         {
             _db.Teams.Update(obj);
+        }
+
+        public void Attach(Team obj)
+        {
+            _db.Teams.Attach(obj);
         }
     }
 }

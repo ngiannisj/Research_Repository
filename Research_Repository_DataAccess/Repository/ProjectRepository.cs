@@ -50,6 +50,12 @@ namespace Research_Repository_DataAccess.Repository
             }
         }
 
+        public Team GetTeam(int teamId)
+        {
+            Team team = _db.Teams.FirstOrDefault(u =>u.Id == teamId);
+            return team;
+        }
+
         public void Update(Project obj)
         {
             _db.Projects.Update(obj);

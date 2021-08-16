@@ -26,80 +26,77 @@ namespace Research_Repository.Controllers
             _projectRepo = projectRepo;
         }
 
-        public IActionResult Index()
+        //POST - UPDATE
+        public void UpdateProject(int id, string projectName, int teamId, string actionName)
         {
-            IEnumerable<Project> objList = _projectRepo.GetAll();
-            return View(objList);
-        }
-
-
-        //GET - UPSERT
-        public IActionResult Upsert(int? id)
-        {
-            ProjectVM projectVM = _projectRepo.GetProjectVM();
-            if (id == null)
+            if (actionName == "Add" && id == 0)
             {
-                //this is for create
-                return View(projectVM);
-            }
-            else
-            {
-                projectVM.Project = _projectRepo.FirstOrDefault(filter: u => u.Id == id, isTracking: false);
-                if (projectVM.Project == null)
+                Team team = _projectRepo.GetTeam(teamId);
+                if (team != null)
                 {
-                    return NotFound();
-                }
-                return View(projectVM);
-            }
-        }
-
-        //POST - UPSERT
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Upsert(ProjectVM projectVM)
-        {
-
-            if (ModelState.IsValid)
-            {
-
-                if(projectVM.Project.Id == 0)
-                {
-                    _projectRepo.Add(projectVM.Project);
+                    Project project = new Project { Name = projectName, TeamId = teamId };
+                    //If project is saved to database
+                    project.Name = projectName;
+                    project.TeamId = teamId;
+                    _projectRepo.Add(project);
                     _projectRepo.Save();
-                } else
-                {
-                    //Updating
-                    var objFromDb = _projectRepo.FirstOrDefault(filter: u => u.Id == projectVM.Project.Id, isTracking: false);
-                    _projectRepo.Update(projectVM.Project);
                 }
+                IList<Team> tempTeams = TempData.Get<IList<Team>>("key");
+                Team newTeam = tempTeams.FirstOrDefault(u => u.Id == teamId);
 
-                _projectRepo.Save();
-                return RedirectToAction("Index");
-            }
-            return View(projectVM.Project);
-        }
-
-        //DELETE - DELETE
-        public int Delete(int id)
-        {
-            var obj = _projectRepo.Find(id);
-            if (obj == null)
-            {
-                return 1;
-            }
-            else
-            {
-                if (!_projectRepo.HasItems(obj.Id))
+                int newId = 0;
+                if (newTeam.Projects != null && newTeam.Projects.Count > 0)
                 {
-                    _projectRepo.Remove(obj);
-                    _projectRepo.Save();
-                    return 2;
+                    newId = newTeam.Projects.Last().Id + 1;
                 }
                 else
                 {
-                    return 3;
+                    IEnumerable<int> projectList = _projectRepo.GetAll(isTracking: false).Select(u => u.Id);
+                    if (projectList.Count() > 0)
+                    {
+                        newId = projectList.Last() + 1;
+                    }
                 }
 
+                newTeam.Projects.Add(new Project { Id = newId, Name = projectName, TeamId = teamId });
+                TempData.Put("key", tempTeams);
+                TempData.Keep();
+
+            }
+            else if (actionName == "Update" && id != 0)
+            {
+                Project project = _projectRepo.Find(id);
+                if (project != null)
+                {
+                    //If project is saved to database
+                    project.Name = projectName;
+                    project.TeamId = teamId;
+                    _projectRepo.Update(project);
+                    _projectRepo.Save();
+                }
+                IList<Team> tempTeams = TempData.Get<IList<Team>>("key");
+                Team tempTeam = tempTeams.FirstOrDefault(u => u.Id == teamId);
+                Project tempProject = tempTeam.Projects.FirstOrDefault(u => u.Id == id);
+                tempProject.Name = projectName;
+                TempData.Put("key", tempTeams);
+                TempData.Keep();
+
+            }
+            else if (actionName == "Delete")
+            {
+                Project project = _projectRepo.Find(id);
+                if (project != null)
+                {
+                    //If project is saved to database
+                    _projectRepo.Remove(project);
+                    _projectRepo.Save();
+                }
+                IList<Team> tempTeams = TempData.Get<IList<Team>>("key");
+                Team tempTeam = tempTeams.FirstOrDefault(u => u.Id == teamId);
+                Project tempProject = tempTeam.Projects.FirstOrDefault(u => u.Id == id);
+                tempTeam.Projects.Remove(tempProject);
+                TempData.Put("key", tempTeams);
+                TempData.Keep();
             }
         }
 

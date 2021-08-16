@@ -16,6 +16,8 @@ namespace Research_Repository_DataAccess.Repository.IRepository
 
         bool HasItems(int id);
 
+        Team GetTeam(int teamId);
+
         void Update(Project obj);
 
     }

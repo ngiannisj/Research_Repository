@@ -42,6 +42,13 @@ namespace Research_Repository.Controllers
                 else
                 {
                     IList<Team> tempTeams = TempData.Get<IList<Team>>("key");
+                    foreach(Team team in tempTeams)
+                    {
+                        if(team.Projects == null)
+                        {
+                            team.Projects = new List<Project>();
+                        }
+                    }
                     TempData.Keep();
                     ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
                     return View(tempTeams);
@@ -75,12 +82,18 @@ namespace Research_Repository.Controllers
             {
                 if (dbObjIdList.Contains(obj.Id))
                 {
-                    _teamRepo.Update(obj);
+                    //IList<Project> projects = obj.Projects;
+                    //_teamRepo.AddProjects(obj.Id, projects);
+                    _teamRepo.Attach(obj);
                 }
                 else
                 {
                     obj.Id = 0;
+                    IList<Project> projects = obj.Projects;
+                    obj.Projects = null;
                     _teamRepo.Add(obj);
+                    _teamRepo.Save();
+                    _teamRepo.AddProjects(obj.Id, projects);
                 }
             }
             _teamRepo.Save();
@@ -91,9 +104,15 @@ namespace Research_Repository.Controllers
         public IActionResult AddTeam(IList<Team> teams)
         {
             int newId = 0;
-            if (teams.Count > 0)
+            IList<Team> teamList = TempData.Get<IList<Team>>("key");
+            if(teamList == null)
             {
-                newId = teams[teams.Count - 1].Id + 1;
+                teamList = teams;
+            }
+
+            if (teamList.Count > 0)
+            {
+                newId = teamList[teamList.Count - 1].Id + 1;
             }
             teams.Add(new Team{ Id = newId, Name = "", Projects = new List<Project>() });
 
@@ -118,75 +137,15 @@ namespace Research_Repository.Controllers
             return RedirectToAction("Index", new { redirect = true });
         }
 
-
-        //GET - UPSERT
-        public IActionResult Upsert(int? id)
+        public bool UpdateTeamProjects()
         {
-            Team team = new Team();
-            if (id == null)
-            {
-                //this is for create
-                return View(team);
-            }
-            else
-            {
-                team = _teamRepo.FirstOrDefault(filter: u => u.Id == id, isTracking: false);
-                if (team == null)
-                {
-                    return NotFound();
-                }
-                return View(team);
-            }
-        }
-
-        //POST - UPSERT
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Upsert(Team obj)
-        {
-
-            if (ModelState.IsValid)
-            {
-
-                if(obj.Id == 0)
-                {
-                    _teamRepo.Add(obj);
-                    _teamRepo.Save();
-                } else
-                {
-                    //Updating
-                    var objFromDb = _teamRepo.FirstOrDefault(filter: u => u.Id == obj.Id, isTracking: false);
-                    _teamRepo.Update(obj);
-                }
-
-                _teamRepo.Save();
-                return RedirectToAction("Index");
-            }
-            return View(obj);
-        }
-
-        //DELETE - DELETE
-        public int Delete(int id)
-        {
-            var obj = _teamRepo.Find(id);
-            if (obj == null)
-            {
-                return 1;
-            }
-            else
-            {
-                if (!_teamRepo.HasProjects(obj.Id))
-                {
-                    _teamRepo.Remove(obj);
-                    _teamRepo.Save();
-                    return 2;
-                }
-                else
-                {
-                    return 3;
-                }
-
-            }
+            IList<Team> tempTeams = TempData.Get<IList<Team>>("key");
+            //foreach (Team team in tempTeams)
+            //{
+            //    team.Projects = _teamRepo.GetTeamProjects(team.Id);
+            //}
+            TempData.Put("key", tempTeams);
+            return true;
         }
 
     }

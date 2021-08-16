@@ -13,9 +13,10 @@ namespace Research_Repository_DataAccess.Repository.IRepository
     public interface ITeamRepository : IRepository<Team>
     {
         IList<Project> GetTeamProjects(int? id);
+        void AddProjects(int teamId, IList<Project> projects);
         bool HasProjects(int id);
         IList<int> GetTeamIds(IEnumerable<Team> teams);
         void Update(Team obj);
-
+        void Attach(Team obj);
     }
 }
