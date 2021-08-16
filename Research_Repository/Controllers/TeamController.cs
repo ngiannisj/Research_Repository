@@ -82,8 +82,6 @@ namespace Research_Repository.Controllers
             {
                 if (dbObjIdList.Contains(obj.Id))
                 {
-                    //IList<Project> projects = obj.Projects;
-                    //_teamRepo.AddProjects(obj.Id, projects);
                     _teamRepo.Attach(obj);
                 }
                 else
