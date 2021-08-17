@@ -46,7 +46,7 @@ function getTeams() {
     return teamsList;
 }
 
-function saveTeamsStat(teamsList, teamId) {
+function saveTempTeams(teamsList, teamId) {
     let tempTeams = JSON.stringify(teamsList);
     $.ajax({
         type: "POST",
@@ -113,7 +113,7 @@ function openProjectModal(project) {
     $("#project-teamId-modal-input").val(teamId);
     $("#project-oldTeamId-modal-input").val(teamId);
     $("#myProjectModal").show();
-    saveTeamsStat(getTeams(), teamId);
+    saveTempTeams(getTeams(), teamId);
     event.preventDefault();
 }
 
@@ -129,5 +129,5 @@ function openAddProjectModal(project) {
     $("#project-id-modal-input").attr("value", 0);
     $("#project-name-modal-input").attr("value", "");
     $("#myProjectModal").show();
-    saveTeamsStat(getTeams(), teamId);
+    saveTempTeams(getTeams(), teamId);
 };
