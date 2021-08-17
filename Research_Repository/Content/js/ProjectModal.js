@@ -1,31 +1,26 @@
 ﻿$(document).ready(function () {
 
-    //// When the user clicks the open button, open the modal 
-    //$(".myProjectBtn").click(function () {
-
-    //    event.preventDefault();
-    //});
 
     // When the user clicks on close button, close the modal
     $(".projectModalClose").click(function () {
         $("#myProjectModal").hide();
     });
 
-    //On add project click
-    $(".addProjectModalBtn").click(function () {
-        $("#project-delete-button").hide().prop('disabled', true);
-        $("#project-submit-button").val("Add");
-        const teamId = $(this).closest(".team").find(".team-id").first().val();
-        $("#project-teamId-modal-input").attr("value", teamId);
-        $("#project-id-modal-input").attr("value", 0);
-        $("#project-name-modal-input").attr("value", "");
-        $("#myProjectModal").show();
-        saveState(getTeams());
+    //On project modal button click
+    $(".project-modal-btn").click(function () {
+        updateProjects($(this));
     });
 
-    $(".project-modal-btn").click(function () {
-        console.log("th");
-        updateProjects($(this));
+    ////If user clicks outside the modal
+    $(document).mouseup(function (e) {
+        const modal = $("#myProjectModal");
+    if (modal.is(":visible")) {
+            // if the target of the click isn't the container nor a descendant of the container
+            if (modal.is(e.target) && modal.has(e.target).length === 0) {
+                modal.hide();
+                $("#project-name-input").val("");
+            }
+    }
     });
 
 });
@@ -51,7 +46,7 @@ function getTeams() {
     return teamsList;
 }
 
-function saveState(teamsList) {
+function saveTeamsStat(teamsList, teamId) {
     let tempTeams = JSON.stringify(teamsList);
     $.ajax({
         type: "POST",
@@ -59,7 +54,22 @@ function saveState(teamsList) {
         traditional: true,
         data: tempTeams,
         contentType: 'application/json; charset=utf-8',
-        dataType: 'json'
+        dataType: 'json',
+        success: function (data) {
+            var $el = $("#project-teamId-modal-input");
+            $('#project-teamId-modal-input option:gt(0)').remove(); // remove all options, but not the first
+
+            for (let i = 0; i < data.length; i++) {
+                $el.append($("<option></option>").attr("value", data[i].value).text(data[i].text));
+            }
+
+            $("#project-teamId-modal-input").val(teamId);
+
+        },
+        error: function (error) {
+            console.log(error);
+            alert("An error occurred!!!")
+        }
     });
 }
 
@@ -67,14 +77,15 @@ function saveState(teamsList) {
 function updateProjects($this) {
     const $modal = $this.closest(".project-modal");
     const projectId = $modal.find("#project-id-modal-input").first().val();
-    const teamId = $modal.find("#project-teamId-modal-input").first().val();
+    const teamId = $modal.find("#project-teamId-modal-input").find(":selected").attr("value");
+    const oldTeamId = $modal.find("#project-oldTeamId-modal-input").val();
     const projectName = $modal.find("#project-name-modal-input").first().val();
     const formAction = $this.val();
 
     $.ajax({
         type: "GET",
         url: "/Project/UpdateProject",
-        data: { "id": projectId, "projectName": projectName, "teamId": teamId, "actionName": formAction },
+        data: { "id": projectId, "projectName": projectName, "teamId": teamId, "oldTeamId": oldTeamId, "actionName": formAction },
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
                 updateTeamProjects(teamId);
@@ -87,18 +98,7 @@ function updateProjects($this) {
 }
 
 function updateTeamProjects() {
-    $.ajax({
-        type: "GET",
-        url: "/Team/UpdateTeamProjects",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
-            window.location.replace('../team?redirect=True');
-        },
-        error: function (error) {
-            console.log(error);
-            alert("An error occurred!!!")
-        }
-    });
+    window.location.replace('../team?redirect=True');
 }
 
 function openProjectModal(project) {
@@ -107,10 +107,27 @@ function openProjectModal(project) {
     const projectName = $(project).siblings(".project-name").first().val();
     const projectId = $(project).siblings(".project-id").first().val();
     const teamId = $(project).closest(".team").find(".team-id").first().val();
+    const oldTeamId = $(project).siblings("#project-oldTeamId-modal-input").first().val();
     $("#project-name-modal-input").attr("value", projectName);
     $("#project-id-modal-input").attr("value", projectId);
-    $("#project-teamId-modal-input").attr("value", teamId);
+    $("#project-teamId-modal-input").val(teamId);
+    $("#project-oldTeamId-modal-input").val(teamId);
     $("#myProjectModal").show();
-    saveState(getTeams());
+    saveTeamsStat(getTeams(), teamId);
     event.preventDefault();
 }
+
+//On add project click
+function openAddProjectModal(project) {
+    console.log("kk");
+    $("#project-delete-button").hide().prop('disabled', true);
+    $("#project-submit-button").val("Add");
+    const teamId = $(project).closest(".team").find(".team-id").first().val();
+    const oldTeamId = $(project).siblings("#project-oldTeamId-modal-input").first().val();
+    $("#project-teamId-modal-input").val(teamId);
+    $("#project-oldTeamId-modal-input").val(teamId);
+    $("#project-id-modal-input").attr("value", 0);
+    $("#project-name-modal-input").attr("value", "");
+    $("#myProjectModal").show();
+    saveTeamsStat(getTeams(), teamId);
+};

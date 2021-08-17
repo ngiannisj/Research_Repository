@@ -76,5 +76,17 @@ namespace Research_Repository_DataAccess.Repository
         {
             _db.Teams.Attach(obj);
         }
+
+        //Get dropdown list of all tags
+        public IEnumerable<SelectListItem> GetTeamsList(IEnumerable<Team> teams)
+        {
+            IEnumerable<SelectListItem> teamSelectList = teams.Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.Id.ToString()
+            }).ToList();
+
+            return teamSelectList;
+        }
     }
 }

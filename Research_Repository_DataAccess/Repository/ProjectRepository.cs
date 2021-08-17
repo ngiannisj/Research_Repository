@@ -23,21 +23,6 @@ namespace Research_Repository_DataAccess.Repository
             _db = db;
         }
 
-
-        public ProjectVM GetProjectVM()
-        {
-            ProjectVM projectVM = new ProjectVM()
-            {
-                Project = new Project(),
-                TeamSelectList = _db.Teams.AsNoTracking().Select(i => new SelectListItem
-                {
-                    Text = i.Name,
-                    Value = i.Id.ToString()
-                })
-            };
-            return projectVM;
-        }
-
         public bool HasItems(int id)
         {
             if (_db.Items.FirstOrDefault(i => i.ProjectId == id) != null)

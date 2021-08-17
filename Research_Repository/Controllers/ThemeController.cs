@@ -48,7 +48,7 @@ namespace Research_Repository.Controllers
                 }
                 else
                 {
-                    IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("key");
+                    IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("themes");
                     TempData.Keep();
                     //Update first theme model with the tag select dropdown list
                     tempThemes[0].TagSelectList = _themeRepo.GetTagList();
@@ -64,7 +64,7 @@ namespace Research_Repository.Controllers
 
         public void SaveThemesState([FromBody]IList<ThemeVM> themes)
         {
-            TempData.Put("key", themes);
+            TempData.Put("themes", themes);
         }
 
         public IActionResult SaveThemes(IList<ThemeVM> themes)
@@ -181,12 +181,12 @@ namespace Research_Repository.Controllers
 
         public bool UpdateThemeTags()
         {
-            IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("key");
+            IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("themes");
             foreach(ThemeVM themeVM in tempThemes)
             {
                 themeVM.TagCheckboxes = _themeRepo.GetTagCheckboxes(themeVM.Theme.Id, themeVM.TagCheckboxes);
             }
-            TempData.Put("key", tempThemes);
+            TempData.Put("themes", tempThemes);
             return true;
         }
 

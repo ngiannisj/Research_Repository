@@ -1,28 +1,20 @@
 ﻿$(document).ready(function () {
-    // Get the modal
-    var tagModal = document.getElementById("myTagModal");
-
-    // Get the button that opens the modal
-    var tagModalOpenBtn = document.getElementById("myTagBtn");
-
-    // Get the button element that closes the modal
-    var tagModalCloseBtn = document.getElementsByClassName("tagModalClose")[0];
 
     // When the user clicks the open button, open the modal 
-    tagModalOpenBtn.onclick = function () {
+    $("#myTagBtn").click(function () {
         event.preventDefault();
         $("#tag-name-input").hide();
         $("#tag-delete-button").hide();
         $("#tag-submit-button").hide();
         $("#tag-delete-button").prop('disabled', true);
         $("#tag-submit-button").prop('disabled', true);
-        tagModal.style.display = "block";
+        $("#myTagModal").show();
         saveState(getThemes());
-    }
+    });
 
     // When the user clicks on close button, close the modal
-    tagModalCloseBtn.onclick = function () {
-        tagModal.style.display = "none";
+    $(".tagModalClose").click(function () {
+        $("#myTagModal").hide();
         $("#tag-name-input").val("");
         $("#tag-name-input").hide();
         $("#tag-select-dropdown").val(0);
@@ -31,22 +23,28 @@
         $("#tag-delete-button").prop('disabled', true);
         $("#tag-submit-button").prop('disabled', true);
         updateThemeTags();
-    }
+    })
 
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == tagModal) {
-            tagModal.style.display = "none";
-            $("#tag-name-input").val("");
-            $("#tag-name-input").hide();
-            $("#tag-select-dropdown").val(0);
-            $("#tag-delete-button").hide();
-            $("#tag-submit-button").hide();
-            $("#tag-delete-button").prop('disabled', true);
-            $("#tag-submit-button").prop('disabled', true);
-            updateThemeTags();
+    //If user clicks outside the modal
+    $(document).mouseup(function (e) {
+        const modal = $("#myTagModal");
+        if (modal.is(":visible")) {
+            // if the target of the click isn't the container nor a descendant of the container
+            if (modal.is(e.target) && modal.has(e.target).length === 0) {
+                console.log("thing");
+                modal.hide();
+                $("#tag-name-input").val("");
+                $("#tag-name-input").hide();
+                $("#tag-select-dropdown").val(0);
+                $("#tag-delete-button").hide();
+                $("#tag-submit-button").hide();
+                $("#tag-delete-button").prop('disabled', true);
+                $("#tag-submit-button").prop('disabled', true);
+                updateThemeTags();
+            }
         }
-    }
+        
+    });
 
     $("#tag-select-dropdown").change(function () {
         populateTagNameField($(this));
@@ -160,7 +158,7 @@ function updateTags($this) {
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
             var $el = $("#tag-select-dropdown");
-            $('#tag-select-dropdown option:gt(1)').remove(); // remove all options, but not the first
+            $('#tag-select-dropdown option:gt(1)').remove(); // remove all options, but not the first two
 
             for (let i = 0; i < data.length; i++) {
                 $el.append($("<option></option>").attr("value", data[i].id).text(data[i].name));

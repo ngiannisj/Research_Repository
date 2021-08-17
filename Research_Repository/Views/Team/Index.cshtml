@@ -1,4 +1,10 @@
-﻿@model IList<Research_Repository_Models.Team>
+﻿@using Research_Repository_Utility;
+
+@model IList<Research_Repository_Models.Team>
+
+@{
+    IEnumerable<SelectListItem> teamSelectList = TempData.Get<IEnumerable<SelectListItem>>("teamSelectList");
+}
 
 <div class="container p-3">
     <form method="post" enctype="multipart/form-data">
@@ -18,55 +24,55 @@
         @if (Model.Count() > 0)
         {
 
-        <table class="table table-bordered table-striped" style="width: 100%">
-            <thead>
-                <tr>
-                    <th>Team Name</th>
-                    <th>Team Projects</th>
-                    <th>Buttons</th>
+            <table class="table table-bordered table-striped" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Team Name</th>
+                        <th>Team Projects</th>
+                        <th>Buttons</th>
 
-                </tr>
-            </thead>
-            <tbody>
-                @for (int y = 0; y < Model.Count; y++)
-                {
-                    if (Model[y] != null)
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int y = 0; y < Model.Count; y++)
                     {
+                        if (Model[y] != null)
+                        {
 
-                        <tr class="team">
-                            <td width="50%">
-                                <input class="form-control team-name" asp-for="@Model[y].Name" />
-                                <input asp-for="@Model[y].Id" class="team-id" hidden />
-                            </td>
-                            <td class="text-center">
-                                <div class="projects-container">
-                                    @if (Model[y].Projects.Count != 0 && Model[y].Projects != null)
-                                    {
-                                        @for (int i = 0; i < Model[y].Projects.Count; i++)
+                            <tr class="team">
+                                <td width="50%">
+                                    <input class="form-control team-name" asp-for="@Model[y].Name" />
+                                    <input asp-for="@Model[y].Id" class="team-id" hidden />
+                                </td>
+                                <td class="text-center">
+                                    <div class="projects-container">
+                                        @if (Model[y].Projects.Count != 0 && Model[y].Projects != null)
                                         {
-                                            <div class="project">
-                                                <button id="@Model[y].Projects[i].Id" onclick="openProjectModal(this)" class="projectModalBtn">@Model[y].Projects[i].Name</button>
-                                                <input asp-for="@Model[y].Projects[i].Name" class="project-name" hidden />
-                                                <input asp-for="@Model[y].Projects[i].Id" class="project-id" hidden />
-                                            </div>
+                                            @for (int i = 0; i < Model[y].Projects.Count; i++)
+                                            {
+                                                <div class="project">
+                                                    <button id="@Model[y].Projects[i].Id" onclick="openProjectModal(this)" class="projectModalBtn">@Model[y].Projects[i].Name</button>
+                                                    <input asp-for="@Model[y].Projects[i].Name" class="project-name" hidden />
+                                                    <input asp-for="@Model[y].Projects[i].Id" class="project-id" hidden />
+                                                </div>
+                                            }
                                         }
-                                    }
 
-                                </div>
-                                <div class="addProjectModalBtn">Add project</div>
-                            </td>
-                            <td class="text-center">
-                                <div class="w-75 btn-group" role="group">
-                                    <button class="btn btn-danger delete-team" asp-action="DeleteTeam" name="deleteId" value="@Model[y].Id">
-                                        Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                                    </div>
+                                    <div onclick="openAddProjectModal(this)" class="addProjectModalBtn">Add project</div>
+                                </td>
+                                <td class="text-center">
+                                    <div class="w-75 btn-group" role="group">
+                                        <button class="btn btn-danger delete-team" asp-action="DeleteTeam" name="deleteId" value="@Model[y].Id">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                     }
-                }
-            </tbody>
-        </table>
+                </tbody>
+            </table>
         }
         else
         {
@@ -88,7 +94,16 @@
             <div class="col-8 row">
                 <input id="project-name-modal-input" class="form-control" />
                 <input id="project-id-modal-input" hidden class="form-control" />
-                <input id="project-teamId-modal-input" hidden class="form-control" />
+                <input id="project-oldTeamId-modal-input" hidden class="form-control" />
+
+                <div class="form-group row">
+                    <div class="col-8 row">
+                        <select id="project-teamId-modal-input" asp-items="@teamSelectList" class="form-control">
+                            <option disabled selected value="0">-- Select Tag --</option>
+                        </select>
+                    </div>
+                </div>
+
                 <span class="text-danger"></span>
             </div>
         </div>

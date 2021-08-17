@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Research_Repository.Data;
 using Research_Repository_DataAccess.Repository.IRepository;
@@ -37,18 +38,24 @@ namespace Research_Repository.Controllers
                     {
                         obj.Projects = _teamRepo.GetTeamProjects(obj.Id);
                     }
+                    IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(objList);
+                    TempData.Put("teamSelectList", teamsSelectList);
                     return View(objList);
                 }
                 else
                 {
-                    IList<Team> tempTeams = TempData.Get<IList<Team>>("key");
-                    foreach(Team team in tempTeams)
+                    IList<Team> tempTeams = TempData.Get<IList<Team>>("teams");
+                    
+
+                    foreach (Team team in tempTeams)
                     {
                         if(team.Projects == null)
                         {
                             team.Projects = new List<Project>();
                         }
                     }
+                    IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(tempTeams);
+                    TempData.Put("teamSelectList", teamsSelectList);
                     TempData.Keep();
                     ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
                     return View(tempTeams);
@@ -56,13 +63,18 @@ namespace Research_Repository.Controllers
             }
             else
             {
+                IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(teams);
+                TempData.Put("teamSelectList", teamsSelectList);
                 return View(teams);
             };
         }
 
-        public void SaveTeamsState([FromBody] IList<Team> teams)
+        public IEnumerable<SelectListItem> SaveTeamsState([FromBody] IList<Team> teams)
         {
-            TempData.Put("key", teams);
+            IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(teams);
+            TempData.Put("teamSelectList", teamsSelectList);
+            TempData.Put("teams", teams);
+            return teamsSelectList;
         }
 
         public IActionResult SaveTeams(IList<Team> teams)
@@ -102,7 +114,7 @@ namespace Research_Repository.Controllers
         public IActionResult AddTeam(IList<Team> teams)
         {
             int newId = 0;
-            IList<Team> teamList = TempData.Get<IList<Team>>("key");
+            IList<Team> teamList = TempData.Get<IList<Team>>("teams");
             if(teamList == null)
             {
                 teamList = teams;
@@ -133,17 +145,6 @@ namespace Research_Repository.Controllers
             ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
             SaveTeamsState(teams);
             return RedirectToAction("Index", new { redirect = true });
-        }
-
-        public bool UpdateTeamProjects()
-        {
-            IList<Team> tempTeams = TempData.Get<IList<Team>>("key");
-            //foreach (Team team in tempTeams)
-            //{
-            //    team.Projects = _teamRepo.GetTeamProjects(team.Id);
-            //}
-            TempData.Put("key", tempTeams);
-            return true;
         }
 
     }

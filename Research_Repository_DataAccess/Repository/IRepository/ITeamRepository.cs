@@ -16,6 +16,7 @@ namespace Research_Repository_DataAccess.Repository.IRepository
         void AddProjects(int teamId, IList<Project> projects);
         bool HasProjects(int id);
         IList<int> GetTeamIds(IEnumerable<Team> teams);
+        IEnumerable<SelectListItem> GetTeamsList(IEnumerable<Team> teams);
         void Update(Team obj);
         void Attach(Team obj);
     }
