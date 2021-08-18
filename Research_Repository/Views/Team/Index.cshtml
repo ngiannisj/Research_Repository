@@ -50,11 +50,12 @@
                                         {
                                             @for (int i = 0; i < Model[y].Projects.Count; i++)
                                             {
-                                                <div class="project">
-                                                    <button id="@Model[y].Projects[i].Id" onclick="openProjectModal(this)" class="projectModalBtn">@Model[y].Projects[i].Name</button>
-                                                    <input asp-for="@Model[y].Projects[i].Name" class="project-name" hidden />
-                                                    <input asp-for="@Model[y].Projects[i].Id" class="project-id" hidden />
-                                                </div>
+                                        <div class="project">
+                                            <button id="@Model[y].Projects[i].Id" onclick="openProjectModal(this)" class="projectModalBtn">@Model[y].Projects[i].Name</button>
+                                            <input asp-for="@Model[y].Projects[i].Name" class="project-name" hidden />
+                                            <input asp-for="@Model[y].Projects[i].Id" class="project-id" hidden />
+                                            <input asp-for="@Model[y].Projects[i].TeamId" class="project-id" hidden />
+                                        </div>
                                             }
                                         }
 

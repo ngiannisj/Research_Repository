@@ -36,7 +36,7 @@ namespace Research_Repository.Controllers
                     IEnumerable<Team> objList = _teamRepo.GetAll();
                     foreach (Team obj in objList)
                     {
-                        obj.Projects = _teamRepo.GetTeamProjects(obj.Id);
+                        obj.Projects = _teamRepo.GetTeamProjectsFromDb(obj.Id);
                     }
                     IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(objList);
                     TempData.Put("teamSelectList", teamsSelectList);
@@ -79,33 +79,51 @@ namespace Research_Repository.Controllers
 
         public IActionResult SaveTeams(IList<Team> teams)
         {
-            IList<int> teamIdListFromTeam = _teamRepo.GetTeamIds(teams);
-            IEnumerable<Team> dbObjList = _teamRepo.GetAll(isTracking: false, includeProperties: "Projects");
-            IList<int> dbObjIdList = _teamRepo.GetTeamIds(dbObjList);
+            teams = TempData.Get<IList<Team>>("teams");
+            IList<int> tempTeamIdList = _teamRepo.GetTeamIds(teams);
+            IEnumerable<Team> dbTeamList = _teamRepo.GetAll(isTracking: false, includeProperties: "Projects");
+            IList<int> dbTeamIdList = _teamRepo.GetTeamIds(dbTeamList);
 
-            foreach (Team obj in dbObjList)
+
+            foreach (Team team in teams)
             {
-                if (!teamIdListFromTeam.Contains(obj.Id))
+                if (!dbTeamIdList.Contains(team.Id))
+                {
+                    team.Id = 0;
+                    IList<Project> teamProjects = team.Projects;
+                    team.Projects = null;
+                    _teamRepo.Add(team);
+                    _teamRepo.Save();
+                    team.Projects = teamProjects;
+                }
+            
+            dbTeamList = _teamRepo.GetAll(isTracking: false, includeProperties: "Projects");
+            dbTeamIdList = _teamRepo.GetTeamIds(dbTeamList);
+                    if (dbTeamIdList.Contains(team.Id))
+                    {
+                        //Update projects db
+                        IList<Project> projects = team.Projects;
+                        _teamRepo.UpsertProjects(team.Id, projects);
+                        IList<int> tempProjectIdList = _teamRepo.GetProjectIds(teams, false);
+                        //Remove projects from db if they do not exist in temp data
+                        _teamRepo.DeleteProjects(tempProjectIdList);
+                        _teamRepo.Attach(team);
+                        _teamRepo.Save();
+                    
+            }
+        }
+
+            //Reevaluate lists after adding and updating teams/projects
+            dbTeamList = _teamRepo.GetAll(isTracking: false, includeProperties: "Projects");
+            tempTeamIdList = _teamRepo.GetTeamIds(teams);
+            foreach (Team obj in dbTeamList)
+            {
+                if (!tempTeamIdList.Contains(obj.Id))
                 {
                     _teamRepo.Remove(obj);
                 }
             }
-            foreach (Team obj in teams)
-            {
-                if (dbObjIdList.Contains(obj.Id))
-                {
-                    _teamRepo.Attach(obj);
-                }
-                else
-                {
-                    obj.Id = 0;
-                    IList<Project> projects = obj.Projects;
-                    obj.Projects = null;
-                    _teamRepo.Add(obj);
-                    _teamRepo.Save();
-                    _teamRepo.AddProjects(obj.Id, projects);
-                }
-            }
+            
             _teamRepo.Save();
             ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
             return RedirectToAction("Index");
@@ -133,8 +151,9 @@ namespace Research_Repository.Controllers
 
         public IActionResult DeleteTeam(IList<Team> teams, int deleteId)
         {
+            IList<Project> tempProjects = _teamRepo.GetProjectsFromTeams(teams);
             Team itemToRemove = teams.FirstOrDefault(u => u.Id == deleteId);
-            if (!_teamRepo.HasProjects(itemToRemove.Id))
+            if (!_teamRepo.HasProjects(itemToRemove.Id, tempProjects))
             {
                 teams.Remove(itemToRemove);
             }
