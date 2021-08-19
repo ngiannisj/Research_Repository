@@ -9,7 +9,7 @@
         $("#tag-delete-button").prop('disabled', true);
         $("#tag-submit-button").prop('disabled', true);
         $("#myTagModal").show();
-        saveState(getThemes());
+        saveTempThemes(getThemes());
     });
 
     // When the user clicks on close button, close the modal
@@ -83,7 +83,7 @@ function getThemes() {
     return themesList;
 }
 
-function saveState(themesList) {
+function saveTempThemes(themesList) {
     let tempThemes = JSON.stringify(themesList);
     $.ajax({
         type: "POST",
@@ -172,16 +172,5 @@ function updateTags($this) {
 }
 
 function updateThemeTags() {
-    $.ajax({
-        type: "GET",
-        url: "/Theme/UpdateThemeTags",
-        contentType: 'application/json; charset=utf-8',
-        success: function (data) {
             window.location.replace('../theme?redirect=True');
-        },
-        error: function (error) {
-            console.log(error);
-            alert("An error occurred!!!")
-        }
-    });
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Research_Repository.Data;
 using Research_Repository_DataAccess.Repository.IRepository;
@@ -43,7 +44,8 @@ namespace Research_Repository.Controllers
                         themeVMList.Add(_themeRepo.CreateThemeVM(null, theme.Id));
                     }
                     //Update first theme model with the tag select dropdown list
-                    themeVMList[0].TagSelectList = _themeRepo.GetTagList();
+                    IEnumerable<SelectListItem> tagSelectList = _themeRepo.GetTagList();
+                    TempData.Put("tagSelectList", tagSelectList);
                     return View(themeVMList);
                 }
                 else
@@ -51,7 +53,10 @@ namespace Research_Repository.Controllers
                     IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("themes");
                     TempData.Keep();
                     //Update first theme model with the tag select dropdown list
-                    tempThemes[0].TagSelectList = _themeRepo.GetTagList();
+                    IEnumerable<SelectListItem> tagSelectList = _themeRepo.GetTagList();
+                        TempData.Put("tagSelectList", tagSelectList);
+
+
                     ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
                     return View(tempThemes);
                 }
@@ -69,37 +74,47 @@ namespace Research_Repository.Controllers
 
         public IActionResult SaveThemes(IList<ThemeVM> themes)
         {
+            if(themes != null && themes.Count() > 0)
+            {
+                _themeRepo.UpdateTagsDb(themes[0]);
+            } else
+            {
+                _themeRepo.UpdateTagsDb(null);
+            }
+
             IList<int> themeIdListFromThemeVM = new List<int>();
-            foreach (ThemeVM obj in themes)
+            foreach (ThemeVM theme in themes)
             {
                 //Get themes from themeVM
-                themeIdListFromThemeVM.Add(obj.Theme.Id);
+                themeIdListFromThemeVM.Add(theme.Theme.Id);
             }
 
-            IEnumerable<Theme> dbObjList = _themeRepo.GetAll(isTracking: false);
-            IList<int> dbObjIdList = _themeRepo.GetThemeIds(dbObjList);
+            IEnumerable<Theme> dbThemeList = _themeRepo.GetAll(isTracking: false);
+            IList<int> dbThemeIdList = _themeRepo.GetThemeIds(dbThemeList);
 
-            foreach (Theme obj in dbObjList)
+            foreach (Theme theme in dbThemeList)
             {
-                if (!themeIdListFromThemeVM.Contains(obj.Id))
+                if (!themeIdListFromThemeVM.Contains(theme.Id))
                 {
-                    _themeRepo.Remove(obj);
+                    _themeRepo.Remove(theme);
+                    _themeRepo.Save();
                 }
             }
-            foreach (ThemeVM obj in themes)
+            foreach (ThemeVM theme in themes)
             {
 
-                if (dbObjIdList.Contains(obj.Theme.Id))
+                if (dbThemeIdList.Contains(theme.Theme.Id))
                 {
-                    _themeRepo.UpdateThemeTagsList(obj);
-                    _themeRepo.Update(obj.Theme);
+                    _themeRepo.UpdateThemeTagsList(theme);
+                    _themeRepo.Update(theme.Theme);
+                    _themeRepo.Save();
                 }
                 else
                 {
-                    obj.Theme.Id = 0;
-                    _themeRepo.Add(obj.Theme);
+                    theme.Theme.Id = 0;
+                    _themeRepo.Add(theme.Theme);
                     _themeRepo.Save();
-                    _themeRepo.UpdateThemeTagsList(obj);
+                    _themeRepo.UpdateThemeTagsList(theme);
                 }
 
 
@@ -144,6 +159,8 @@ namespace Research_Repository.Controllers
             return RedirectToAction("Index");
         }
 
+
+
         public IActionResult DeleteTheme(IList<ThemeVM> themes, int deleteId)
         {
             ThemeVM itemToRemove = themes.FirstOrDefault(u => u.Theme.Id == deleteId);
@@ -177,17 +194,6 @@ namespace Research_Repository.Controllers
             ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
             SaveThemesState(themes);
             return RedirectToAction("Index", new { redirect = true });
-        }
-
-        public bool UpdateThemeTags()
-        {
-            IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("themes");
-            foreach(ThemeVM themeVM in tempThemes)
-            {
-                themeVM.TagCheckboxes = _themeRepo.GetTagCheckboxes(themeVM.Theme.Id, themeVM.TagCheckboxes);
-            }
-            TempData.Put("themes", tempThemes);
-            return true;
         }
 
             //GET - DOWNLOAD FILE

@@ -20,6 +20,8 @@ namespace Research_Repository_DataAccess.Repository.IRepository
 
         void UpdateThemeTagsList(ThemeVM themeVM);
 
+        void UpdateTagsDb(ThemeVM tempThemes);
+
         bool HasItems(int id);
 
         IList<int> GetThemeIds(IEnumerable<Theme> themes);

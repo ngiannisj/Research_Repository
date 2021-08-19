@@ -10,8 +10,6 @@ namespace Research_Repository_Models.ViewModels
     {
         public Theme Theme { get; set; }
 
-        public IEnumerable<SelectListItem> TagSelectList { get; set; }
-
         public IList<TagListVM> TagCheckboxes { get; set; }
     }
 }

@@ -43,6 +43,7 @@ namespace Research_Repository_DataAccess.Repository
                                 ThemeId = themeVM.Theme.Id,
                                 TagId = tag.TagId
                             });
+                            _db.SaveChanges();
                         }
                     }
                     else
@@ -52,6 +53,55 @@ namespace Research_Repository_DataAccess.Repository
                             _db.Remove(ThemeTagsList.FirstOrDefault(i => i.TagId == tag.TagId));
                         }
                     }
+                }
+            }
+        }
+
+        public void UpdateTagsDb(ThemeVM tempTheme)
+        {
+            if (tempTheme == null)
+            {
+                tempTheme = new ThemeVM();
+            }
+            if (tempTheme.TagCheckboxes == null)
+            {
+                tempTheme.TagCheckboxes = new List<TagListVM>();
+            }
+            IList<Tag> dbTagList = _db.Tags.AsNoTracking().ToList();
+            IList<int> dbTagIdList = dbTagList.Select(u => u.Id).ToList();
+            IList<int> tagIdListFromThemeVM = new List<int>();
+
+            foreach (Tag tag in dbTagList)
+            {
+                if (!tagIdListFromThemeVM.Contains(tag.Id))
+                {
+                    _db.Tags.Remove(tag);
+                }
+            }
+
+            if (tempTheme.TagCheckboxes.Count > 0)
+            {
+                foreach (TagListVM tagCheckbox in tempTheme.TagCheckboxes)
+                {
+                    tagIdListFromThemeVM.Add(tagCheckbox.TagId);
+                }
+
+                foreach (TagListVM tagCheckbox in tempTheme.TagCheckboxes)
+                {
+                    if (!dbTagIdList.Contains(tagCheckbox.TagId))
+                    {
+                        Tag newTag = new Tag { Id = 0, Name = tagCheckbox.Name };
+                        _db.Tags.Add(newTag);
+                        _db.SaveChanges();
+                        tagCheckbox.TagId = newTag.Id;
+                    }
+                    else
+                    {
+                        Tag tag = _db.Tags.FirstOrDefault(u => u.Id == tagCheckbox.TagId);
+                        tag.Name = tagCheckbox.Name;
+                        _db.Tags.Update(tag);
+                    }
+
                 }
             }
         }
@@ -68,22 +118,23 @@ namespace Research_Repository_DataAccess.Repository
                     Name = i.Name,
                     CheckedState = selectedTagIds.Contains(i.Id)
                 }).ToList();
-                if(tempTagCheckboxes.Count() != 0)
+                if (tempTagCheckboxes.Count() != 0)
                 {
-                    foreach(TagListVM tagCheckbox in tagCheckboxes)
+                    foreach (TagListVM tagCheckbox in tagCheckboxes)
                     {
-                        foreach(TagListVM tempTagCheckbox in tempTagCheckboxes)
+                        foreach (TagListVM tempTagCheckbox in tempTagCheckboxes)
                         {
-                            if(tagCheckbox.TagId == tempTagCheckbox.TagId)
+                            if (tagCheckbox.TagId == tempTagCheckbox.TagId)
                             {
                                 tagCheckbox.CheckedState = tempTagCheckbox.CheckedState;
                             }
                         }
-                       
+
                     }
                 }
                 return tagCheckboxes;
-            }else
+            }
+            else
             {
                 IList<TagListVM> tagCheckboxes = _db.Tags.AsNoTracking().Select(i => new TagListVM
                 {
@@ -98,17 +149,17 @@ namespace Research_Repository_DataAccess.Repository
         //Get dropdown list of all tags
         public IEnumerable<SelectListItem> GetTagList()
         {
-               IEnumerable<SelectListItem> tagSelectList = _db.Tags.AsNoTracking().Select(i => new SelectListItem
-                {
-                    Text = i.Name,
-                    Value = i.Id.ToString()
-                });
+            IEnumerable<SelectListItem> tagSelectList = _db.Tags.AsNoTracking().Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.Id.ToString()
+            });
 
-                return tagSelectList;
+            return tagSelectList;
         }
 
 
-        public ThemeVM CreateThemeVM(string newId, int? id=null)
+        public ThemeVM CreateThemeVM(string newId, int? id = null)
         {
             ThemeVM themeVM = new ThemeVM();
 

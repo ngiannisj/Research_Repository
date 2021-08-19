@@ -30,30 +30,49 @@ namespace Research_Repository.Controllers
         //POST - UPDATE
         public IEnumerable<Tag> UpdateTag(int id, string tagName, string actionName)
         {
+            IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("themes");
+            TempData.Keep();
             if (actionName == "Add" && id == 0)
             {
-                Tag tag = new Tag
+
+                int tempTagId = 0;
+                if(tempThemes[0].TagCheckboxes != null && tempThemes[0].TagCheckboxes.Count() > 0)
                 {
-                    Id = 0,
-                    Name = tagName
-                };
-                _tagRepo.Add(tag);
+                    tempTagId = tempThemes[0].TagCheckboxes.Select(u => u.TagId).ToList().Max() + 1;
+                }
+
+                TagListVM tagCheckbox = new TagListVM
+                {
+                    TagId = tempTagId,
+                    Name = tagName,
+                    CheckedState = false
+    };
+                foreach(ThemeVM tempThemeVM in tempThemes)
+                {
+                    tempThemeVM.TagCheckboxes.Add(tagCheckbox);
+                }
             }
             else if (actionName == "Update" && id != 0)
             {
-                Tag tag = _tagRepo.Find(id);
-                tag.Name = tagName;
-                _tagRepo.Update(tag);
+                foreach (ThemeVM tempThemeVM in tempThemes)
+                {
+                    TagListVM tagCheckbox = tempThemeVM.TagCheckboxes.FirstOrDefault(u => u.TagId == id);
+                    tagCheckbox.Name = tagName;
+                }
             }
             else if (actionName == "Delete")
             {
-                Tag tag = _tagRepo.Find(id);
-                _tagRepo.Remove(tag);
+                foreach (ThemeVM tempThemeVM in tempThemes)
+                {
+                    TagListVM tagCheckbox = tempThemeVM.TagCheckboxes.FirstOrDefault(u => u.TagId == id);
+                    tempThemeVM.TagCheckboxes.Remove(tagCheckbox);
+                }
             }
 
-                _tagRepo.Save();
-
-            return _tagRepo.GetAll();
+            TempData.Put("themes", tempThemes);
+            IList<Tag> tempTags = tempThemes[0].TagCheckboxes.Select(u => new Tag{ Id = u.TagId, Name = u.Name }).ToList();
+            IList<ThemeVM> tempThems = TempData.Get<IList<ThemeVM>>("themes");
+            return tempTags;
             }
 
         //GET - GETTAGNAME (FROM AJAX CALL)
@@ -62,7 +81,9 @@ namespace Research_Repository.Controllers
             string tagName = "newTag";
             if (id != null)
             {
-                tagName = _tagRepo.FirstOrDefault(i => i.Id == id, isTracking: false).Name;
+                IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("themes");
+                TempData.Keep();
+                tagName = tempThemes[0].TagCheckboxes.FirstOrDefault(u => u.TagId == id).Name;
             }
             return tagName;
         }
