@@ -74,13 +74,7 @@ namespace Research_Repository.Controllers
 
         public IActionResult SaveThemes(IList<ThemeVM> themes)
         {
-            if(themes != null && themes.Count() > 0)
-            {
-                _themeRepo.UpdateTagsDb(themes[0]);
-            } else
-            {
-                _themeRepo.UpdateTagsDb(null);
-            }
+                _themeRepo.UpdateTagsDb(themes);
 
             IList<int> themeIdListFromThemeVM = new List<int>();
             foreach (ThemeVM theme in themes)

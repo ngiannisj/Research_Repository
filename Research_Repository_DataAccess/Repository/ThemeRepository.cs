@@ -57,16 +57,8 @@ namespace Research_Repository_DataAccess.Repository
             }
         }
 
-        public void UpdateTagsDb(ThemeVM tempTheme)
+        public void UpdateTagsDb(IList<ThemeVM> tempThemes)
         {
-            if (tempTheme == null)
-            {
-                tempTheme = new ThemeVM();
-            }
-            if (tempTheme.TagCheckboxes == null)
-            {
-                tempTheme.TagCheckboxes = new List<TagListVM>();
-            }
             IList<Tag> dbTagList = _db.Tags.AsNoTracking().ToList();
             IList<int> dbTagIdList = dbTagList.Select(u => u.Id).ToList();
             IList<int> tagIdListFromThemeVM = new List<int>();
@@ -78,30 +70,40 @@ namespace Research_Repository_DataAccess.Repository
                     _db.Tags.Remove(tag);
                 }
             }
-
-            if (tempTheme.TagCheckboxes.Count > 0)
+          
+            if(tempThemes.Count > 0 && tempThemes[0].TagCheckboxes != null)
             {
-                foreach (TagListVM tagCheckbox in tempTheme.TagCheckboxes)
+                if (tempThemes[0].TagCheckboxes.Count > 0)
                 {
-                    tagIdListFromThemeVM.Add(tagCheckbox.TagId);
-                }
-
-                foreach (TagListVM tagCheckbox in tempTheme.TagCheckboxes)
-                {
-                    if (!dbTagIdList.Contains(tagCheckbox.TagId))
+                    foreach (TagListVM tagCheckbox in tempThemes[0].TagCheckboxes)
                     {
-                        Tag newTag = new Tag { Id = 0, Name = tagCheckbox.Name };
-                        _db.Tags.Add(newTag);
-                        _db.SaveChanges();
-                        tagCheckbox.TagId = newTag.Id;
-                    }
-                    else
-                    {
-                        Tag tag = _db.Tags.FirstOrDefault(u => u.Id == tagCheckbox.TagId);
-                        tag.Name = tagCheckbox.Name;
-                        _db.Tags.Update(tag);
+                        tagIdListFromThemeVM.Add(tagCheckbox.TagId);
                     }
 
+                    foreach (TagListVM tagCheckbox in tempThemes[0].TagCheckboxes)
+                    {
+                        int index = 0;
+                        if (!dbTagIdList.Contains(tagCheckbox.TagId))
+                        {
+                            Tag newTag = new Tag { Id = 0, Name = tagCheckbox.Name };
+                            _db.Tags.Add(newTag);
+                            _db.SaveChanges();
+
+                            //Update tags with new ID
+                            index = tempThemes[0].TagCheckboxes.IndexOf(tagCheckbox);
+                            foreach (ThemeVM themeVM in tempThemes)
+                            {
+                                themeVM.TagCheckboxes[index].TagId = newTag.Id;
+                            }
+                        }
+                        else
+                        {
+                            Tag tag = _db.Tags.FirstOrDefault(u => u.Id == tagCheckbox.TagId);
+                            tag.Name = tagCheckbox.Name;
+                            _db.Tags.Update(tag);
+                        }
+
+                    }
                 }
             }
         }

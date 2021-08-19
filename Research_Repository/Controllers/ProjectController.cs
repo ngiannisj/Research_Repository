@@ -29,29 +29,20 @@ namespace Research_Repository.Controllers
         //POST - UPDATE
         public void UpdateProject(int id, string projectName, int teamId, int oldTeamId, string actionName)
         {
+            IList<Project> tempProjects = new List<Project>();
+            IList<Team> tempTeams = TempData.Get<IList<Team>>("teams");
+
+            Team newTeam = tempTeams.FirstOrDefault(u => u.Id == teamId);
+            foreach (Team tempTeam in tempTeams)
+            {
+                foreach (Project tempProject in tempTeam.Projects)
+                {
+                    tempProjects.Add(tempProject);
+                }
+            }
+
             if (actionName == "Add" && id == 0)
             {
-                //Team team = _projectRepo.GetTeam(teamId);
-                //if (team != null)
-                //{
-                //    Project project = new Project { Name = projectName, TeamId = teamId };
-                //    //If project is saved to database
-                //    project.Name = projectName;
-                //    project.TeamId = teamId;
-                //    _projectRepo.Add(project);
-                //    _projectRepo.Save();
-                //}
-                IList<Team> tempTeams = TempData.Get<IList<Team>>("teams");
-                IList<Project> tempProjects = new List<Project>();
-                Team newTeam = tempTeams.FirstOrDefault(u => u.Id == teamId);
-                foreach (Team tempTeam in tempTeams)
-                {
-                    foreach (Project tempProject in tempTeam.Projects)
-                    {
-                        tempProjects.Add(tempProject);
-                    }
-                }
-
                 int newId = 0;
                 if (tempProjects != null && tempProjects.Count > 0)
                 {
@@ -71,35 +62,19 @@ namespace Research_Repository.Controllers
                 TempData.Keep();
 
             }
-            else if (actionName == "Update" && id != 0)
+            else if (actionName == "Update")
             {
-                Project project = _projectRepo.Find(id);
-                if (project != null)
-                {
-                    ////If project is saved to database
-                    ////If team exists in database
-                    //if(_projectRepo.GetTeam(teamId) != null)
-                    //{
-                    //    project.Name = projectName;
-                    //    project.TeamId = teamId;
-                    //    _projectRepo.Update(project);
-                    //    _projectRepo.Save();
-                    //} else
-                    //{
-                    //    //Generate warning to save new team before changing project location
-                    //    return;
-                    //}
-
-                }
-                IList<Team> tempTeams = TempData.Get<IList<Team>>("teams");
+                tempTeams = TempData.Get<IList<Team>>("teams");
+                TempData.Keep();
                 Team tempTeam = tempTeams.FirstOrDefault(u => u.Id == teamId);
                 Team oldTeam = tempTeams.FirstOrDefault(u => u.Id == oldTeamId);
+                int newId = tempProjects.Select(u => u.Id).ToList().Max() + 1;
                 Project tempProject = tempTeam.Projects.FirstOrDefault(u => u.Id == id);
                 if (tempProject == null)
                 {
-                    tempTeam.Projects.Add(new Project { Id = id, Name = projectName, TeamId = teamId });
+                    tempTeam.Projects.Add(new Project { Id = newId, Name = projectName, TeamId = teamId });
                     oldTeam.Projects.Remove(oldTeam.Projects.FirstOrDefault(u => u.Id == id));
-                    tempProject = tempTeam.Projects.FirstOrDefault(u => u.Id == id);
+                    tempProject = tempTeam.Projects.FirstOrDefault(u => u.Id == newId);
                 }
                 tempProject.Name = projectName;
                 TempData.Put("teams", tempTeams);
@@ -108,14 +83,7 @@ namespace Research_Repository.Controllers
             }
             else if (actionName == "Delete")
             {
-                //Project project = _projectRepo.Find(id);
-                //if (project != null)
-                //{
-                //    //If project is saved to database
-                //    _projectRepo.Remove(project);
-                //    _projectRepo.Save();
-                //}
-                IList<Team> tempTeams = TempData.Get<IList<Team>>("teams");
+                tempTeams = TempData.Get<IList<Team>>("teams");
                 Team tempTeam = tempTeams.FirstOrDefault(u => u.Id == teamId);
                 Project tempProject = tempTeam.Projects.FirstOrDefault(u => u.Id == id);
                 tempTeam.Projects.Remove(tempProject);

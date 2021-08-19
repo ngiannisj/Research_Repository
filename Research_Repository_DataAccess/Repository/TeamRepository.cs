@@ -112,16 +112,17 @@ namespace Research_Repository_DataAccess.Repository
                         _db.Projects.Add(project);
                         _db.SaveChanges();
                     } 
-                    else if(dbProjectIdList.Contains(project.Id) && dbProjectTeamId != teamId)
+                    else
                     {
                         //If project exists in db but team id is different
                         project.TeamId = teamId;
-                        _db.Projects.Attach(project);
+                        _db.Projects.Update(project);
                     }
 
                 }
             }
             _db.SaveChanges();
+
         }
 
         public void DeleteProjects(IList<int> tempProjectIds)

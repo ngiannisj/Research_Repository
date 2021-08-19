@@ -79,7 +79,14 @@ namespace Research_Repository.Controllers
 
         public IActionResult SaveTeams(IList<Team> teams)
         {
-            teams = TempData.Get<IList<Team>>("teams");
+            IList<Team> tempTeams = TempData.Get<IList<Team>>("teams");
+            foreach(Team team in teams)
+            {
+                if (tempTeams != null && tempTeams.Count() > 0)
+                {
+                    team.Projects = tempTeams.FirstOrDefault(u => u.Id == team.Id).Projects;
+                }
+            }
             IList<int> tempTeamIdList = _teamRepo.GetTeamIds(teams);
             IEnumerable<Team> dbTeamList = _teamRepo.GetAll(isTracking: false, includeProperties: "Projects");
             IList<int> dbTeamIdList = _teamRepo.GetTeamIds(dbTeamList);
@@ -107,7 +114,7 @@ namespace Research_Repository.Controllers
                         IList<int> tempProjectIdList = _teamRepo.GetProjectIds(teams, false);
                         //Remove projects from db if they do not exist in temp data
                         _teamRepo.DeleteProjects(tempProjectIdList);
-                        _teamRepo.Attach(team);
+                        _teamRepo.Update(team);
                         _teamRepo.Save();
                     
             }
@@ -131,7 +138,7 @@ namespace Research_Repository.Controllers
 
         public IActionResult AddTeam(IList<Team> teams)
         {
-            int newId = 0;
+            int newId = 1;
             IList<Team> teamList = TempData.Get<IList<Team>>("teams");
             if(teamList == null)
             {

@@ -62,7 +62,7 @@ function saveTempTeams(teamsList, teamId) {
             for (let i = 0; i < data.length; i++) {
                 $el.append($("<option></option>").attr("value", data[i].value).text(data[i].text));
             }
-
+            
             $("#project-teamId-modal-input").val(teamId);
 
         },
