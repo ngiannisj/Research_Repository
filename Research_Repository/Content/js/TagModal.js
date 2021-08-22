@@ -31,7 +31,6 @@
         if (modal.is(":visible")) {
             // if the target of the click isn't the container nor a descendant of the container
             if (modal.is(e.target) && modal.has(e.target).length === 0) {
-                console.log("thing");
                 modal.hide();
                 $("#tag-name-input").val("");
                 $("#tag-name-input").hide();
@@ -70,7 +69,7 @@ function getThemes() {
             const tagId = $(e).find(".tag-checkbox-id").first().val();
             const tagName = $(e).find(".tag-checkbox-name").first().val();
             const tagStatus = $(e).find(".tag-checkbox-state").first().is(':checked');
-            const tag = { TagId: tagId, Name: tagName, CheckedState: tagStatus }
+            const tag = { Value: tagId, Name: tagName, CheckedState: tagStatus }
             tags.push(tag);
 
             const tagSelectListItem = { Text: tagName, Value: tagId }

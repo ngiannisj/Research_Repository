@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Research_Repository_Models.ViewModels
 {
-    public class TagListVM
+    public class CheckboxVM
     {
-        public int TagId { get; set; }
+        public int Value { get; set; }
         public string Name { get; set; }
         public bool CheckedState { get; set; }
     }

@@ -43,7 +43,7 @@ namespace Research_Repository.Controllers
 
             if (actionName == "Add" && id == 0)
             {
-                int newId = 0;
+                int newId = 1;
                 if (tempProjects != null && tempProjects.Count > 0)
                 {
                     newId = tempProjects.Select(u => u.Id).ToList().Max() + 1;

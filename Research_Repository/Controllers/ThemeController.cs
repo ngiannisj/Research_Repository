@@ -41,11 +41,21 @@ namespace Research_Repository.Controllers
                     IList<ThemeVM> themeVMList = new List<ThemeVM>();
                     foreach (Theme theme in themeList)
                     {
-                        themeVMList.Add(_themeRepo.CreateThemeVM(null, theme.Id));
+                        themeVMList.Add(_themeRepo.CreateThemeVM(0, themes, theme.Id));
                     }
                     //Update first theme model with the tag select dropdown list
-                    IEnumerable<SelectListItem> tagSelectList = _themeRepo.GetTagList();
-                    TempData.Put("tagSelectList", tagSelectList);
+                    if (themeVMList != null && themeVMList.Count > 0)
+                    {
+                        if(themeVMList[0].TagCheckboxes != null && themeVMList[0].TagCheckboxes.Count() > 0)
+                        {
+                            IEnumerable<SelectListItem> tagSelectList = themeVMList[0].TagCheckboxes.Select(i => new SelectListItem
+                            {
+                                Text = i.Name,
+                                Value = i.Value.ToString()
+                            }).ToList();
+                            TempData.Put("tagSelectList", tagSelectList);
+                        }
+                    }
                     return View(themeVMList);
                 }
                 else
@@ -53,8 +63,18 @@ namespace Research_Repository.Controllers
                     IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("themes");
                     TempData.Keep();
                     //Update first theme model with the tag select dropdown list
-                    IEnumerable<SelectListItem> tagSelectList = _themeRepo.GetTagList();
-                        TempData.Put("tagSelectList", tagSelectList);
+                    if (tempThemes != null && tempThemes.Count > 0)
+                    {
+                        if (tempThemes[0].TagCheckboxes != null && tempThemes[0].TagCheckboxes.Count() > 0)
+                        {
+                            IEnumerable<SelectListItem> tagSelectList = tempThemes[0].TagCheckboxes.Select(i => new SelectListItem
+                            {
+                                Text = i.Name,
+                                Value = i.Value.ToString()
+                            }).ToList();
+                            TempData.Put("tagSelectList", tagSelectList);
+                        }
+                    }
 
 
                     ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
@@ -70,6 +90,7 @@ namespace Research_Repository.Controllers
         public void SaveThemesState([FromBody]IList<ThemeVM> themes)
         {
             TempData.Put("themes", themes);
+
         }
 
         public IActionResult SaveThemes(IList<ThemeVM> themes)
@@ -173,18 +194,12 @@ namespace Research_Repository.Controllers
 
         public IActionResult AddTheme(IList<ThemeVM> themes)
         {
-            IList<Theme> themeListFromThemeVM = new List<Theme>();
-            string newId = "0";
+            int newId = 1;
             if (themes.Count > 0)
             {
-                newId = themes[themes.Count - 1].Theme.Id + 1.ToString();
+                newId = themes[themes.Count - 1].Theme.Id + 1;
             }
-            themes.Add(_themeRepo.CreateThemeVM(newId, null));
-            foreach (ThemeVM obj in themes)
-            {
-                //Get themes from themeVM
-                themeListFromThemeVM.Add(obj.Theme);
-            }
+            themes.Add(_themeRepo.CreateThemeVM(newId, themes, null));
             ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
             SaveThemesState(themes);
             return RedirectToAction("Index", new { redirect = true });

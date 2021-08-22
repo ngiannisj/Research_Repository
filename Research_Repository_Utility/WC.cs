@@ -19,5 +19,12 @@ namespace Research_Repository_Utility
         public const string ThemeName = "Theme";
         public const string ItemName = "Item";
 
+        //Approved uses
+        public const string Internal = "Internal";
+        public const string External = "External";
+
+        //Sensitivity
+        public const string Unclassified = "Unclassified";
+        public const string Protected = "Protected";
     }
 }

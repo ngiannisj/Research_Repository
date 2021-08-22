@@ -12,11 +12,11 @@ namespace Research_Repository_DataAccess.Repository.IRepository
 {
     public interface IThemeRepository : IRepository<Theme>
     {
-        IList<TagListVM> GetTagCheckboxes(int? id, IList<TagListVM> tempTagCheckboxes);
+        IList<CheckboxVM> GetTagCheckboxes(int? id, IList<CheckboxVM> tempTagCheckboxes);
 
         IEnumerable<SelectListItem> GetTagList();
 
-        ThemeVM CreateThemeVM(string newId, int? id=null);
+        ThemeVM CreateThemeVM(int newId, IList<ThemeVM> themeVMs, int? id = null);
 
         void UpdateThemeTagsList(ThemeVM themeVM);
 

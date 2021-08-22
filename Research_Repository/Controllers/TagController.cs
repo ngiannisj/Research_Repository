@@ -35,15 +35,15 @@ namespace Research_Repository.Controllers
             if (actionName == "Add" && id == 0)
             {
 
-                int tempTagId = 0;
+                int tempTagId = 1;
                 if(tempThemes[0].TagCheckboxes != null && tempThemes[0].TagCheckboxes.Count() > 0)
                 {
-                    tempTagId = tempThemes[0].TagCheckboxes.Select(u => u.TagId).ToList().Max() + 1;
+                    tempTagId = tempThemes[0].TagCheckboxes.Select(u => u.Value).ToList().Max() + 1;
                 }
 
-                TagListVM tagCheckbox = new TagListVM
+                CheckboxVM tagCheckbox = new CheckboxVM
                 {
-                    TagId = tempTagId,
+                    Value = tempTagId,
                     Name = tagName,
                     CheckedState = false
     };
@@ -56,7 +56,7 @@ namespace Research_Repository.Controllers
             {
                 foreach (ThemeVM tempThemeVM in tempThemes)
                 {
-                    TagListVM tagCheckbox = tempThemeVM.TagCheckboxes.FirstOrDefault(u => u.TagId == id);
+                    CheckboxVM tagCheckbox = tempThemeVM.TagCheckboxes.FirstOrDefault(u => u.Value == id);
                     tagCheckbox.Name = tagName;
                 }
             }
@@ -64,13 +64,13 @@ namespace Research_Repository.Controllers
             {
                 foreach (ThemeVM tempThemeVM in tempThemes)
                 {
-                    TagListVM tagCheckbox = tempThemeVM.TagCheckboxes.FirstOrDefault(u => u.TagId == id);
+                    CheckboxVM tagCheckbox = tempThemeVM.TagCheckboxes.FirstOrDefault(u => u.Value == id);
                     tempThemeVM.TagCheckboxes.Remove(tagCheckbox);
                 }
             }
 
             TempData.Put("themes", tempThemes);
-            IList<Tag> tempTags = tempThemes[0].TagCheckboxes.Select(u => new Tag{ Id = u.TagId, Name = u.Name }).ToList();
+            IList<Tag> tempTags = tempThemes[0].TagCheckboxes.Select(u => new Tag{ Id = u.Value, Name = u.Name }).ToList();
             IList<ThemeVM> tempThems = TempData.Get<IList<ThemeVM>>("themes");
             return tempTags;
             }
@@ -83,7 +83,7 @@ namespace Research_Repository.Controllers
             {
                 IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("themes");
                 TempData.Keep();
-                tagName = tempThemes[0].TagCheckboxes.FirstOrDefault(u => u.TagId == id).Name;
+                tagName = tempThemes[0].TagCheckboxes.FirstOrDefault(u => u.Value == id).Name;
             }
             return tagName;
         }

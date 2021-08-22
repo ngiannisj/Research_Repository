@@ -16,49 +16,85 @@
             <h2 class="text-info pl-3">@title</h2>
         </div>
         <div class="row">
-            <div class="col-8">
-                <div class="form-group row">
-                    <div class="col-4">
-                        <label asp-for="Item.Title"></label>
-                    </div>
-                    <div class="col-8">
-                        <input asp-for="Item.Title" class="form-control" />
-                        <span asp-validation-for="Item.Title" class="text-danger"></span>
-                    </div>
+            <div class="col-12">
 
+
+                <!-- Team -->
+                <div class="form-group row">
+                    <div class="col-12">
+                        <select id="team-selector" asp-for="TeamId" asp-items="@Model.TeamSelectList" class="form-control">
+                            <option disabled selected>-- Select Team --</option>
+                        </select>
+                    </div>
                 </div>
+
+                <!-- Collaborator -->
+                <div class="form-group row" style="display:none;">
+                    <div class="col-12">
+                        <label asp-for="Item.Collaborator"></label>
+                    </div>
+                    <div class="col-12">
+                        <input asp-for="Item.Collaborator" class="form-control" />
+                        <span asp-validation-for="Item.Collaborator" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Suggested Team -->
+                <div class="form-group row" style="display:none;">
+                    <div class="col-12">
+                        <label asp-for="Item.SuggestedTeam"></label>
+                    </div>
+                    <div class="col-12">
+                        <input asp-for="Item.SuggestedTeam" class="form-control" />
+                        <span asp-validation-for="Item.SuggestedTeam" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Project -->
                 <div class="form-group row">
-                    <div class="col-4 row">
-                        <label asp-for="Item.ThemeId"></label>
+                    <div class="col-12">
+                        <select id="project-selector" asp-for="Item.ProjectId" asp-items="@Model.ProjectSelectList" class="form-control">
+                            <option disabled selected>-- Select Project --</option>
+                        </select>
                     </div>
+                    <span asp-validation-for="Item.ProjectId"></span>
+                </div>
 
-                    <div class="form-group row">
-                        <div class="col-8 row">
-                            <select id="team-selector" asp-for="TeamId" asp-items="@Model.TeamSelectList" class="form-control">
-                                <option disabled selected>-- Select Team --</option>
-                            </select>
-                        </div>
+                <!-- Suggested Project -->
+                <div class="form-group row" style="display:none;">
+                    <div class="col-12">
+                        <label asp-for="Item.SuggestedProject"></label>
                     </div>
-
-                    <div class="form-group row">
-                        <div class="col-8 row">
-                            <select id="project-selector" asp-for="Item.ProjectId" asp-items="@Model.ProjectSelectList" class="form-control">
-                                <option disabled selected>-- Select Project --</option>
-                            </select>
-                        </div>
-                        <span asp-validation-for="Item.ProjectId"></span>
+                    <div class="col-12">
+                        <input asp-for="Item.SuggestedProject" class="form-control" />
+                        <span asp-validation-for="Item.SuggestedProject" class="text-danger"></span>
                     </div>
+                </div>
 
-                    <div class="form-group row">
-                        <div class="col-8 row">
-                            <select id="theme-selector" asp-for="Item.ThemeId" asp-items="@Model.ThemeSelectList" class="form-control">
-                                <option disabled selected>-- Select Theme --</option>
-                            </select>
-                        </div>
-                        <span asp-validation-for="Item.ThemeId"></span>
+                <!-- Theme -->
+                <div class="form-group row">
+                    <div class="col-12">
+                        <select id="theme-selector" asp-for="Item.ThemeId" asp-items="@Model.ThemeSelectList" class="form-control">
+                            <option disabled selected>-- Select Theme --</option>
+                        </select>
                     </div>
+                    <span asp-validation-for="Item.ThemeId"></span>
+                </div>
 
-                    <div class="col-4">
+                <!-- Suggested Theme -->
+                <div class="form-group row" style="display:none;">
+                    <div class="col-12">
+                        <label asp-for="Item.SuggestedTheme"></label>
+                    </div>
+                    <div class="col-12">
+                        <input asp-for="Item.SuggestedTheme" class="form-control" />
+                        <span asp-validation-for="Item.SuggestedTheme" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Tags -->
+                <div class="form-group row">
+                    <div class="col-12">
                         <div class="multiselect">
                             <div class="selectBox" onclick="showCheckboxes()">
                                 <select>
@@ -70,50 +106,148 @@
                                 @for (int i = 0; i < Model.TagList.Count; i++)
                                 {
                                     <label>
-                                        <input asp-for="@Model.TagList[i].CheckedState" id="tag-input-id-@Model.TagList[i].TagId" />@Model.TagList[i].Name
+                                        <input asp-for="@Model.TagList[i].CheckedState" id="tag-input-id-@Model.TagList[i].Value" />@Model.TagList[i].Name
                                     </label>
-                                    <input asp-for="@Model.TagList[i].TagId" id="tag-id-@Model.TagList[i].TagId" hidden />
+                                    <input asp-for="@Model.TagList[i].Value" id="tag-id-@Model.TagList[i].Value" hidden />
                                 }
                             </div>
                             <span asp-validation-for="TagList"></span>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form-group row">
-                        <div class="col-8 offset-4 row">
-
-                            <div class="col">
-                                @if (Model.Item.Id != 0)
-                                {
-                                    <input type="submit" class="btn btn-info w-100" value="Update" />
-                                }
-                                else
-                                {
-                                    <input type="submit" class="btn btn-primary w-100" value="Create" />
-                                }
-                            </div>
-                            <div class="col">
-                                <a asp-action="Index" class="btn btn-success w-100">
-                                    Back
-                                </a>
-                            </div>
-                        </div>
+                <!-- Suggested Tags -->
+                <div class="form-group row" style="display:none;">
+                    <div class="col-12">
+                        <label asp-for="Item.SuggestedTags"></label>
+                    </div>
+                    <div class="col-12">
+                        <input asp-for="Item.SuggestedTags" class="form-control" />
+                        <span asp-validation-for="Item.SuggestedTags" class="text-danger"></span>
                     </div>
                 </div>
 
-            <div class="form-group row">
-                <div class="col-4">
-                    <label asp-for="Item.Files"></label>
-                </div>
-                <div class="col-8">
-                    <input type="file" name="Item.Files" id="uploadbox" multiple asp-for="Item.Files" class="form-control" />
+                <!-- Title -->
+                <div class="form-group row">
+                    <div class="col-12">
+                        <label asp-for="Item.Title"></label>
+                    </div>
+                    <div class="col-12">
+                        <input asp-for="Item.Title" class="form-control" />
+                        <span asp-validation-for="Item.Title" class="text-danger"></span>
+                    </div>
                 </div>
 
-            </div>
+                <!-- Abstract -->
+                <div class="form-group row">
+                    <div class="col-12">
+                        <label asp-for="Item.Abstract"></label>
+                    </div>
+                    <div class="col-12">
+                        <input asp-for="Item.Abstract" class="form-control" />
+                        <span asp-validation-for="Item.Abstract" class="text-danger"></span>
+                    </div>
+                </div>
 
-        </div>
+                <!-- Key Insights -->
+                <div class="form-group row">
+                    <div class="col-12">
+                        <label asp-for="Item.KeyInsights"></label>
+                    </div>
+                    <div class="col-12">
+                        <input asp-for="Item.KeyInsights" class="form-control" />
+                        <span asp-validation-for="Item.KeyInsights" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Key Methodology -->
+                <div class="form-group row">
+                    <div class="col-12">
+                        <label asp-for="Item.Methodology"></label>
+                    </div>
+                    <div class="col-12">
+                        <input asp-for="Item.Methodology" class="form-control" />
+                        <span asp-validation-for="Item.Methodology" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Key Limitations -->
+                <div class="form-group row">
+                    <div class="col-12">
+                        <label asp-for="Item.Limitations"></label>
+                    </div>
+                    <div class="col-12">
+                        <input asp-for="Item.Limitations" class="form-control" />
+                        <span asp-validation-for="Item.Limitations" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Start Date -->
+                <div class="form-group">
+                    <label asp-for="Item.StartDate" class="control-label"></label>
+                    <input asp-for="Item.StartDate" class="form-control" />
+                    <span asp-validation-for="Item.StartDate" class="text-danger"></span>
+                </div>
+
+                <!-- End Date -->
+                <div class="form-group">
+                    <label asp-for="Item.EndDate" class="control-label"></label>
+                    <input asp-for="Item.EndDate" class="form-control" />
+                    <span asp-validation-for="Item.EndDate" class="text-danger"></span>
+                </div>
+
+                <!-- Approved Use -->
+                <div class="form-group">
+                    @foreach (var item in Model.ApprovalRadioButtons)
+                    {
+                        <input asp-for="Item.ApprovedUse" type="radio" value="@item.Name" /> @item.Name
+                    }
+                </div>
+
+                <div class="form-group">
+                    <!-- Sensitivity Use -->
+                    @foreach (var item in Model.SensitivityRadioButtons)
+                    {
+                        <input asp-for="Item.Sensitivity" type="radio" value="@item.Name" /> @item.Name
+                    }
+                </div>
+
+                        <!-- Files -->
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <label asp-for="Item.Files"></label>
+                            </div>
+                            <div class="col-12">
+                                <input type="file" name="Item.Files" id="uploadbox" multiple asp-for="Item.Files" class="form-control" />
+                            </div>
+
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="form-group">
+                            <div class="col-8 offset-2 row">
+
+                                <div class="col-6">
+                                    @if (Model.Item.Id != 0)
+                                    {
+                                        <input type="submit" class="btn btn-info w-100" value="Update" />
+                                    }
+                                    else
+                                    {
+                                        <input type="submit" class="btn btn-primary w-100" value="Create" />
+                                    }
+                                </div>
+                                <div class="col-6">
+                                    <a asp-action="Index" class="btn btn-success w-100">
+                                        Back
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
     </div>
-        </div>
 </form>
 
 @section Scripts {

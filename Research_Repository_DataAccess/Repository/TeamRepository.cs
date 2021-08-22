@@ -110,7 +110,6 @@ namespace Research_Repository_DataAccess.Repository
                         //If project does not exist in db
                         project.Id = 0;
                         _db.Projects.Add(project);
-                        _db.SaveChanges();
                     } 
                     else
                     {
@@ -125,16 +124,27 @@ namespace Research_Repository_DataAccess.Repository
 
         }
 
-        public void DeleteProjects(IList<int> tempProjectIds)
+        public void DeleteProjects(IList<int> tempProjectIds, bool deleteAllProjects)
         {
             IList<Project> dbProjects = _db.Projects.AsNoTracking().ToList();
-            foreach (Project project in dbProjects)
+            if(tempProjectIds == null && deleteAllProjects == true)
             {
-                if(!tempProjectIds.Contains(project.Id))
+                foreach (Project project in dbProjects)
                 {
-                    _db.Remove(project);
+                        _db.Remove(project);
                 }
             }
+            else if(deleteAllProjects == false)
+            {
+                foreach (Project project in dbProjects)
+                {
+                    if (!tempProjectIds.Contains(project.Id))
+                    {
+                        _db.Remove(project);
+                    }
+                }
+            }
+           
             _db.SaveChanges();
         }
 

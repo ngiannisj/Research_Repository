@@ -12,12 +12,29 @@ namespace Research_Repository_Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        public string Title { get; set; }
-        public string Description { get; set; }
+
+        //Project information
+        public string Collaborator { get; set; }
+        public string SuggestedTeam { get; set; }
+        public string SuggestedProject { get; set; }
+        public string SuggestedTags { get; set; }
+        public string SuggestedTheme { get; set; }
+
+        [Display(Name = "Start date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime StartDate { get; set; }
+        [Display(Name = "End date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime EndDate { get; set; }
+        [Display(Name = "Date of publish")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime PublishDate { get; set; }
 
 
-        [Display(Name ="Theme Type")]
+        [Display(Name = "Theme Type")]
         public int? ThemeId { get; set; }
 
         [ForeignKey("ThemeId")]
@@ -32,6 +49,21 @@ namespace Research_Repository_Models
 
         public ICollection<ItemTag> ItemTags { get; set; }
 
+        //Research information
+        [Required]
+        public string Title { get; set; }
+        public string Abstract { get; set; }
+        public string KeyInsights { get; set; }
+        public string Methodology { get; set; }
+        public string Limitations { get; set; }
+
+        //Security
+        public string ApprovedUse { get; set; }
+        public string Sensitivity { get; set; }
+
+        //Files
         public string Files { get; set; }
+
+
     }
 }

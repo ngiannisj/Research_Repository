@@ -15,7 +15,7 @@ namespace Research_Repository_Models.Solr
         {
             this.Id = model.Id.ToString();
             this.Title = model.Title;
-            this.Description = model.Description;
+            this.Abstract = model.Abstract;
 
         }
 
@@ -24,6 +24,6 @@ namespace Research_Repository_Models.Solr
         [SolrField("title")]
         public string Title { get; set; }
         [SolrField("description")]
-        public string? Description { get; set; }
+        public string? Abstract { get; set; }
     }
 }

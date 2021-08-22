@@ -91,6 +91,11 @@ namespace Research_Repository.Controllers
             IEnumerable<Team> dbTeamList = _teamRepo.GetAll(isTracking: false, includeProperties: "Projects");
             IList<int> dbTeamIdList = _teamRepo.GetTeamIds(dbTeamList);
 
+            if(teams == null || teams.Count() < 1)
+            {
+                _teamRepo.DeleteProjects(null, true);
+            }
+
 
             foreach (Team team in teams)
             {
@@ -113,7 +118,7 @@ namespace Research_Repository.Controllers
                         _teamRepo.UpsertProjects(team.Id, projects);
                         IList<int> tempProjectIdList = _teamRepo.GetProjectIds(teams, false);
                         //Remove projects from db if they do not exist in temp data
-                        _teamRepo.DeleteProjects(tempProjectIdList);
+                        _teamRepo.DeleteProjects(tempProjectIdList, false);
                         _teamRepo.Update(team);
                         _teamRepo.Save();
                     

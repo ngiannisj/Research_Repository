@@ -49,7 +49,7 @@
                                                 <input asp-for="@Model[y].TagCheckboxes[i].Name" hidden class="tag-checkbox-name" />
                                                 <label>@Model[y].TagCheckboxes[i].Name</label>
                                                 <input asp-for="@Model[y].TagCheckboxes[i].CheckedState" class="tag-checkbox-state" />
-                                                <input asp-for="@Model[y].TagCheckboxes[i].TagId" hidden class="tag-checkbox-id" />
+                                                <input asp-for="@Model[y].TagCheckboxes[i].Value" hidden class="tag-checkbox-id" />
                                             </div>
                                         }
                                         <span asp-validation-for="@Model[y].TagCheckboxes"></span>

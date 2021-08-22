@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Research_Repository_Models.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,7 +22,11 @@ namespace Research_Repository_Models.ViewModels
 
         public IEnumerable<SelectListItem> ThemeSelectList { get; set; }
 
-        public IList<TagListVM> TagList { get; set; }
+        public IList<CheckboxVM> TagList { get; set; }
+
+        public IEnumerable<RadioButtonVM> ApprovalRadioButtons { set; get; }
+
+        public IEnumerable<RadioButtonVM> SensitivityRadioButtons { set; get; }
     }
 
 }

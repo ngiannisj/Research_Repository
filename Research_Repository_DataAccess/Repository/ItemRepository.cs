@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Research_Repository.Data;
 using Research_Repository_DataAccess.Repository.IRepository;
 using Research_Repository_Models;
+using Research_Repository_Models.Models.ViewModels;
 using Research_Repository_Models.ViewModels;
+using Research_Repository_Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +28,9 @@ namespace Research_Repository_DataAccess.Repository
             ICollection<int> selectedTagIds = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == id).Select(i => i.TagId).ToList();
             ItemVM itemVM = new ItemVM()
             {
-                TagList = _db.Tags.AsNoTracking().Select(i => new TagListVM
+                TagList = _db.Tags.AsNoTracking().Select(i => new CheckboxVM
                 {
-                    TagId = i.Id,
+                    Value = i.Id,
                     Name = i.Name,
                     CheckedState = selectedTagIds.Contains(i.Id)
                 }).ToList(),
@@ -47,6 +49,16 @@ namespace Research_Repository_DataAccess.Repository
                     Text = i.Name,
                     Value = i.Id.ToString()
                 }),
+                ApprovalRadioButtons = new List<RadioButtonVM>
+                {
+                    new RadioButtonVM {Value = 1, Name = WC.Internal},
+                    new RadioButtonVM {Value = 2, Name = WC.External}
+                },
+                SensitivityRadioButtons = new List<RadioButtonVM>
+                {
+                    new RadioButtonVM {Value = 1, Name = WC.Unclassified},
+                    new RadioButtonVM {Value = 2, Name = WC.Protected}
+                },
                 Item = new Item()
             };
             return itemVM;
@@ -61,26 +73,26 @@ namespace Research_Repository_DataAccess.Repository
 
             if (itemVM.TagList != null)
             {
-                foreach (TagListVM tag in itemVM.TagList)
+                foreach (CheckboxVM tag in itemVM.TagList)
                 {
                     //If the checkbox is checked and the tag is available in the selected theme
-                    if (tag.CheckedState && ThemeTagIdsList.Contains(tag.TagId))
+                    if (tag.CheckedState && ThemeTagIdsList.Contains(tag.Value))
                     {
                         //If the entry in the join table does not already exist
-                        if (!ItemTagIdsList.Contains(tag.TagId))
+                        if (!ItemTagIdsList.Contains(tag.Value))
                         {
                             _db.ItemTags.Add(new ItemTag
                             {
                                 ItemId = itemVM.Item.Id,
-                                TagId = tag.TagId
+                                TagId = tag.Value
                             });
                         }
                     }
                     else
                     {
-                        if (ItemTagIdsList.Contains(tag.TagId))
+                        if (ItemTagIdsList.Contains(tag.Value))
                         {
-                            _db.ItemTags.Remove(ItemTagsList.FirstOrDefault(i => i.TagId == tag.TagId));
+                            _db.ItemTags.Remove(ItemTagsList.FirstOrDefault(i => i.TagId == tag.Value));
                         }
                     }
                 }
