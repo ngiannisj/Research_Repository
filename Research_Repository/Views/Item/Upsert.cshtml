@@ -69,7 +69,7 @@
                 <!-- Project -->
                 <div class="form-group row">
                     <div class="col-12">
-                        <select id="project-selector" asp-for="Item.ProjectId" asp-items="@Model.ProjectSelectList" class="form-control">
+                        <select id="project-selector" asp-for="Item.ProjectId" asp-items="@Model.ProjectSelectList" class="form-control" disabled>
                             <option disabled selected>-- Select Project --</option>
                         </select>
                     </div>
@@ -114,8 +114,8 @@
                 <div class="form-group row">
                     <div class="col-12">
                         <div class="multiselect">
-                            <div class="selectBox" onclick="showCheckboxes()">
-                                <select>
+                            <div class="selectBox" id="tag-selector" onclick="showCheckboxes()">
+                                <select disabled>
                                     <option>Select an option</option>
                                 </select>
                                 <div class="overSelect"></div>

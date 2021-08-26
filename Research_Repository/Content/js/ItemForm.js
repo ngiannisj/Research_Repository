@@ -2,6 +2,18 @@
     $("#file-upload-box").change(function () {
         handleFiles(this);
     });
+
+    $("#team-selector").change(function () {
+        if ($(this).val != 0) {
+            $("#project-selector").prop('disabled', false);
+        }
+    });
+
+    $("#theme-selector").change(function () {
+        if ($(this).val != 0) {
+            $("#tag-selector select").prop('disabled', false);
+        }
+    });
 });
 
 function addKeyInsightField(buttonRef) {
@@ -122,3 +134,4 @@ function removeFile(buttonRef) {
     });
     $(buttonRef).parent().remove();
 }
+
