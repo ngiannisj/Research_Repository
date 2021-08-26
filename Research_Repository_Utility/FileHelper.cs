@@ -18,7 +18,9 @@ namespace Research_Repository_Utility
 
             foreach (IFormFile file in files)
             {
-                string fileName = file.FileName;
+                //Replace spaces in file name with dashes
+                string fileName = file.FileName.Replace(" ", "-");
+
                 string filePath = Path.Combine(directoryPath, fileName);
 
                 //Add file name to list of file names if it is not already uploaded
@@ -83,6 +85,11 @@ namespace Research_Repository_Utility
 
         public static void CopyFiles(string fileName, string webRootPath, string sourceFileLocation, string targetFileLocation, bool deleteTargetFiles)
         {
+            //Delete existing files in the target folder
+            if (deleteTargetFiles)
+            {
+                DeleteFiles(null, webRootPath, targetFileLocation);
+            }
 
             string sourcePath = webRootPath + sourceFileLocation;
             string targetPath = webRootPath + targetFileLocation;
@@ -124,12 +131,6 @@ namespace Research_Repository_Utility
                     string destFile = Path.Combine(targetPath, file);
                    File.Copy(s, destFile, true);
                 }
-            }
-
-            //Delete existing files in the target folder
-            if (deleteTargetFiles)
-            {
-                DeleteFiles(null, webRootPath, targetFileLocation);
             }
         }
 

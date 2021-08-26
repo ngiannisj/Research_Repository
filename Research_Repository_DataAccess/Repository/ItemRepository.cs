@@ -25,13 +25,20 @@ namespace Research_Repository_DataAccess.Repository
 
         public ItemVM GetItemVM(int? id)
         {
-          
+            Item item = new Item();
             IList<string> suggestedTagsList = new List<string>();
             IList<string> keyInsightsList = new List<string>{""};
             if (id !=null && id != 0)
             {
-                suggestedTagsList = _db.Items.FirstOrDefault(u => u.Id == id).SuggestedTags.ToString().Split("~~");
-                keyInsightsList = _db.Items.FirstOrDefault(u => u.Id == id).KeyInsights.ToString().Split("~~");
+                if(_db.Items.FirstOrDefault(u => u.Id == id).SuggestedTags != null)
+                {
+                    suggestedTagsList = _db.Items.FirstOrDefault(u => u.Id == id).SuggestedTags.ToString().Split("~~");
+                }
+                if (_db.Items.FirstOrDefault(u => u.Id == id).KeyInsights != null)
+                {
+                    keyInsightsList = _db.Items.FirstOrDefault(u => u.Id == id).KeyInsights.ToString().Split("~~");
+                }
+                item = _db.Items.Find(id);
             }
 
             ICollection<int> selectedTagIds = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == id).Select(i => i.TagId).ToList();
@@ -63,15 +70,15 @@ namespace Research_Repository_DataAccess.Repository
                 }),
                 ApprovalRadioButtons = new List<RadioButtonVM>
                 {
-                    new RadioButtonVM {Value = 1, Name = WC.Internal},
-                    new RadioButtonVM {Value = 2, Name = WC.External}
+                    new RadioButtonVM { Value = 1, Name = WC.Internal },
+                    new RadioButtonVM { Value = 2, Name = WC.External }
                 },
                 SensitivityRadioButtons = new List<RadioButtonVM>
                 {
-                    new RadioButtonVM {Value = 1, Name = WC.Unclassified},
-                    new RadioButtonVM {Value = 2, Name = WC.Protected}
+                    new RadioButtonVM { Value = 1, Name = WC.Unclassified },
+                    new RadioButtonVM { Value = 2, Name = WC.Protected }
                 },
-                Item = new Item()
+                Item = item
             };
             return itemVM;
         }

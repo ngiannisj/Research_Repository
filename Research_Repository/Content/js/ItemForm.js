@@ -85,9 +85,12 @@ function handleFiles(fileUploadBox) {
 
             //Update file list html
             if (data) {
-                let filesHtml = data;
-                for (let i = 0; i < fileList.length; i++) {
-                    filesHtml += `<div class="file"><h2>${fileList[i].name}</h2><button onclick="removeFile(this)">Delete</button><br><br></div>`;
+                let newFileNames = data.split(",");
+                newFileNames.pop();
+                let filesHtml = "";
+                for (let i = 0; i < newFileNames.length; i++) {
+                    let downloadLink = "/Item/GetDownloadedFile/?filePath=\\files\\documents\\items\\temp\\" + newFileNames[i];
+                   filesHtml += `<div class="file"><a href="${downloadLink}"><h2>${newFileNames[i]}</h2></a><button onclick="removeFile(this)">Delete</button><br><br></div>`;
                 };
                 $("#files-list").append(filesHtml);
             }

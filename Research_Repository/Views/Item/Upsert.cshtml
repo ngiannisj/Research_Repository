@@ -1,7 +1,20 @@
-﻿@model Research_Repository_Models.ViewModels.ItemVM
+﻿@using Research_Repository_Utility;
+@model Research_Repository_Models.ViewModels.ItemVM
 
 @{
     var title = "Create Item";
+
+    IList<string> fileNames = new List<string>();
+    if (Model.Item.Files != null)
+    {
+
+        fileNames = Model.Item.Files.Split(",").ToList();
+
+        //Remove empty space from array
+        fileNames.RemoveAt(fileNames.Count - 1);
+    }
+
+    string tempFilesFolderPath = $@"/Item/GetDownloadedFile/?filePath={WC.ItemFilePath}temp\";
 }
 
 <form method="post" enctype="multipart/form-data">
@@ -38,7 +51,6 @@
 
                     <div class="col-10">
                         <input asp-for="Item.Collaborator" class="form-control" />
-                        <span asp-validation-for="Item.Collaborator" class="text-danger"></span>
                     </div>
                     <div class="col-2"><button onclick="hideField('collaborator-input', 'add-collaborator-button')">Delete</button></div>
                 </div>
@@ -50,7 +62,6 @@
                     </div>
                     <div class="col-10">
                         <input asp-for="Item.SuggestedTeam" class="form-control" />
-                        <span asp-validation-for="Item.SuggestedTeam" class="text-danger"></span>
                         <div class="col-2"><button onclick="hideField('suggested-team-input', 'add-team-button')">Delete</button></div>
                     </div>
                 </div>
@@ -62,7 +73,6 @@
                             <option disabled selected>-- Select Project --</option>
                         </select>
                     </div>
-                    <span asp-validation-for="Item.ProjectId"></span>
                 </div>
                 <button onclick="showField(this, 'suggested-project-input')" id="add-project-button">Add project</button>
 
@@ -73,7 +83,6 @@
                     </div>
                     <div class="col-10">
                         <input asp-for="Item.SuggestedProject" class="form-control" />
-                        <span asp-validation-for="Item.SuggestedProject" class="text-danger"></span>
                     </div>
                     <div class="col-2"><button onclick="hideField('suggested-project-input', 'add-project-button')">Delete</button></div>
                 </div>
@@ -85,7 +94,6 @@
                             <option disabled selected>-- Select Theme --</option>
                         </select>
                     </div>
-                    <span asp-validation-for="Item.ThemeId"></span>
                 </div>
                 <button onclick="showField(this, 'suggested-theme-input')" id="add-theme-button">Add theme</button>
 
@@ -96,7 +104,6 @@
                     </div>
                     <div class="col-10">
                         <input asp-for="Item.SuggestedTheme" class="form-control" />
-                        <span asp-validation-for="Item.SuggestedTheme" class="text-danger"></span>
                     </div>
                     <div class="col-2">
                         <button onclick="hideField('suggested-theme-input', 'add-theme-button')">Delete</button>
@@ -122,7 +129,6 @@
                                     <input asp-for="@Model.TagList[i].Value" id="tag-id-@Model.TagList[i].Value" hidden />
                                 }
                             </div>
-                            <span asp-validation-for="TagList"></span>
                         </div>
                     </div>
                 </div>
@@ -139,7 +145,6 @@
                                 </div>
                                 <div class="col-10">
                                     <input asp-for="SuggestedTagList[i]" class="form-control" />
-                                    <span asp-validation-for="SuggestedTagList[i]" class="text-danger"></span>
                                 </div>
                                 <div class="col-2"><button onclick="removeField(this, 'suggestedTag')">Delete</button></div>
                             </div>
@@ -156,7 +161,6 @@
                     </div>
                     <div class="col-12">
                         <input asp-for="Item.Title" class="form-control" />
-                        <span asp-validation-for="Item.Title" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -167,7 +171,6 @@
                     </div>
                     <div class="col-12">
                         <input asp-for="Item.Abstract" class="form-control" />
-                        <span asp-validation-for="Item.Abstract" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -183,7 +186,6 @@
                                 </div>
                                 <div class="col-10">
                                     <input asp-for="KeyInsightsList[i]" class="form-control" />
-                                    <span asp-validation-for="KeyInsightsList[i]" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-2"><button onclick="removeField(this, 'keyInsight')">Delete</button></div>
@@ -199,7 +201,6 @@
                     </div>
                     <div class="col-12">
                         <input asp-for="Item.Methodology" class="form-control" />
-                        <span asp-validation-for="Item.Methodology" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -210,7 +211,6 @@
                     </div>
                     <div class="col-12">
                         <input asp-for="Item.Limitations" class="form-control" />
-                        <span asp-validation-for="Item.Limitations" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -218,14 +218,12 @@
                 <div class="form-group">
                     <label asp-for="Item.StartDate" class="control-label"></label>
                     <input asp-for="Item.StartDate" class="form-control" />
-                    <span asp-validation-for="Item.StartDate" class="text-danger"></span>
                 </div>
 
                 <!-- End Date -->
                 <div class="form-group">
                     <label asp-for="Item.EndDate" class="control-label"></label>
                     <input asp-for="Item.EndDate" class="form-control" />
-                    <span asp-validation-for="Item.EndDate" class="text-danger"></span>
                 </div>
 
                 <!-- Approved Use -->
@@ -244,6 +242,9 @@
                     }
                 </div>
 
+                <!-- Hidden file names -->
+                <input asp-for="Item.Files" id="file-names" />
+
                 <!-- Files -->
                 <div class="form-group row">
                     <div class="col-12">
@@ -253,10 +254,12 @@
                         <input type="file" name="Item.Files" id="file-upload-box" multiple asp-for="Item.Files" class="form-control" />
                     </div>
                     <div class="col-12" id="files-list">
-
+                        @foreach (string fileName in fileNames)
+                        {
+                            string downloadLink = tempFilesFolderPath + fileName;
+                            <div class="file"><a href=@downloadLink><h2>@fileName</h2></a><button onclick="removeFile(this)">Delete</button><br><br></div>
+                        }
                     </div>
-                    <!-- Hidden file names -->
-                    <input asp-for="Item.SuggestedProject" id="file-names" hidden />
                 </div>
 
                 <!-- Buttons -->
@@ -285,11 +288,3 @@
         </div>
     </div>
 </form>
-
-@section Scripts {
-
-    @{
-        <partial name="_ValidationScriptsPartial" />
-
-    }
-}

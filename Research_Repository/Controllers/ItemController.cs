@@ -52,7 +52,7 @@ namespace Research_Repository.Controllers
             //Create new temp folder for files
             string webRootPath = _webHostEnvironment.WebRootPath;
             string targetFileLocation = WC.ItemFilePath + "temp\\";
-            string sourceFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
+            string sourceFileLocation = WC.ItemFilePath + id + "\\";
             FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, true);
 
             if (id == null)
@@ -64,7 +64,10 @@ namespace Research_Repository.Controllers
             {
                 //Updating
                 itemVM.Item = _itemRepo.FirstOrDefault(filter: i => i.Id == id, includeProperties: "Project");
+                if(itemVM.Item.Project != null)
+                {
                     itemVM.TeamId = itemVM.Item.Project.TeamId;
+                }
 
                 if (itemVM.Item == null)
                 {
@@ -81,8 +84,6 @@ namespace Research_Repository.Controllers
         public IActionResult Upsert(ItemVM itemVM)
         {
 
-            if (ModelState.IsValid)
-            {
                 if(itemVM.SuggestedTagList != null && itemVM.SuggestedTagList.Count > 0)
                 {
                     itemVM.Item.SuggestedTags = string.Join("~~", itemVM.SuggestedTagList);
@@ -125,8 +126,6 @@ namespace Research_Repository.Controllers
                 FileHelper.DeleteFiles(null, webRootPath, sourceFileLocation);
                 _itemRepo.Save();
                 return RedirectToAction("Index");
-            }
-            return View(itemVM);
         }
 
 
@@ -145,7 +144,7 @@ namespace Research_Repository.Controllers
             if (obj.Files != null)
             {
                 string webRootPath = _webHostEnvironment.WebRootPath;
-                string fileLocation = WC.ItemFilePath + obj.Id + "\\";
+                string fileLocation = WC.ItemFilePath + id + "\\";
 
                 FileHelper.DeleteFiles(null, webRootPath, fileLocation);
             }
@@ -171,6 +170,12 @@ namespace Research_Repository.Controllers
             string fileLocation = WC.ItemFilePath + "temp\\";
 
             FileHelper.DeleteFiles(name, webRootPath, fileLocation);
+        }
+
+        //GET - DOWNLOAD FILE
+        public IActionResult GetDownloadedFile(string filePath)
+        {
+            return FileHelper.DownloadFile(filePath);
         }
 
         //GET - GETTEAMPROJECTS (FROM AJAX CALL)
