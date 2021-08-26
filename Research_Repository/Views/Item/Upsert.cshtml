@@ -27,26 +27,31 @@
                         </select>
                     </div>
                 </div>
+                <button onclick="showField(this, 'collaborator-input')" id="add-collaborator-button">Add collaborator</button>
+                <button onclick="showField(this, 'suggested-team-input')" id="add-team-button">Add team</button>
 
                 <!-- Collaborator -->
-                <div class="form-group row" style="display:none;">
+                <div class="form-group row" style="display:none;" id="collaborator-input">
                     <div class="col-12">
                         <label asp-for="Item.Collaborator"></label>
                     </div>
-                    <div class="col-12">
+
+                    <div class="col-10">
                         <input asp-for="Item.Collaborator" class="form-control" />
                         <span asp-validation-for="Item.Collaborator" class="text-danger"></span>
                     </div>
+                    <div class="col-2"><button onclick="hideField('collaborator-input', 'add-collaborator-button')">Delete</button></div>
                 </div>
 
                 <!-- Suggested Team -->
-                <div class="form-group row" style="display:none;">
+                <div class="form-group row" style="display:none;" id="suggested-team-input">
                     <div class="col-12">
                         <label asp-for="Item.SuggestedTeam"></label>
                     </div>
-                    <div class="col-12">
+                    <div class="col-10">
                         <input asp-for="Item.SuggestedTeam" class="form-control" />
                         <span asp-validation-for="Item.SuggestedTeam" class="text-danger"></span>
+                        <div class="col-2"><button onclick="hideField('suggested-team-input', 'add-team-button')">Delete</button></div>
                     </div>
                 </div>
 
@@ -59,16 +64,18 @@
                     </div>
                     <span asp-validation-for="Item.ProjectId"></span>
                 </div>
+                <button onclick="showField(this, 'suggested-project-input')" id="add-project-button">Add project</button>
 
                 <!-- Suggested Project -->
-                <div class="form-group row" style="display:none;">
+                <div class="form-group row" style="display:none;" id="suggested-project-input">
                     <div class="col-12">
                         <label asp-for="Item.SuggestedProject"></label>
                     </div>
-                    <div class="col-12">
+                    <div class="col-10">
                         <input asp-for="Item.SuggestedProject" class="form-control" />
                         <span asp-validation-for="Item.SuggestedProject" class="text-danger"></span>
                     </div>
+                    <div class="col-2"><button onclick="hideField('suggested-project-input', 'add-project-button')">Delete</button></div>
                 </div>
 
                 <!-- Theme -->
@@ -80,15 +87,19 @@
                     </div>
                     <span asp-validation-for="Item.ThemeId"></span>
                 </div>
+                <button onclick="showField(this, 'suggested-theme-input')" id="add-theme-button">Add theme</button>
 
                 <!-- Suggested Theme -->
-                <div class="form-group row" style="display:none;">
+                <div class="form-group row" style="display:none;" id="suggested-theme-input">
                     <div class="col-12">
                         <label asp-for="Item.SuggestedTheme"></label>
                     </div>
-                    <div class="col-12">
+                    <div class="col-10">
                         <input asp-for="Item.SuggestedTheme" class="form-control" />
                         <span asp-validation-for="Item.SuggestedTheme" class="text-danger"></span>
+                    </div>
+                    <div class="col-2">
+                        <button onclick="hideField('suggested-theme-input', 'add-theme-button')">Delete</button>
                     </div>
                 </div>
 
@@ -116,16 +127,27 @@
                     </div>
                 </div>
 
-                <!-- Suggested Tags -->
-                <div class="form-group row" style="display:none;">
-                    <div class="col-12">
-                        <label asp-for="Item.SuggestedTags"></label>
-                    </div>
-                    <div class="col-12">
-                        <input asp-for="Item.SuggestedTags" class="form-control" />
-                        <span asp-validation-for="Item.SuggestedTags" class="text-danger"></span>
-                    </div>
+                <div class="form-group" id="suggested-tags">
+                    @if (Model.SuggestedTagList != null && Model.SuggestedTagList.Count > 0)
+                    {
+                        @for (int i = 0; i < Model.SuggestedTagList.Count(); i++)
+                        {
+                            <!-- Suggested Tags -->
+                            <div class="suggested-tag-field row">
+                                <div class="col-12">
+                                    <label asp-for="SuggestedTagList[i]"></label>
+                                </div>
+                                <div class="col-10">
+                                    <input asp-for="SuggestedTagList[i]" class="form-control" />
+                                    <span asp-validation-for="SuggestedTagList[i]" class="text-danger"></span>
+                                </div>
+                                <div class="col-2"><button onclick="removeField(this, 'suggestedTag')">Delete</button></div>
+                            </div>
+                        }
+                    }
+                    <button onclick="addSuggestedTagField(this)" id="add-suggested-tag-button">Suggest a tag</button>
                 </div>
+
 
                 <!-- Title -->
                 <div class="form-group row">
@@ -150,14 +172,24 @@
                 </div>
 
                 <!-- Key Insights -->
-                <div class="form-group row">
-                    <div class="col-12">
-                        <label asp-for="Item.KeyInsights"></label>
-                    </div>
-                    <div class="col-12">
-                        <input asp-for="Item.KeyInsights" class="form-control" />
-                        <span asp-validation-for="Item.KeyInsights" class="text-danger"></span>
-                    </div>
+                <div class="form-group" id="key-insights">
+                    @if (Model.KeyInsightsList != null && Model.KeyInsightsList.Count > 0)
+                    {
+                        @for (int i = 0; i < Model.KeyInsightsList.Count(); i++)
+                        {
+                            <div class="key-insight-field row">
+                                <div class="col-12">
+                                    <label asp-for="KeyInsightsList[i]"></label>
+                                </div>
+                                <div class="col-10">
+                                    <input asp-for="KeyInsightsList[i]" class="form-control" />
+                                    <span asp-validation-for="KeyInsightsList[i]" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-2"><button onclick="removeField(this, 'keyInsight')">Delete</button></div>
+                        }
+                    }
+                    <button onclick="addKeyInsightField(this)">Add a key insight</button>
                 </div>
 
                 <!-- Key Methodology -->
@@ -212,41 +244,45 @@
                     }
                 </div>
 
-                        <!-- Files -->
-                        <div class="form-group row">
-                            <div class="col-12">
-                                <label asp-for="Item.Files"></label>
-                            </div>
-                            <div class="col-12">
-                                <input type="file" name="Item.Files" id="uploadbox" multiple asp-for="Item.Files" class="form-control" />
-                            </div>
+                <!-- Files -->
+                <div class="form-group row">
+                    <div class="col-12">
+                        <label asp-for="Item.Files"></label>
+                    </div>
+                    <div class="col-12">
+                        <input type="file" name="Item.Files" id="file-upload-box" multiple asp-for="Item.Files" class="form-control" />
+                    </div>
+                    <div class="col-12" id="files-list">
 
+                    </div>
+                    <!-- Hidden file names -->
+                    <input asp-for="Item.SuggestedProject" id="file-names" hidden />
+                </div>
+
+                <!-- Buttons -->
+                <div class="form-group">
+                    <div class="col-8 offset-2 row">
+
+                        <div class="col-6">
+                            @if (Model.Item.Id != 0)
+                            {
+                                <input type="submit" class="btn btn-info w-100" value="Update" />
+                            }
+                            else
+                            {
+                                <input type="submit" class="btn btn-primary w-100" value="Create" />
+                            }
                         </div>
-
-                        <!-- Buttons -->
-                        <div class="form-group">
-                            <div class="col-8 offset-2 row">
-
-                                <div class="col-6">
-                                    @if (Model.Item.Id != 0)
-                                    {
-                                        <input type="submit" class="btn btn-info w-100" value="Update" />
-                                    }
-                                    else
-                                    {
-                                        <input type="submit" class="btn btn-primary w-100" value="Create" />
-                                    }
-                                </div>
-                                <div class="col-6">
-                                    <a asp-action="Index" class="btn btn-success w-100">
-                                        Back
-                                    </a>
-                                </div>
-                            </div>
+                        <div class="col-6">
+                            <a asp-action="Index" class="btn btn-success w-100">
+                                Back
+                            </a>
                         </div>
                     </div>
-
                 </div>
+            </div>
+
+        </div>
     </div>
 </form>
 

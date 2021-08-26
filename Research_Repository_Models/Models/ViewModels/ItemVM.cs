@@ -16,6 +16,10 @@ namespace Research_Repository_Models.ViewModels
 
         public int? TeamId { get; set; }
 
+        public IList<string> SuggestedTagList { get; set; }
+        
+        public IList<string> KeyInsightsList { get; set; }
+
         public IEnumerable<SelectListItem> TeamSelectList { get; set; }
 
         public IEnumerable<SelectListItem> ProjectSelectList { get; set; }

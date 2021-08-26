@@ -49,6 +49,11 @@ namespace Research_Repository.Controllers
         {
 
             ItemVM itemVM = _itemRepo.GetItemVM(id);
+            //Create new temp folder for files
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string targetFileLocation = WC.ItemFilePath + "temp\\";
+            string sourceFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
+            FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, true);
 
             if (id == null)
             {
@@ -78,55 +83,46 @@ namespace Research_Repository.Controllers
 
             if (ModelState.IsValid)
             {
-                var files = HttpContext.Request.Form.Files;
+                if(itemVM.SuggestedTagList != null && itemVM.SuggestedTagList.Count > 0)
+                {
+                    itemVM.Item.SuggestedTags = string.Join("~~", itemVM.SuggestedTagList);
+                }
+                if (itemVM.KeyInsightsList != null && itemVM.KeyInsightsList.Count > 0)
+                {
+                    itemVM.Item.KeyInsights = string.Join("~~", itemVM.KeyInsightsList);
+                }
+
+                //File parameters
+                string sourceFileLocation = WC.ItemFilePath + "temp\\";
                 string webRootPath = _webHostEnvironment.WebRootPath;
 
                 if (itemVM.Item.Id == 0)
                 {
-
                     //Creating
                     _itemRepo.Add(itemVM.Item);
                     _itemRepo.Save();
                     _solr.AddUpdate(new ItemSolr(itemVM.Item));
 
-                    string fileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
-                    if (files.Count != 0)
-                    {
-                        itemVM.Item.Files = FileHelper.UploadFiles(files, webRootPath, fileLocation);
-                    }
+                    //Update files
+                    string targetFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\"; 
+                    FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, false);
 
                     _itemRepo.UpdateItemTagsList(itemVM);
                 }
                 else
                 {
-                    string fileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
                     //Updating
                     var objFromDb = _itemRepo.FirstOrDefault(filter: u => u.Id == itemVM.Item.Id, isTracking: false);
 
-                    if (files.Count > 0)
-                    {
-
-                        if (objFromDb.Files != null)
-                        {
-                            List<string> filesArray = objFromDb.Files.Split(',').Where(u => !string.IsNullOrWhiteSpace(u)).ToList();
-                            foreach (string file in filesArray)
-                            {
-                                FileHelper.DeleteFile(webRootPath, file, fileLocation);
-                            }
-                            
-                        }
-
-                        itemVM.Item.Files = FileHelper.UploadFiles(files, webRootPath, fileLocation);
-                    }
-                    else
-                    {
-                        itemVM.Item.Files = objFromDb.Files;
-                    }
+                    //Update files
+                    string targetFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
+                    FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, true);
 
                     _itemRepo.Update(itemVM.Item);
                     _itemRepo.UpdateItemTagsList(itemVM);
                 }
 
+                FileHelper.DeleteFiles(null, webRootPath, sourceFileLocation);
                 _itemRepo.Save();
                 return RedirectToAction("Index");
             }
@@ -151,15 +147,30 @@ namespace Research_Repository.Controllers
                 string webRootPath = _webHostEnvironment.WebRootPath;
                 string fileLocation = WC.ItemFilePath + obj.Id + "\\";
 
-                List<string> filesArray = obj.Files.Split(',').Where(u => !string.IsNullOrWhiteSpace(u)).ToList();
-                foreach (string file in filesArray)
-                {
-                    FileHelper.DeleteFile(webRootPath, file, fileLocation);
-                }
+                FileHelper.DeleteFiles(null, webRootPath, fileLocation);
             }
             _itemRepo.Remove(obj);
             _itemRepo.Save();
             return RedirectToAction("Index");
+        }
+
+        //POST - POSTFILES (FROM AJAX CALL)
+        public string PostFiles()
+        {
+            var files = Request.Form.Files;
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string fileLocation = WC.ItemFilePath + "temp\\";
+
+            return FileHelper.UploadFiles(files, webRootPath, fileLocation);
+        }
+
+        //DELETE - DELETEFILES (FROM AJAX CALL)
+        public void DeleteFiles(string name)
+        {
+            string webRootPath = _webHostEnvironment.WebRootPath;
+            string fileLocation = WC.ItemFilePath + "temp\\";
+
+            FileHelper.DeleteFiles(name, webRootPath, fileLocation);
         }
 
         //GET - GETTEAMPROJECTS (FROM AJAX CALL)

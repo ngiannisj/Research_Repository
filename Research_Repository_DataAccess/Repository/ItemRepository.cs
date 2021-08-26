@@ -25,15 +25,27 @@ namespace Research_Repository_DataAccess.Repository
 
         public ItemVM GetItemVM(int? id)
         {
+          
+            IList<string> suggestedTagsList = new List<string>();
+            IList<string> keyInsightsList = new List<string>{""};
+            if (id !=null && id != 0)
+            {
+                suggestedTagsList = _db.Items.FirstOrDefault(u => u.Id == id).SuggestedTags.ToString().Split("~~");
+                keyInsightsList = _db.Items.FirstOrDefault(u => u.Id == id).KeyInsights.ToString().Split("~~");
+            }
+
             ICollection<int> selectedTagIds = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == id).Select(i => i.TagId).ToList();
             ItemVM itemVM = new ItemVM()
             {
+                SuggestedTagList = suggestedTagsList,
+                KeyInsightsList = keyInsightsList,
                 TagList = _db.Tags.AsNoTracking().Select(i => new CheckboxVM
                 {
                     Value = i.Id,
                     Name = i.Name,
                     CheckedState = selectedTagIds.Contains(i.Id)
                 }).ToList(),
+
                 ThemeSelectList = _db.Themes.AsNoTracking().Select(i => new SelectListItem
                 {
                     Text = i.Name,

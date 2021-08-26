@@ -27,4 +27,8 @@
     <ProjectReference Include="..\Research_Repository_Utility\Research_Repository_Utility.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\files\documents\items\" />
+  </ItemGroup>
+
 </Project>
