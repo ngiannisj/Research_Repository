@@ -63,6 +63,14 @@ namespace Research_Repository_Models
         //Files
         public string Files { get; set; }
 
+        //Status
+        public string Status { get; set; }
 
+        //User
+        [Display(Name = "Uploader")]
+        public string UploaderId { get; set; }
+
+        [ForeignKey("UploaderId")]
+        public virtual ApplicationUser Uploader { get; set; }
     }
 }

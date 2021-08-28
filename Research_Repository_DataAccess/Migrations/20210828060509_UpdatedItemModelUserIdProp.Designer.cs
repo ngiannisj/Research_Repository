@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Research_Repository.Data;
 
 namespace Research_Repository_DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210828060509_UpdatedItemModelUserIdProp")]
+    partial class UpdatedItemModelUserIdProp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -403,6 +405,9 @@ namespace Research_Repository_DataAccess.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<string>("Branch")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
@@ -541,7 +546,7 @@ namespace Research_Repository_DataAccess.Migrations
 
             modelBuilder.Entity("Research_Repository_Models.ApplicationUser", b =>
                 {
-                    b.HasOne("Research_Repository_Models.Team", "Team")
+                    b.HasOne("Research_Repository_Models.Project", "Team")
                         .WithMany()
                         .HasForeignKey("TeamId");
 

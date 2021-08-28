@@ -265,26 +265,11 @@
                 <!-- Buttons -->
                 <div class="form-group">
                     <div class="col-8 offset-2 row">
-
-                        <div class="col-6">
-                            @if (Model.Item.Id != 0)
-                            {
-                                <input type="submit" class="btn btn-info w-100" value="Update" />
-                            }
-                            else
-                            {
-                                <input type="submit" class="btn btn-primary w-100" value="Create" />
-                            }
-                        </div>
-                        <div class="col-6">
-                            <a asp-action="Index" class="btn btn-success w-100">
-                                Back
-                            </a>
-                        </div>
+                        <input type="submit" class="btn btn-info w-100" name="submit" value="Submit" />
+                        <input type="submit" class="btn btn-primary w-100" name="save" value="Save draft" />
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </form>

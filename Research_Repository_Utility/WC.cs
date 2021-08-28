@@ -26,5 +26,11 @@ namespace Research_Repository_Utility
         //Sensitivity
         public const string Unclassified = "Unclassified";
         public const string Protected = "Protected";
+
+        //Item status
+        public const string Draft = "Draft";
+        public const string Submitted = "Submitted";
+        public const string Published = "Published";
+        public const string Rejected = "Rejected";
     }
 }

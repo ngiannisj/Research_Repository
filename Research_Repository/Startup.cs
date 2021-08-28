@@ -38,11 +38,15 @@ namespace Research_Repository
                 .AddDefaultTokenProviders().AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            //Used for accessing current user properties
+            services.AddHttpContextAccessor();
+
             services.AddScoped<IThemeRepository, ThemeRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IProfileRepository, ProfileRepository>();
 
             services.AddControllersWithViews();
 

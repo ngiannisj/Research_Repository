@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Research_Repository.Controllers
@@ -28,11 +30,13 @@ namespace Research_Repository.Controllers
 
         private readonly IItemRepository _itemRepo;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly UserManager<IdentityUser> _userManager; //Used for accessing current user properties
         private readonly ISolrIndexService<ItemSolr> _solr;
-        public ItemController(IItemRepository itemRepo, IWebHostEnvironment webHostEnvironment, ISolrIndexService<ItemSolr> solr)
+        public ItemController(IItemRepository itemRepo, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager, ISolrIndexService<ItemSolr> solr)
         {
             _itemRepo = itemRepo;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
             _solr = solr;
 
         }
@@ -81,8 +85,16 @@ namespace Research_Repository.Controllers
         //POST - UPSERT
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upsert(ItemVM itemVM)
+        public IActionResult Upsert(ItemVM itemVM, string submit)
         {
+
+            if(submit == "Submit")
+            {
+                itemVM.Item.Status = WC.Submitted;
+            } else
+            {
+                itemVM.Item.Status = WC.Draft;
+            }
 
                 if(itemVM.SuggestedTagList != null && itemVM.SuggestedTagList.Count > 0)
                 {
@@ -99,6 +111,7 @@ namespace Research_Repository.Controllers
 
                 if (itemVM.Item.Id == 0)
                 {
+                itemVM.Item.UploaderId = _userManager.GetUserId(User);
                     //Creating
                     _itemRepo.Add(itemVM.Item);
                     _itemRepo.Save();
@@ -125,7 +138,7 @@ namespace Research_Repository.Controllers
 
                 FileHelper.DeleteFiles(null, webRootPath, sourceFileLocation);
                 _itemRepo.Save();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Profile");
         }
 
 

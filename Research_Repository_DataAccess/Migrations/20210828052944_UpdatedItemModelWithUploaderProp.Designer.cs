@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Research_Repository.Data;
 
 namespace Research_Repository_DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210828052944_UpdatedItemModelWithUploaderProp")]
+    partial class UpdatedItemModelWithUploaderProp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -285,16 +287,14 @@ namespace Research_Repository_DataAccess.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UploaderId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Uploader")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProjectId");
 
                     b.HasIndex("ThemeId");
-
-                    b.HasIndex("UploaderId");
 
                     b.ToTable("Items");
                 });
@@ -403,6 +403,9 @@ namespace Research_Repository_DataAccess.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<string>("Branch")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
@@ -480,15 +483,9 @@ namespace Research_Repository_DataAccess.Migrations
                         .HasForeignKey("ThemeId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Research_Repository_Models.ApplicationUser", "Uploader")
-                        .WithMany("Items")
-                        .HasForeignKey("UploaderId");
-
                     b.Navigation("Project");
 
                     b.Navigation("Theme");
-
-                    b.Navigation("Uploader");
                 });
 
             modelBuilder.Entity("Research_Repository_Models.ItemTag", b =>
@@ -541,7 +538,7 @@ namespace Research_Repository_DataAccess.Migrations
 
             modelBuilder.Entity("Research_Repository_Models.ApplicationUser", b =>
                 {
-                    b.HasOne("Research_Repository_Models.Team", "Team")
+                    b.HasOne("Research_Repository_Models.Project", "Team")
                         .WithMany()
                         .HasForeignKey("TeamId");
 
@@ -575,11 +572,6 @@ namespace Research_Repository_DataAccess.Migrations
                     b.Navigation("Items");
 
                     b.Navigation("ThemeTags");
-                });
-
-            modelBuilder.Entity("Research_Repository_Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }
