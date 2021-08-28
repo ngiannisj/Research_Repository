@@ -1,4 +1,6 @@
-﻿@model Research_Repository_Models.ViewModels.ProfileVM;
+﻿@using Research_Repository_Utility;
+
+@model Research_Repository_Models.ViewModels.ProfileVM;
 
 <div class="container p-3">
     <div class="row pt-4">
@@ -11,6 +13,15 @@
 
     @if (Model.User.Items != null && Model.User.Items.Count() > 0)
     {
+<div>
+    @if (User.IsInRole(WC.UploaderRole))
+    {
+        <button id="drafts-filter-btn selected" onclick="filterProfileItems('@WC.Draft')">Drafts</button>
+    }
+        <button id="submitted-filter-btn @(User.IsInRole(WC.LibrarianRole) ? "selected" : "") " onclick="filterProfileItems('@WC.Submitted')">Submitted</button>
+        <button id="published-filter-btn" onclick="filterProfileItems('@WC.Published')">Published</button>
+        <button id="rejected-filter-btn" onclick="filterProfileItems('@WC.Rejected')">Rejected</button>
+    </div>
         <table class="table table-bordered table-striped" style="width: 100%">
             <thead>
                 <tr>
@@ -24,19 +35,19 @@
                 {
                     if (obj != null)
                     {
-                    <tr>
-                        <td width="50%">@obj.Title</td>
-                        <td class="text-center">
-                            <div class="w-75 btn-group" role="group">
-                                <a asp-controller="Item" asp-action="Upsert" asp-route-Id="@obj.Id" class="btn btn-primary mx-2">
-                                    Edit
-                                </a>
-                                <a asp-controller="Item" asp-action="Delete" asp-route-Id="@obj.Id" class="btn btn-danger">
-                                    Delete
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
+                        <tr class="item" data-status="@obj.Status">
+                            <td width="50%">@obj.Title</td>
+                            <td class="text-center">
+                                <div class="w-75 btn-group" role="group">
+                                    <a asp-controller="Item" asp-action="Upsert" asp-route-Id="@obj.Id" class="btn btn-primary mx-2">
+                                        Edit
+                                    </a>
+                                    <a asp-controller="Item" asp-action="Delete" asp-route-Id="@obj.Id" class="btn btn-danger">
+                                        Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
                     }
                 }
             </tbody>
@@ -46,29 +57,29 @@
     {
         <p>No drafts exist</p>
     }
-<form method="post" enctype="multipart/form-data">
-    <div class="form-group row">
-        <div class="col-8 row">
-            <input asp-for="User.FullName" id="user-name-input" class="form-control" style="display:none;" />
-            <div id="user-name-text">@Model.User.FullName</div>
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group row">
+            <div class="col-8 row">
+                <input asp-for="User.FullName" id="user-name-input" class="form-control" style="display:none;" />
+                <div id="user-name-text">@Model.User.FullName</div>
+            </div>
         </div>
-    </div>
-    <div class="form-group row">
-        <div class="col-8 row">
-            <select asp-items="@Model.TeamSelectList" asp-for="User.TeamId" class="form-control" id="user-team-selector" style="display:none;">
-                <option disabled selected value="0">-- Select Team --</option>
-            </select>
+        <div class="form-group row">
+            <div class="col-8 row">
+                <select asp-items="@Model.TeamSelectList" asp-for="User.TeamId" class="form-control" id="user-team-selector" style="display:none;">
+                    <option disabled selected value="0">-- Select Team --</option>
+                </select>
+            </div>
+            <div id="user-team-text">@(Model.User.TeamId != null ? Model.User.Team.Name : "No team provided")</div>
         </div>
-        <div id="user-team-text">@(Model.User.TeamId != null ? Model.User.Team.Name : "No team provided")</div>
-    </div>
-    <div class="form-group row">
-        <div class="col-8 row">
-            <input asp-for="User.Role" id="user-role-input" class="form-control" style="display:none;" />
-            <div id="user-role-text">@(Model.User.Role != null ? Model.User.Role : "No role provided")</div>
+        <div class="form-group row">
+            <div class="col-8 row">
+                <input asp-for="User.Role" id="user-role-input" class="form-control" style="display:none;" />
+                <div id="user-role-text">@(Model.User.Role != null ? Model.User.Role : "No role provided")</div>
+            </div>
         </div>
-    </div>
-    <button type="submit" id="profile-edit-btn" class="btn btn-info w-100">Edit</button>
-    <input type="submit" id="profile-save-btn" class="btn btn-info w-100" name="save" value="Save" asp-action="SaveProfile" style="display:none;"/>
-</form>
+        <button type="submit" id="profile-edit-btn" class="btn btn-info w-100">Edit</button>
+        <input type="submit" id="profile-save-btn" class="btn btn-info w-100" name="save" value="Save" asp-action="SaveProfile" style="display:none;" />
+    </form>
 </div>
 

@@ -66,6 +66,9 @@ namespace Research_Repository_Models
         //Status
         public string Status { get; set; }
 
+        [Display (Name = "Reason")]
+        public string Comment { get; set; }
+
         //User
         [Display(Name = "Uploader")]
         public string UploaderId { get; set; }

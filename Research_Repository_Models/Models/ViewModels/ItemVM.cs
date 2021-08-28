@@ -22,6 +22,8 @@ namespace Research_Repository_Models.ViewModels
 
         public IEnumerable<SelectListItem> TeamSelectList { get; set; }
 
+        public IEnumerable<SelectListItem> StatusSelectList { get; set; }
+
         public IEnumerable<SelectListItem> ProjectSelectList { get; set; }
 
         public IEnumerable<SelectListItem> ThemeSelectList { get; set; }

@@ -41,6 +41,9 @@ namespace Research_Repository_DataAccess.Repository
                 item = _db.Items.Find(id);
             }
 
+            string[] statusInputs = { WC.Submitted, WC.Published, WC.Rejected };
+            IList<string> statusSelectList = new List<string>(statusInputs);
+
             ICollection<int> selectedTagIds = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == id).Select(i => i.TagId).ToList();
             ItemVM itemVM = new ItemVM()
             {
@@ -67,6 +70,11 @@ namespace Research_Repository_DataAccess.Repository
                 {
                     Text = i.Name,
                     Value = i.Id.ToString()
+                }),
+                StatusSelectList = statusSelectList.Select(i => new SelectListItem
+                {
+                    Text = i,
+                    Value = i
                 }),
                 ApprovalRadioButtons = new List<RadioButtonVM>
                 {

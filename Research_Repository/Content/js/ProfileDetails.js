@@ -13,4 +13,13 @@
         $("#user-role-text").hide();
         $(this).hide();
     });
+
+    $(".selected").click();
 });
+
+function filterProfileItems(status) {
+    $(".item").hide();
+    $(`.item[data-status='${status}']`).show();
+    $(".selected").removeClass("selected");
+    $(this).addClass("selected");
+}

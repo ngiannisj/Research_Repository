@@ -262,14 +262,36 @@
                     </div>
                 </div>
 
-                <!-- Buttons -->
-                <div class="form-group">
-                    <div class="col-8 offset-2 row">
-                        <input type="submit" class="btn btn-info w-100" name="submit" value="Submit" />
-                        <input type="submit" class="btn btn-primary w-100" name="save" value="Save draft" />
+                @if (User.IsInRole(WC.LibrarianRole))
+                {
+                    <!-- Status -->
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <select id="status-selector" asp-for="Item.Status" asp-items="@Model.StatusSelectList" class="form-control">
+                                <option disabled selected>-- Select Status --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Comment -->
+                    <div class="form-group row" id="comment-input">
+                        <div class="col-12">
+                            <label asp-for="Item.Comment"></label>
+                        </div>
+                        <div class="col-12">
+                            <input asp-for="Item.Comment" class="form-control" />
+                        </div>
+                    </div>
+                }
+
+                    <!-- Buttons -->
+                    <div class="form-group">
+                        <div class="col-8 offset-2 row">
+                            <input type="submit" class="btn btn-info w-100" name="submit" value="Submit" />
+                            <input type="submit" class="btn btn-primary w-100" name="save" value="Save draft" />
+                        </div>
                     </div>
                 </div>
-            </div>
         </div>
     </div>
 </form>

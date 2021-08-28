@@ -14,6 +14,15 @@
             $("#tag-selector select").prop('disabled', false);
         }
     });
+
+    $("#status-selector").change(function () {
+        if ($(this).val == "Rejected") {
+            $("#comment-input").show();
+        } else {
+            $("#comment-input").hide();
+        }
+    });
+
 });
 
 function addKeyInsightField(buttonRef) {

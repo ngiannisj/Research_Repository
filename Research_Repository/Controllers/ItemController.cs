@@ -68,7 +68,7 @@ namespace Research_Repository.Controllers
             {
                 //Updating
                 itemVM.Item = _itemRepo.FirstOrDefault(filter: i => i.Id == id, includeProperties: "Project");
-                if(itemVM.Item.Project != null)
+                if (itemVM.Item.Project != null)
                 {
                     itemVM.TeamId = itemVM.Item.Project.TeamId;
                 }
@@ -88,57 +88,62 @@ namespace Research_Repository.Controllers
         public IActionResult Upsert(ItemVM itemVM, string submit)
         {
 
-            if(submit == "Submit")
+            if (submit == "Submit")
             {
                 itemVM.Item.Status = WC.Submitted;
-            } else
+            }
+            else
             {
                 itemVM.Item.Status = WC.Draft;
             }
 
-                if(itemVM.SuggestedTagList != null && itemVM.SuggestedTagList.Count > 0)
-                {
-                    itemVM.Item.SuggestedTags = string.Join("~~", itemVM.SuggestedTagList);
-                }
-                if (itemVM.KeyInsightsList != null && itemVM.KeyInsightsList.Count > 0)
-                {
-                    itemVM.Item.KeyInsights = string.Join("~~", itemVM.KeyInsightsList);
-                }
+            if (itemVM.SuggestedTagList != null && itemVM.SuggestedTagList.Count > 0)
+            {
+                itemVM.Item.SuggestedTags = string.Join("~~", itemVM.SuggestedTagList);
+            }
+            if (itemVM.KeyInsightsList != null && itemVM.KeyInsightsList.Count > 0)
+            {
+                itemVM.Item.KeyInsights = string.Join("~~", itemVM.KeyInsightsList);
+            }
 
-                //File parameters
-                string sourceFileLocation = WC.ItemFilePath + "temp\\";
-                string webRootPath = _webHostEnvironment.WebRootPath;
+            //File parameters
+            string sourceFileLocation = WC.ItemFilePath + "temp\\";
+            string webRootPath = _webHostEnvironment.WebRootPath;
 
-                if (itemVM.Item.Id == 0)
-                {
+            if (itemVM.Item.Id == 0)
+            {
                 itemVM.Item.UploaderId = _userManager.GetUserId(User);
-                    //Creating
-                    _itemRepo.Add(itemVM.Item);
-                    _itemRepo.Save();
-                    _solr.AddUpdate(new ItemSolr(itemVM.Item));
-
-                    //Update files
-                    string targetFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\"; 
-                    FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, false);
-
-                    _itemRepo.UpdateItemTagsList(itemVM);
-                }
-                else
-                {
-                    //Updating
-                    var objFromDb = _itemRepo.FirstOrDefault(filter: u => u.Id == itemVM.Item.Id, isTracking: false);
-
-                    //Update files
-                    string targetFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
-                    FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, true);
-
-                    _itemRepo.Update(itemVM.Item);
-                    _itemRepo.UpdateItemTagsList(itemVM);
-                }
-
-                FileHelper.DeleteFiles(null, webRootPath, sourceFileLocation);
+                //Creating
+                _itemRepo.Add(itemVM.Item);
                 _itemRepo.Save();
-                return RedirectToAction("Index", "Profile");
+                _solr.AddUpdate(new ItemSolr(itemVM.Item));
+
+                //Update files
+                string targetFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
+                FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, false);
+
+                _itemRepo.UpdateItemTagsList(itemVM);
+            }
+            else
+            {
+                //Updating
+                var objFromDb = _itemRepo.FirstOrDefault(filter: u => u.Id == itemVM.Item.Id, isTracking: false);
+
+                //Update files
+                string targetFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
+                FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, true);
+
+                _itemRepo.Update(itemVM.Item);
+                _itemRepo.UpdateItemTagsList(itemVM);
+            }
+
+            if (itemVM.Item.Status == WC.Rejected)
+            {
+                itemVM.Item.Comment = "";
+            }
+            FileHelper.DeleteFiles(null, webRootPath, sourceFileLocation);
+            _itemRepo.Save();
+            return RedirectToAction("Index", "Profile");
         }
 
 
