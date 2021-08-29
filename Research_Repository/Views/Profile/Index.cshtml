@@ -16,9 +16,9 @@
 <div>
     @if (User.IsInRole(WC.UploaderRole))
     {
-        <button id="drafts-filter-btn selected" onclick="filterProfileItems('@WC.Draft')">Drafts</button>
+        <button id="drafts-filter-btn" class="selected" onclick="filterProfileItems('@WC.Draft')">Drafts</button>
     }
-        <button id="submitted-filter-btn @(User.IsInRole(WC.LibrarianRole) ? "selected" : "") " onclick="filterProfileItems('@WC.Submitted')">Submitted</button>
+        <button id="submitted-filter-btn" class="@(User.IsInRole(WC.LibrarianRole) ? "selected" : "")" onclick="filterProfileItems('@WC.Submitted')">Submitted</button>
         <button id="published-filter-btn" onclick="filterProfileItems('@WC.Published')">Published</button>
         <button id="rejected-filter-btn" onclick="filterProfileItems('@WC.Rejected')">Rejected</button>
     </div>
@@ -35,7 +35,7 @@
                 {
                     if (obj != null)
                     {
-                        <tr class="item" data-status="@obj.Status">
+                        <tr class="item" data-status="@obj.Status" style="display:none;">
                             <td width="50%">@obj.Title</td>
                             <td class="text-center">
                                 <div class="w-75 btn-group" role="group">

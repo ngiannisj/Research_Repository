@@ -88,7 +88,8 @@ namespace Research_Repository.Controllers
                 }
             }
             IList<int> tempTeamIdList = _teamRepo.GetTeamIds(teams);
-            IEnumerable<Team> dbTeamList = _teamRepo.GetAll(isTracking: false, includeProperties: "Projects");
+            IEnumerable<Team> dbTeamList = _teamRepo.GetAll(isTracking: false, include: i => i
+        .Include(a => a.Projects));
             IList<int> dbTeamIdList = _teamRepo.GetTeamIds(dbTeamList);
 
             if(teams == null || teams.Count() < 1)
@@ -109,7 +110,8 @@ namespace Research_Repository.Controllers
                     team.Projects = teamProjects;
                 }
             
-            dbTeamList = _teamRepo.GetAll(isTracking: false, includeProperties: "Projects");
+            dbTeamList = _teamRepo.GetAll(isTracking: false, include: i => i
+        .Include(a => a.Projects));
             dbTeamIdList = _teamRepo.GetTeamIds(dbTeamList);
                     if (dbTeamIdList.Contains(team.Id))
                     {
@@ -126,7 +128,8 @@ namespace Research_Repository.Controllers
         }
 
             //Reevaluate lists after adding and updating teams/projects
-            dbTeamList = _teamRepo.GetAll(isTracking: false, includeProperties: "Projects");
+            dbTeamList = _teamRepo.GetAll(isTracking: false, include: i => i
+        .Include(a => a.Projects));
             tempTeamIdList = _teamRepo.GetTeamIds(teams);
             foreach (Team obj in dbTeamList)
             {

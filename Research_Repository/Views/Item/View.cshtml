@@ -1,0 +1,225 @@
+﻿@using Research_Repository_Utility;
+@model Research_Repository_Models.Item;
+
+@{
+    //Create files list
+    IList<string> fileNames = new List<string>();
+    if (Model.Files != null)
+    {
+
+        fileNames = Model.Files.Split(",").ToList();
+
+        //Remove empty space from list
+        if(fileNames != null && fileNames.Count() > 1)
+        {
+            fileNames.RemoveAt(fileNames.Count - 1);
+        }
+    }
+
+    string tempFilesFolderPath = $@"/Item/GetDownloadedFile/?filePath={WC.ItemFilePath}temp\";
+
+    //Create key insights list
+    IList<string> keyInsights = new List<string>();
+    if (Model.KeyInsights != null)
+    {
+
+        keyInsights = Model.KeyInsights.Split("~~").ToList();
+
+        //Remove empty space from list
+        if (keyInsights != null && keyInsights.Count() > 1)
+        {
+            keyInsights.RemoveAt(fileNames.Count - 1);
+        }
+    }
+}
+
+<div class="border p-3">
+
+    <div class="row">
+        <div class="col-12">
+
+
+            <!-- Team -->
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.Title != null)
+                    {
+                        @Model.Title
+                    }
+                    </div>
+            </div>
+
+            <!-- Collaborator -->
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.Collaborator != null)
+                    {
+                        @Model.Collaborator
+                    }
+                    </div>
+            </div>
+
+            <!-- Suggested Team -->
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.Project != null)
+                    {
+                        @Model.Project.Team.Name
+                    }
+                </div>
+            </div>
+
+            <!-- Project -->
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.Project != null)
+                    {
+                        @Model.Project.Name
+                    }
+                    </div>
+            </div>
+
+            <!-- Theme -->
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.Theme != null)
+                    {
+                        @Model.Theme
+                    }
+                    </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="form-group row">
+                <div class="col-12">
+                    @if (Model.ItemTags != null && Model.ItemTags.Count() > 0)
+                    {
+                        foreach (ItemTag itemTag in Model.ItemTags)
+                        {
+                            <div>@itemTag.Tag.Name</div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <!-- Title -->
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.Title != null)
+                    {
+                        @Model.Title
+                    }
+                    </div>
+            </div>
+
+            <!-- Abstract -->
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.Abstract != null)
+                    {
+                        @Model.Abstract
+                    }
+                    </div>
+            </div>
+
+            <!-- Key Insights -->
+            <div class="row">
+                <div class="col-12">
+                    @foreach (string keyInsight in keyInsights)
+                    {
+                        <div>@keyInsight</div>
+                    }
+                </div>
+            </div>
+
+            <!-- Key Methodology -->
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.Methodology != null)
+                    {
+                        @Model.Methodology
+                    }
+                    </div>
+            </div>
+
+            <!-- Key Limitations -->
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.Limitations != null)
+                    {
+                        @Model.Limitations
+                    }
+                    </div>
+            </div>
+
+            <!-- Start Date -->
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.StartDate != null)
+                    {
+                        @Model.StartDate
+                    }
+                    </div>
+            </div>
+
+            <!-- End Date -->
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.EndDate != null)
+                    {
+                        @Model.EndDate
+                    }
+                    </div>
+            </div>
+
+            <!-- Approved Use -->
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.ApprovedUse != null)
+                    {
+                        @Model.ApprovedUse
+                    }
+                    </div>
+            </div>
+
+            <!-- Sensitivity Use -->
+            <div class="row">
+                <div class="col-12">
+                    @if (Model.Sensitivity != null)
+                    {
+                        @Model.Sensitivity
+                    }
+                    </div>
+            </div>
+
+            <!-- Files -->
+            <div class="row">
+                <div class="col-12" id="files-list">
+                    @foreach (string fileName in fileNames)
+                    {
+                        string downloadLink = tempFilesFolderPath + fileName;
+                    }
+                </div>
+            </div>
+            @if (User.IsInRole(WC.LibrarianRole))
+            {
+                <form method="post" enctype="multipart/form-data">
+                    @if (Model.Id != 0)
+                    {
+                        <input asp-for="Id" hidden />
+                    }
+                    <!-- Buttons -->
+                <div class="form-group">
+                    <a asp-action="Upsert" asp-route-Id="@Model.Id" class="btn btn-primary mx-2">
+                        Edit
+                    </a>
+                    <a asp-action="Delete" asp-route-Id="@Model.Id" class="btn btn-danger">
+                        Delete
+                    </a>
+                </div>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+

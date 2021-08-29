@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Research_Repository.Data;
 using Research_Repository_DataAccess.Repository.IRepository;
 using System;
@@ -33,19 +34,16 @@ namespace Research_Repository_DataAccess.Repository
             return dbSet.Find(id);
         }
 
-        public T FirstOrDefault(Expression<Func<T, bool>> filter = null, string includeProperties = null, bool isTracking = true)
+        public T FirstOrDefault(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, bool isTracking = true)
         {
             IQueryable<T> query = dbSet;
             if (filter != null)
             {
                 query = query.Where(filter);
             }
-            if (includeProperties != null)
+            if (include != null)
             {
-                foreach (var includeProp in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    query = query.Include(includeProp);
-                }
+                    query = include(query);
             }
             if (!isTracking)
             {
@@ -54,21 +52,18 @@ namespace Research_Repository_DataAccess.Repository
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = null, bool isTracking = true)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, bool isTracking = true)
         {
             IQueryable<T> query = dbSet;
             if(filter != null)
             {
                 query = query.Where(filter);
             }
-            if(includeProperties != null)
+            if (include != null)
             {
-                foreach(var includeProp in includeProperties.Split(new char[] { ','}, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    query = query.Include(includeProp);
-                }
+                query = include(query);
             }
-            if(orderBy != null)
+            if (orderBy != null)
             {
                 query = orderBy(query);
             }

@@ -4,19 +4,19 @@
     });
 
     $("#team-selector").change(function () {
-        if ($(this).val != 0) {
+        if ($(this).val() != 0) {
             $("#project-selector").prop('disabled', false);
         }
     });
 
     $("#theme-selector").change(function () {
-        if ($(this).val != 0) {
+        if ($(this).val() != 0) {
             $("#tag-selector select").prop('disabled', false);
         }
     });
 
     $("#status-selector").change(function () {
-        if ($(this).val == "Rejected") {
+        if ($(this).val() == "Rejected") {
             $("#comment-input").show();
         } else {
             $("#comment-input").hide();

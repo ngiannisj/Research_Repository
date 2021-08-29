@@ -43,7 +43,8 @@ namespace Research_Repository.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Item> objList = _itemRepo.GetAll(includeProperties: WC.ThemeName);
+            IEnumerable<Item> objList = _itemRepo.GetAll(filter: u => u.Status == WC.Published, include: i => i
+        .Include(a => a.Theme));
             return View(objList);
         }
 
@@ -67,7 +68,7 @@ namespace Research_Repository.Controllers
             else
             {
                 //Updating
-                itemVM.Item = _itemRepo.FirstOrDefault(filter: i => i.Id == id, includeProperties: "Project");
+                itemVM.Item = _itemRepo.FirstOrDefault(filter: i => i.Id == id, include: i => i.Include(a => a.Project));
                 if (itemVM.Item.Project != null)
                 {
                     itemVM.TeamId = itemVM.Item.Project.TeamId;
@@ -88,11 +89,7 @@ namespace Research_Repository.Controllers
         public IActionResult Upsert(ItemVM itemVM, string submit)
         {
 
-            if (submit == "Submit")
-            {
-                itemVM.Item.Status = WC.Submitted;
-            }
-            else
+            if (submit != "Submit")
             {
                 itemVM.Item.Status = WC.Draft;
             }
@@ -145,6 +142,36 @@ namespace Research_Repository.Controllers
             _itemRepo.Save();
             return RedirectToAction("Index", "Profile");
         }
+
+        //GET - VIEW
+        public IActionResult View(int id)
+        {
+            Item item = _itemRepo.FirstOrDefault(u => u.Id == id, include: source => source
+        .Include(a => a.Project)
+        .ThenInclude(a => a.Team)
+        .Include(a => a.ItemTags)
+        .ThenInclude(a => a.Tag));
+
+                //Updating
+                if (item.Project != null)
+                {
+                    //item.Team = item.Project.Team;
+                }
+
+            if (item.ItemTags != null)
+            {
+                foreach(ItemTag itemTag in item.ItemTags)
+                {
+                    //item.Tags.Add(itemTag.Tag);
+                }
+            }
+
+            if (item == null)
+                {
+                    return NotFound();
+                }
+                return View(item);
+            }
 
 
         //DELETE - DELETE

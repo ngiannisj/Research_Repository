@@ -14,7 +14,7 @@
         $(this).hide();
     });
 
-    $(".selected").click();
+    $(".selected").first().click();
 });
 
 function filterProfileItems(status) {

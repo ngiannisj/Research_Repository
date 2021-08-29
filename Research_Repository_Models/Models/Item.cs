@@ -46,7 +46,6 @@ namespace Research_Repository_Models
         [ForeignKey("ProjectId")]
         public virtual Project Project { get; set; }
 
-
         public ICollection<ItemTag> ItemTags { get; set; }
 
         //Research information
