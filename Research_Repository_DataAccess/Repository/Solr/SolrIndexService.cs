@@ -58,7 +58,7 @@ namespace Research_Repository_DataAccess.Repository.Solr
 
             if (!string.IsNullOrEmpty(itemQueryParams.SearchText))
             {
-                query = new SolrQuery("*");
+                query = new SolrQuery(itemQueryParams.SearchText);
             }
             else
             {
@@ -68,10 +68,13 @@ namespace Research_Repository_DataAccess.Repository.Solr
             SolrQueryResults<T> items = _solr.Query(query, new QueryOptions
             {
                FilterQueries = new ISolrQuery[] {
-                new SolrQueryInList("teams", itemQueryParams.Teams[0] != "" ? itemQueryParams.Teams : null),
-                new SolrQueryInList("projects", itemQueryParams.Projects[0] != "" ? itemQueryParams.Projects : null),
-                new SolrQueryInList("tags", itemQueryParams.Tags[0] != "" ? itemQueryParams.Tags : null)
-            }
+            new SolrQueryInList("themes", itemQueryParams.Themes[0] != "" ? itemQueryParams.Themes : null),
+            new SolrQueryInList("teams", itemQueryParams.Teams[0] != "" ? itemQueryParams.Teams : null),
+            new SolrQueryInList("projects", itemQueryParams.Projects[0] != "" ? itemQueryParams.Projects : null),
+            new SolrQueryInList("tags", itemQueryParams.Tags[0] != "" ? itemQueryParams.Tags : null),
+            new SolrQueryInList("sensitivity", itemQueryParams.Sensitivity[0] != "" ? itemQueryParams.Sensitivity : null),
+            new SolrQueryInList("approvals", itemQueryParams.Approvals[0] != "" ? itemQueryParams.Approvals : null)
+        }
         });
             return items;
         }

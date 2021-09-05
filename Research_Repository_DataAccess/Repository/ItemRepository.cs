@@ -127,20 +127,90 @@ namespace Research_Repository_DataAccess.Repository
         }
 
         //GET - GetAssignedProjects
-        public ICollection<int> GetAssignedProjects(int id)
+        public ItemListVM GetItemListVM()
         {
-            ICollection<int> AssignedProjectIds = _db.Projects.AsNoTracking().Where(i => i.TeamId == id).Select(i => i.Id).ToList();
+            IEnumerable<Item> items = _db.Items.Where(u => u.Status == WC.Published).Include(i => i.Theme);
+            string[] sensitivityArray = { WC.Unclassified, WC.Protected };
+            IList<string> sensitivityList = sensitivityArray.ToList();
+            string[] approvalArray = { WC.Internal, WC.External };
+            IList<string> approvalList = approvalArray.ToList();
 
+            ItemListVM itemListVM = new ItemListVM
+            {
+                Items = items,
+                TagCheckboxes = _db.Tags.AsNoTracking().Select(i => new CheckboxVM
+                {
+                    Value = i.Id,
+                    Name = i.Name,
+                    CheckedState = false
+                }).ToList(),
+                ThemeCheckboxes = _db.Themes.AsNoTracking().Select(i => new CheckboxVM
+                {
+                    Value = i.Id,
+                    Name = i.Name,
+                    CheckedState = false
+                }).ToList(),
+                TeamCheckboxes = _db.Teams.AsNoTracking().Select(i => new CheckboxVM
+                {
+                    Value = i.Id,
+                    Name = i.Name,
+                    CheckedState = false
+                }).ToList(),
+                ProjectCheckboxes = _db.Projects.AsNoTracking().Select(i => new CheckboxVM
+                {
+                    Value = i.Id,
+                    Name = i.Name,
+                    CheckedState = false
+                }).ToList(),
+                SensitivityCheckboxes = sensitivityList.Select(i => new CheckboxVM
+                {
+                    Value = sensitivityList.IndexOf(i),
+                    Name = i,
+                    CheckedState = false
+                }).ToList(),
+                ApprovalCheckboxes = approvalList.Select(i => new CheckboxVM
+                {
+                    Value = approvalList.IndexOf(i),
+                    Name = i,
+                    CheckedState = false
+                }).ToList()
+            };
+            return itemListVM;
+        }
+
+        //GET - GetAssignedProjects
+        public ICollection<int> GetAssignedProjects(IList<int> ids)
+        {
+            ICollection<int> AssignedProjectIds = new List<int>();
+            foreach(int id in ids)
+            {
+                ICollection<int> newProjectIds = _db.Projects.AsNoTracking().Where(i => i.TeamId == id).Select(i => i.Id).ToList();
+                foreach(int newProjectId in newProjectIds)
+                {
+                    if(!AssignedProjectIds.Contains(newProjectId))
+                    {
+                        AssignedProjectIds.Add(newProjectId);
+                    }
+                }
+            }
             return AssignedProjectIds;
         }
 
         //GET - GetAssignedTags
-        public ICollection<int> GetAssignedTags(int id)
+        public ICollection<int> GetAssignedTags(IList<int> ids)
         {
-            ICollection<int> selectedTagIds = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == id).Select(i => i.TagId).ToList();
-
-            ICollection<int> AssignedTagIds = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == id).Include(i => i.Tag).Select(i => i.TagId).ToList();
-
+            ICollection<int> AssignedTagIds = new List<int>();
+            foreach (int id in ids)
+            {
+                ICollection<int> newTagIds = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == id).Include(i => i.Tag).Select(i => i.TagId).ToList();
+                foreach (int newTagId in newTagIds)
+                {
+                    if (!AssignedTagIds.Contains(newTagId))
+                    {
+                        AssignedTagIds.Add(newTagId);
+                    }
+                }
+            }
             return AssignedTagIds;
         }
 

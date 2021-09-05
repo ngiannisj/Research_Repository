@@ -39,12 +39,22 @@
                             <td width="50%">@obj.Title</td>
                             <td class="text-center">
                                 <div class="w-75 btn-group" role="group">
-                                    <a asp-controller="Item" asp-action="Upsert" asp-route-Id="@obj.Id" class="btn btn-primary mx-2">
-                                        Edit
-                                    </a>
-                                    <a asp-controller="Item" asp-action="Delete" asp-route-Id="@obj.Id" class="btn btn-danger">
-                                        Delete
-                                    </a>
+                                    @if (obj.Status == WC.Draft || User.IsInRole(WC.LibrarianRole))
+                                    {
+                                        <a asp-controller="Item" asp-action="Upsert" asp-route-Id="@obj.Id" class="btn btn-primary mx-2">
+                                            Edit
+                                        </a>
+                                        <a asp-controller="Item" asp-action="Delete" asp-route-Id="@obj.Id" class="btn btn-danger">
+                                            Delete
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-controller="Item" asp-action="View" asp-route-Id="@obj.Id" class="btn btn-primary mx-2">
+                                            View
+                                        </a>
+                                    }
+
                                 </div>
                             </td>
                         </tr>

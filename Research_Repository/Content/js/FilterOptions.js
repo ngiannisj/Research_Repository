@@ -28,18 +28,19 @@
 //Filter tags checklist based on theme selected
 function filterTags($this) {
 
-    let selectedThemeId = parseInt($this.find(":selected").attr("value"));
+    let selectedThemeIds = [parseInt($this.find(":selected").attr("value"))];
 
-    if (!selectedThemeId) {
+    if (!selectedThemeIds) {
         return
     };
 
     $.ajax({
         type: "GET",
         url: "/Item/GetThemeTags",
-        data: { "id": selectedThemeId },
+        data: { "ids": selectedThemeIds },
         dataType: "json",
-        contentType: 'application/json; charset=utf-8',
+        cache: false,
+        traditional: true,
         success: function (data) {
             $("#checkboxes label").hide();
             for (var i = 0; i < data.length; i++) {
@@ -55,18 +56,19 @@ function filterTags($this) {
 //Filter projects select list based on team selected
 function filterProjects($this) {
 
-    let selectedTeamId = parseInt($this.find(":selected").attr("value"));
+    let selectedTeamIds = [parseInt($this.find(":selected").attr("value"))];
 
-    if (!selectedTeamId) {
+    if (!selectedTeamIds) {
         return
     };
 
     $.ajax({
         type: "GET",
         url: "/Item/GetTeamProjects",
-        data: { "id": selectedTeamId },
+        data: { "ids": selectedTeamIds },
         dataType: "json",
-        contentType: 'application/json; charset=utf-8',
+        cache: false,
+        traditional: true,
         success: function (data) {
             $("#project-selector option").hide();
             for (var i = 0; i < data.length; i++) {

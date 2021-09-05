@@ -14,9 +14,11 @@ namespace Research_Repository_DataAccess.Repository.IRepository
 
         public void UpdateItemTagsList(ItemVM itemVM);
 
-        public ICollection<int> GetAssignedProjects(int id);
+        public ItemListVM GetItemListVM();
 
-        public ICollection<int> GetAssignedTags(int id);
+        public ICollection<int> GetAssignedProjects(IList<int> ids);
+
+        public ICollection<int> GetAssignedTags(IList<int> ids);
 
         void Update(Item obj);
     }

@@ -43,9 +43,8 @@ namespace Research_Repository.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Item> objList = _itemRepo.GetAll(filter: u => u.Status == WC.Published, include: i => i
-        .Include(a => a.Theme));
-            return View(objList);
+            ItemListVM itemListVM = _itemRepo.GetItemListVM();
+            return View(itemListVM);
         }
 
 
@@ -224,15 +223,15 @@ namespace Research_Repository.Controllers
         }
 
         //GET - GETTEAMPROJECTS (FROM AJAX CALL)
-        public ICollection<int> GetTeamProjects(int id)
+        public ICollection<int> GetTeamProjects(IList<int> ids)
         {
-            return _itemRepo.GetAssignedProjects(id);
+            return _itemRepo.GetAssignedProjects(ids);
         }
 
         //GET - GETTHEMETAGS (FROM AJAX CALL)
-        public ICollection<int> GetThemeTags(int id)
+        public ICollection<int> GetThemeTags(IList<int> ids)
         {
-            return _itemRepo.GetAssignedTags(id);
+            return _itemRepo.GetAssignedTags(ids);
         }
 
         //GET - GETFILTEREDITEMS (FROM AJAX CALL)
