@@ -1,21 +1,20 @@
 ﻿@using Research_Repository_Utility;
 
-@model Research_Repository_Models.ViewModels.ProfileVM;
+@model IEnumerable< Research_Repository_Models.Item>;
 
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Profile</h2>
+            <h2 class="text-primary">Requests</h2>
         </div>
     </div>
 
     <br /><br />
 
-    @if (Model.User.Items != null && Model.User.Items.Count() > 0)
+    @if (Model != null && Model.Count() > 0)
     {
 <div>
-        <button id="drafts-filter-btn" class="selected" onclick="filterProfileItems('@WC.Draft')">Drafts</button>
-        <button id="submitted-filter-btn" onclick="filterProfileItems('@WC.Submitted')">Submitted</button>
+        <button id="submitted-filter-btn" class="selected" onclick="filterProfileItems('@WC.Submitted')">Submitted</button>
         <button id="published-filter-btn" onclick="filterProfileItems('@WC.Published')">Published</button>
         <button id="rejected-filter-btn" onclick="filterProfileItems('@WC.Rejected')">Rejected</button>
     </div>
@@ -27,7 +26,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var obj in Model.User.Items)
+                @foreach (var obj in Model)
                 {
                     if (obj != null)
                     {
@@ -63,29 +62,5 @@
     {
         <p>No items exist</p>
     }
-    <form method="post" enctype="multipart/form-data">
-        <div class="form-group row">
-            <div class="col-8 row">
-                <input asp-for="User.FullName" id="user-name-input" class="form-control" style="display:none;" />
-                <div id="user-name-text">@Model.User.FullName</div>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-8 row">
-                <select asp-items="@Model.TeamSelectList" asp-for="User.TeamId" class="form-control" id="user-team-selector" style="display:none;">
-                    <option disabled selected value="0">-- Select Team --</option>
-                </select>
-            </div>
-            <div id="user-team-text">@(Model.User.TeamId != null ? Model.User.Team.Name : "No team provided")</div>
-        </div>
-        <div class="form-group row">
-            <div class="col-8 row">
-                <input asp-for="User.Role" id="user-role-input" class="form-control" style="display:none;" />
-                <div id="user-role-text">@(Model.User.Role != null ? Model.User.Role : "No role provided")</div>
-            </div>
-        </div>
-        <button type="submit" id="profile-edit-btn" class="btn btn-info w-100">Edit</button>
-        <input type="submit" id="profile-save-btn" class="btn btn-info w-100" name="save" value="Save" asp-action="SaveProfile" style="display:none;" />
-    </form>
 </div>
 

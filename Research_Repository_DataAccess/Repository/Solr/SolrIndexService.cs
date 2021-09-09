@@ -65,17 +65,22 @@ namespace Research_Repository_DataAccess.Repository.Solr
                 query = SolrQuery.All;
             }
 
+            //Convert string date to dateTime format
+            DateTime startDate = DateTime.ParseExact(itemQueryParams.StartDate, "d", null);
+            DateTime endDate = DateTime.ParseExact(itemQueryParams.EndDate, "d", null);
+
             SolrQueryResults<T> items = _solr.Query(query, new QueryOptions
             {
-               FilterQueries = new ISolrQuery[] {
-            new SolrQueryInList("themes", itemQueryParams.Themes[0] != "" ? itemQueryParams.Themes : null),
-            new SolrQueryInList("teams", itemQueryParams.Teams[0] != "" ? itemQueryParams.Teams : null),
-            new SolrQueryInList("projects", itemQueryParams.Projects[0] != "" ? itemQueryParams.Projects : null),
-            new SolrQueryInList("tags", itemQueryParams.Tags[0] != "" ? itemQueryParams.Tags : null),
-            new SolrQueryInList("sensitivity", itemQueryParams.Sensitivity[0] != "" ? itemQueryParams.Sensitivity : null),
-            new SolrQueryInList("approvals", itemQueryParams.Approvals[0] != "" ? itemQueryParams.Approvals : null)
-        }
-        });
+                FilterQueries = new ISolrQuery[] {
+                    itemQueryParams.Themes[0] != "" ? new SolrQueryInList("themes", itemQueryParams.Themes) : null,
+                    itemQueryParams.Teams[0] != "" ? new SolrQueryInList("teams", itemQueryParams.Teams) : null,
+                    itemQueryParams.Projects[0] != "" ? new SolrQueryInList("projects", itemQueryParams.Projects) : null,
+                    itemQueryParams.Tags[0] != "" ? new SolrQueryInList("tags",  itemQueryParams.Tags) : null,
+                    itemQueryParams.Sensitivity[0] != "" ? new SolrQueryInList("sensitivity", itemQueryParams.Sensitivity) : null,
+                    itemQueryParams.Approvals[0] != "" ? new SolrQueryInList("approvals", itemQueryParams.Approvals) : null,
+                    startDate != endDate ? new SolrQueryByRange<DateTime>("dateRange", startDate, endDate): null,
+                }
+            });
             return items;
         }
     }

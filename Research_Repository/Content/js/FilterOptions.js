@@ -70,7 +70,7 @@ function filterProjects($this) {
         cache: false,
         traditional: true,
         success: function (data) {
-            $("#project-selector option").hide();
+            $("#project-selector option:not(:first)").hide();
             for (var i = 0; i < data.length; i++) {
                 $("#project-selector option[value=" + data[i] + "]").show();
             }

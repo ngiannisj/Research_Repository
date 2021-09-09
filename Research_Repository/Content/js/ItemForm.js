@@ -3,14 +3,26 @@
         handleFiles(this);
     });
 
+    if ($("#theme-selector").val() != null && $("#theme-selector").val() != 0) {
+        $("#tag-selector select").prop('disabled', false);
+    }
+
+    if ($("#team-selector").val()) {
+        $("#project-selector").prop('disabled', false);
+    }
+
     $("#team-selector").change(function () {
+
         if ($(this).val() != 0) {
+            $("#project-selector").prop("selectedIndex", 0);
             $("#project-selector").prop('disabled', false);
         }
     });
 
     $("#theme-selector").change(function () {
+
         if ($(this).val() != 0) {
+            
             $("#tag-selector select").prop('disabled', false);
         }
     });
@@ -40,6 +52,7 @@ function addKeyInsightField(buttonRef) {
                         <div class="col-2"><button onclick="removeField(this, 'keyInsight')">Delete</button></div>
                     </div>`
     );
+    event.preventDefault();
 }
 
 function addSuggestedTagField(buttonRef) {
@@ -60,15 +73,16 @@ function addSuggestedTagField(buttonRef) {
     if (numberOfSuggestedTags == 0) {
         buttonRef.innerHTML = "Suggest another tag";
     }
+    event.preventDefault();
 }
 
 function showField(button, fieldId) {
     $("#" + fieldId).show();
     $(button).hide();
+    event.preventDefault();
 }
 
 function removeField(buttonRef, field) {
-    console.log("thing");
     $(buttonRef).parent().parent().remove();
     if (field == "suggestedTag") {
         const numberOfSuggestedTags = $(".suggested-tag-field").length;
@@ -76,12 +90,14 @@ function removeField(buttonRef, field) {
             $("#add-suggested-tag-button").html("Suggest a tag")
         }
     }
+    event.preventDefault();
 }
 
 function hideField(fieldId, addButton) {
     $("#" + fieldId + " input").val('');
     $("#" + fieldId).hide();
     $("#" + addButton).show();
+    event.preventDefault();
 }
 
 function handleFiles(fileUploadBox) {
@@ -121,6 +137,7 @@ function handleFiles(fileUploadBox) {
             alert("An error occurred!!!")
         }
     });
+    event.preventDefault();
 }
 
 function removeFile(buttonRef) {
@@ -142,5 +159,6 @@ function removeFile(buttonRef) {
         }
     });
     $(buttonRef).parent().remove();
+    event.preventDefault();
 }
 

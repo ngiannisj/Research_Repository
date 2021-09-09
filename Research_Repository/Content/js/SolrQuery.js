@@ -17,9 +17,9 @@ $(document).ready(function () {
         filterProjectsForItemsList();
     });
 
-    $("#filters #text-search").keypress(function () {
+    $("#filters #text-search, #filters #start-date-search, #filters #end-date-search").keypress(function () {
         queryParameters.searchText = $("#text-search").val();
-        filterItemList();
+        /*filterItemList();*/
     });
 });
 
@@ -48,6 +48,8 @@ function updateFilterParameters() {
     $("#project-checkbox-filter input:visible:checked").each(function (index, element) {
         queryParameters.projects.push($(this).data("name"));
     });
+    queryParameters.startDate = $("#start-date-search").val();
+    queryParameters.endDate = $("#end-date-search").val();
     console.log(queryParameters);
 };
 

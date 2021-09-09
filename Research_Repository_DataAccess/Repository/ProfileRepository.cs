@@ -36,14 +36,7 @@ namespace Research_Repository_DataAccess.Repository
                 TeamSelectList = GetTeamSelectList()
             };
 
-            if (userInstance.IsInRole(WC.LibrarianRole))
-            {
-                user.Items = _db.Items.ToList();
-            } 
-            else if(User.IsInRole(WC.UploaderRole))
-            {
-                user.Items = _db.Items.Where(u => u.UploaderId == userId).ToList();
-            }
+            user.Items = _db.Items.Where(u => u.UploaderId == userId).ToList();
 
             return profileVM;
         }

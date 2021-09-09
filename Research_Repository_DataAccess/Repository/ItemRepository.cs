@@ -41,7 +41,7 @@ namespace Research_Repository_DataAccess.Repository
                 item = _db.Items.Find(id);
             }
 
-            string[] statusInputs = { WC.Submitted, WC.Published, WC.Rejected };
+            string[] statusInputs = {WC.Draft, WC.Submitted, WC.Published, WC.Rejected };
             IList<string> statusSelectList = new List<string>(statusInputs);
 
             ICollection<int> selectedTagIds = _db.ItemTags.AsNoTracking().Where(i => i.ItemId == id).Select(i => i.TagId).ToList();

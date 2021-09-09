@@ -47,6 +47,7 @@ namespace Research_Repository
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IProfileRepository, ProfileRepository>();
+            services.AddScoped<IItemRequestRepository, ItemRequestRepository>();
 
             services.AddControllersWithViews();
 

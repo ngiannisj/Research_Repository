@@ -59,6 +59,15 @@ namespace Research_Repository.Controllers
             string sourceFileLocation = WC.ItemFilePath + id + "\\";
             FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, true);
 
+            if (itemVM.Item.Status == WC.Submitted && itemVM.Item.NotifyLibrarian == true)
+            {
+                itemVM.Item.NotifyLibrarian = false;
+                string librarianNotificationCount = _itemRepo.GetAll(isTracking: false).Select(i => i.NotifyLibrarian == true).Count().ToString();
+                TempData.Put("librarianNotifications", librarianNotificationCount);
+                _itemRepo.Update(itemVM.Item);
+                _itemRepo.Save();
+            }
+
             if (id == null)
             {
                 //Creating
@@ -87,10 +96,15 @@ namespace Research_Repository.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(ItemVM itemVM, string submit)
         {
+            itemVM.Item.LastUpdatedDate = DateTime.Today;
 
-            if (submit != "Submit")
+            if (User.IsInRole(WC.UploaderRole) && submit != "Submit" || itemVM.Item.Status == null || itemVM.Item.Status == "")
             {
                 itemVM.Item.Status = WC.Draft;
+            }
+            else if (User.IsInRole(WC.UploaderRole) && submit == "Submit")
+            {
+                itemVM.Item.Status = WC.Submitted;
             }
 
             if (itemVM.SuggestedTagList != null && itemVM.SuggestedTagList.Count > 0)
@@ -109,10 +123,29 @@ namespace Research_Repository.Controllers
             if (itemVM.Item.Id == 0)
             {
                 itemVM.Item.UploaderId = _userManager.GetUserId(User);
+
+                //Update notifications
+                if (itemVM.Item.Status == WC.Published)
+                {
+                    itemVM.Item.NotifyUploader = true;
+                    string uploaderNotificationCount = _itemRepo.GetAll(isTracking: false).Select(i => i.NotifyUploader == true).Count().ToString();
+                    TempData.Put("uploaderNotifications", uploaderNotificationCount);
+                }
+                else if (itemVM.Item.Status == WC.Submitted)
+                {
+                    itemVM.Item.NotifyLibrarian = true;
+                    string librarianNotificationCount = _itemRepo.GetAll(isTracking: false).Select(i => i.NotifyLibrarian == true).Count().ToString();
+                    TempData.Put("librarianNotifications", librarianNotificationCount);
+                }
+                else
+                {
+                    itemVM.Item.NotifyUploader = false;
+                    itemVM.Item.NotifyLibrarian = false;
+                }
+
                 //Creating
                 _itemRepo.Add(itemVM.Item);
                 _itemRepo.Save();
-                _solr.AddUpdate(new ItemSolr(itemVM.Item));
 
                 //Update files
                 string targetFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
@@ -122,12 +155,23 @@ namespace Research_Repository.Controllers
             }
             else
             {
-                //Updating
-                var objFromDb = _itemRepo.FirstOrDefault(filter: u => u.Id == itemVM.Item.Id, isTracking: false);
 
                 //Update files
                 string targetFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
                 FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, true);
+
+                if (itemVM.Item.Status == WC.Published && _itemRepo.FirstOrDefault(i => i.Id == itemVM.Item.Id, isTracking: false).Status != WC.Published)
+                {
+                    itemVM.Item.NotifyUploader = true;
+                    string uploaderNotificationCount = _itemRepo.GetAll(isTracking: false).Select(i => i.NotifyUploader == true).Count().ToString();
+                    TempData.Put("uploaderNotifications", uploaderNotificationCount);
+                }
+                else if (itemVM.Item.Status == WC.Submitted && _itemRepo.FirstOrDefault(i => i.Id == itemVM.Item.Id, isTracking: false).Status != WC.Submitted)
+                {
+                    itemVM.Item.NotifyLibrarian = true;
+                    string librarianNotificationCount = _itemRepo.GetAll(isTracking: false).Select(i => i.NotifyLibrarian == true).Count().ToString();
+                    TempData.Put("librarianNotifications", librarianNotificationCount);
+                }
 
                 _itemRepo.Update(itemVM.Item);
                 _itemRepo.UpdateItemTagsList(itemVM);
@@ -138,7 +182,24 @@ namespace Research_Repository.Controllers
                 itemVM.Item.Comment = "";
             }
             FileHelper.DeleteFiles(null, webRootPath, sourceFileLocation);
+
             _itemRepo.Save();
+
+            //Update solr
+            if (itemVM.Item.Status == WC.Published)
+            {
+                //Get item from db to include navigation fields
+                Item dbItem = _itemRepo.FirstOrDefault(u => u.Id == itemVM.Item.Id, isTracking: false, include: source => source
+        .Include(a => a.Project)
+        .ThenInclude(a => a.Team)
+        .Include(a => a.ItemTags)
+        .ThenInclude(a => a.Tag)
+        .Include(a => a.Theme)
+        .Include(a => a.Uploader));
+
+                _solr.AddUpdate(new ItemSolr(dbItem));
+            }
+
             return RedirectToAction("Index", "Profile");
         }
 
@@ -151,26 +212,21 @@ namespace Research_Repository.Controllers
         .Include(a => a.ItemTags)
         .ThenInclude(a => a.Tag));
 
-                //Updating
-                if (item.Project != null)
-                {
-                    //item.Team = item.Project.Team;
-                }
-
-            if (item.ItemTags != null)
+            if (item.NotifyUploader == true && item.UploaderId == _userManager.GetUserId(User))
             {
-                foreach(ItemTag itemTag in item.ItemTags)
-                {
-                    //item.Tags.Add(itemTag.Tag);
-                }
+                item.NotifyUploader = false;
+                string uploaderNotificationCount = _itemRepo.GetAll(isTracking: false).Select(i => i.NotifyUploader == true).Count().ToString();
+                TempData.Put("uploaderNotifications", uploaderNotificationCount);
+                _itemRepo.Update(item);
+                _itemRepo.Save();
             }
 
             if (item == null)
-                {
-                    return NotFound();
-                }
-                return View(item);
+            {
+                return NotFound();
             }
+            return View(item);
+        }
 
 
         //DELETE - DELETE

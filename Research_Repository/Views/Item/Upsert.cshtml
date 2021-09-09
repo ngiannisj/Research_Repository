@@ -22,6 +22,9 @@
     {
         title = "Edit Item";
         <input asp-for="Item.Id" hidden />
+        <input asp-for="Item.UploaderId" hidden />
+        <input asp-for="Item.NotifyUploader" hidden />
+        <input asp-for="Item.NotifyLibrarian" hidden />
     }
 
     <div class="border p-3">
@@ -188,7 +191,10 @@
                                     <input asp-for="KeyInsightsList[i]" class="form-control" />
                                 </div>
                             </div>
-                            <div class="col-2"><button onclick="removeField(this, 'keyInsight')">Delete</button></div>
+                            if (i != 0)
+                            {
+                                <div class="col-2"><button onclick="removeField(this, 'keyInsight')">Delete</button></div>
+                            }
                         }
                     }
                     <button onclick="addKeyInsightField(this)">Add a key insight</button>
@@ -243,7 +249,7 @@
                 </div>
 
                 <!-- Hidden file names -->
-                <input asp-for="Item.Files" id="file-names" hidden/>
+                <input asp-for="Item.Files" id="file-names" hidden />
 
                 <!-- Files -->
                 <div class="form-group row">
@@ -284,14 +290,17 @@
                     </div>
                 }
 
-                    <!-- Buttons -->
-                    <div class="form-group">
-                        <div class="col-8 offset-2 row">
-                            <input type="submit" class="btn btn-info w-100" name="submit" value="Submit" />
+                <!-- Buttons -->
+                <div class="form-group">
+                    <div class="col-8 offset-2 row">
+                        <input type="submit" class="btn btn-info w-100" name="submit" value="@(User.IsInRole(WC.UploaderRole) ? "Submit" : "Save")" />
+                        @if (User.IsInRole(WC.UploaderRole))
+                        {
                             <input type="submit" class="btn btn-primary w-100" name="save" value="Save draft" />
-                        </div>
+                        }
                     </div>
                 </div>
+            </div>
         </div>
     </div>
 </form>

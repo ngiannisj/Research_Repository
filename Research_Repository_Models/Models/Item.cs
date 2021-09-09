@@ -22,16 +22,16 @@ namespace Research_Repository_Models
 
         [Display(Name = "Start date")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
         [Display(Name = "End date")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
         [Display(Name = "Date of publish")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime PublishDate { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime LastUpdatedDate { get; set; }
 
 
         [Display(Name = "Theme Type")]
@@ -74,5 +74,9 @@ namespace Research_Repository_Models
 
         [ForeignKey("UploaderId")]
         public virtual ApplicationUser Uploader { get; set; }
+
+        //Notifications
+        public bool NotifyUploader { get; set; }
+        public bool NotifyLibrarian { get; set; }
     }
 }
