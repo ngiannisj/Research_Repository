@@ -15,6 +15,17 @@
         </div>
 
         <br /><br />
+        <ul>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Theme" asp-action="Index">Themes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="ItemRequest" asp-action="Index">Requests</a>
+            </li>
+        </ul>
 
         @if (Model.Count() > 0)
         {

@@ -29,14 +29,14 @@ namespace Research_Repository_DataAccess.Repository
 
             ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
             user.Team = _db.Teams.FirstOrDefault(u => u.Id == user.TeamId);
+            user.Items = _db.Items.Where(u => u.UploaderId == userId).ToList();
 
             ProfileVM profileVM = new ProfileVM
             {
                 User = user,
+                NotificationCount = user.Items.Where(i => i.NotifyUploader == true).Count(),
                 TeamSelectList = GetTeamSelectList()
             };
-
-            user.Items = _db.Items.Where(u => u.UploaderId == userId).ToList();
 
             return profileVM;
         }

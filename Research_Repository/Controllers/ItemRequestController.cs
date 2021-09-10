@@ -36,8 +36,8 @@ namespace Research_Repository.Controllers
 
         public IActionResult Index()
         {
-            IEnumerable<Item> itemRequests = _itemRequestRepo.GetAll(filter: i => i.Status != WC.Draft);
-            return View(itemRequests);
+            ItemRequestVM itemRequestVM = _itemRequestRepo.GetItemRequestVM();
+            return View(itemRequestVM);
         }
 
     }

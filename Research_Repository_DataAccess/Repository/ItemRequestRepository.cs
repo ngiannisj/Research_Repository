@@ -22,5 +22,17 @@ namespace Research_Repository_DataAccess.Repository
         {
             _db = db;
         }
+
+        public ItemRequestVM GetItemRequestVM()
+        {
+
+            ItemRequestVM itemRequestVM = new ItemRequestVM
+            {
+                Items = _db.Items.Where(i => i.Status != WC.Draft).ToList(),
+                NotificationCount = _db.Items.Where(i => i.NotifyLibrarian == true).Count(),
+            };
+
+            return itemRequestVM;
+        }
     }
 }

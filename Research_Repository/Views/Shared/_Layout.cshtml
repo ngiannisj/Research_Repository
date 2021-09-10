@@ -1,12 +1,5 @@
 ﻿@using Research_Repository_Utility;
 
-@{
-    string uploaderNotifications = TempData.Get<string>("uploaderNotifications");
-    TempData.Keep();
-    string librarianNotifications = TempData.Get<string>("librarianNotifications");
-    TempData.Keep();
-}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,16 +30,10 @@
                         @if (User.IsInRole(WC.LibrarianRole))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Theme" asp-action="Index">Themes</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ItemRequest" asp-action="Index">Librarian Portal</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Profile" asp-action="Index">Profile @uploaderNotifications</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="ItemRequest" asp-action="Index">Item Requests @librarianNotifications</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Profile" asp-action="Index">Profile</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Create admin user</a>

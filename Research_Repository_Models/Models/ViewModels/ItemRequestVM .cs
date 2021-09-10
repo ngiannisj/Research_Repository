@@ -10,13 +10,11 @@ using System.Threading.Tasks;
 
 namespace Research_Repository_Models.ViewModels
 {
-    public class ProfileVM
+    public class ItemRequestVM
     {
-        public ApplicationUser User { get; set; }
-
         public int NotificationCount { get; set; }
 
-        public IEnumerable<SelectListItem> TeamSelectList { get; set; }
+        public IEnumerable<Item> Items { get; set; }
     }
 
 }

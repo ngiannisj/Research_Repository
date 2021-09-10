@@ -13,6 +13,6 @@ namespace Research_Repository_DataAccess.Repository.IRepository
 {
     public interface IItemRequestRepository : IRepository<Item>
     {
-        
+        public ItemRequestVM GetItemRequestVM();
     }
 }

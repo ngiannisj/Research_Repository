@@ -1,6 +1,6 @@
 ﻿@using Research_Repository_Utility;
 
-@model IEnumerable< Research_Repository_Models.Item>;
+@model Research_Repository_Models.ViewModels.ItemRequestVM;
 
 <div class="container p-3">
     <div class="row pt-4">
@@ -10,14 +10,27 @@
     </div>
 
     <br /><br />
+          <ul>
+              <li class="nav-item">
+                  <a class="nav-link text-dark" asp-area="" asp-controller="Theme" asp-action="Index">Themes</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link text-dark" asp-area="" asp-controller="ItemRequest" asp-action="Index">Requests</a>
+              </li>
+          </ul>
 
-    @if (Model != null && Model.Count() > 0)
+    <div>Notifications: @Model.NotificationCount</div>
+
+    @if (Model.Items != null && Model.Items.Count() > 0)
     {
-<div>
-        <button id="submitted-filter-btn" class="selected" onclick="filterProfileItems('@WC.Submitted')">Submitted</button>
-        <button id="published-filter-btn" onclick="filterProfileItems('@WC.Published')">Published</button>
-        <button id="rejected-filter-btn" onclick="filterProfileItems('@WC.Rejected')">Rejected</button>
-    </div>
+        <div>
+            <button id="submitted-filter-btn" class="selected" onclick="filterProfileItems('@WC.Submitted')">Submitted</button>
+            <button id="published-filter-btn" onclick="filterProfileItems('@WC.Published')">Published</button>
+            <button id="rejected-filter-btn" onclick="filterProfileItems('@WC.Rejected')">Rejected</button>
+        </div>
         <table class="table table-bordered table-striped" style="width: 100%">
             <thead>
                 <tr>
@@ -26,7 +39,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var obj in Model)
+                @foreach (var obj in Model.Items)
                 {
                     if (obj != null)
                     {
