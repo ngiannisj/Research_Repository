@@ -10,4 +10,8 @@
     <PackageReference Include="SolrNet" Version="1.0.19" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Research_Repository_Utility\Research_Repository_Utility.csproj" />
+  </ItemGroup>
+
 </Project>

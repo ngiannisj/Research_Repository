@@ -19,5 +19,6 @@ namespace Research_Repository_Models.Models.Solr
         public IList<string> Approvals { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
+        public string PaginationStartItem { get; set; }
     }
 }

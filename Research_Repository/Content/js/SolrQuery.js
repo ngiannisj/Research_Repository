@@ -7,11 +7,13 @@
     sensitivity =[],
     approvals =[],
     startDate = "00-00-0001",
-    endDate = "00-00-0001"
+    endDate = "00-00-0001",
+    paginationStartItem = "0"
 };
 
-$(document).ready(function () {
+const numOfItemsPerPage = 2;
 
+$(document).ready(function () {
     $("#filters input:not(#text-search), #filters select").change(function (async) {
         //Filter project list from team selection
         filterProjectsForItemsList();
@@ -21,9 +23,14 @@ $(document).ready(function () {
         queryParameters.searchText = $("#text-search").val();
         filterProjectsForItemsList();
     });
+
+    if ($('#filters').length) {
+        updateFilterParameters(queryParameters.paginationStartItem);
+    }
 });
 
-function updateFilterParameters() {
+
+function updateFilterParameters(page) {
     queryParameters.themes = [];
     queryParameters.teams = [];
     queryParameters.projects = [];
@@ -50,20 +57,48 @@ function updateFilterParameters() {
     });
     queryParameters.startDate = $("#start-date-search").val();
     queryParameters.endDate = $("#end-date-search").val();
-
+    console.log(page);
+    queryParameters.paginationStartItem = (page * numOfItemsPerPage);
     filterItemList();
 };
 
 function filterItemList() {
-    console.log(queryParameters);
     let stringifiedParameters = JSON.stringify(queryParameters);
     $.ajax({
         type: "GET",
         url: "/Item/GetFilteredItems",
         data: { "itemQueryJson": stringifiedParameters },
         success: function (data) {
-            //show filtered items
-            console.log(data);
+            let itemListHtml = "";
+            for (let i = 0; i < data.items.length; i++) {
+                itemListHtml += `<tr>
+                    <td width="33%">${data.items[i].title}</td>
+                    <td width="33%">${data.items[i].team}</td>
+                    <td width="33%">${data.items[i].abstract}</td>
+                    <td class="text-center">
+                        <div class="w-75 btn-group" role="group">
+                            <a class="btn btn-primary mx-2" href="/Item/View/${data.items[i].id}">
+                                View
+                            </a>
+                        </div>
+                    </td>
+                </tr>`;
+            };
+            $("#published-item-list").html(itemListHtml);
+
+            //Pagination
+            let itemListPaginationHtml = "";
+            let numOfPages = 0;
+            if (data.numOfTotalResults <= numOfItemsPerPage) {
+                numOfPages = 0;
+            } else {
+                numOfPages = Math.ceil(data.numOfTotalResults / numOfItemsPerPage) - 1;
+            }
+
+            for (let i = 0; i <= numOfPages; i++) {
+                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i})">${i + 1}</button>`;
+                $("#item-list-pagination").html(itemListPaginationHtml);
+            };
         },
         error: function () {
             alert("Error occured!!")
@@ -94,8 +129,7 @@ function filterTagsForItemsList() {
             } else {
                 $("#tag-checkbox-filter label").show();
             }
-            //filterItemList();
-            updateFilterParameters();
+            updateFilterParameters(queryParameters.paginationStartItem);
         },
         error: function () {
             alert("Error occured!!")

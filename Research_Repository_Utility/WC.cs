@@ -32,5 +32,30 @@ namespace Research_Repository_Utility
         public const string Submitted = "Submitted";
         public const string Published = "Published";
         public const string Rejected = "Rejected";
+
+        //Solr fields
+        public const string SolrId = "id";
+        public const string SolrTitle = "title_tti";
+        public const string SolrAbstract = "abstract_tti";
+        public const string SolrCollaborator = "collaborator_tti";
+        public const string SolrDateRange = "dateRange";
+        public const string SolrTheme = "theme_tti";
+        public const string SolrProject = "project_tti";
+        public const string SolrTeam = "team_tti";
+        public const string SolrTags = "tags_tti";
+        public const string SolrKeyInsights = "keyInsights_tti";
+        public const string SolrMethodology = "methodology_tti";
+        public const string SolrLimitations = "limitations_tti";
+        public const string SolrApprovedUse = "approvedUse";
+        public const string SolrSensitivity = "sensitivity";
+        public const string SolrUploader = "uploader_tti";
+        public const string SolrLastUpdatedDate = "lastUpdatedDate";
+
+        //Date formats
+        public const string YearMonthDay = "yyyy-MM-dd";
+        public const string YearMonthDayTagHelper = "{0:yyyy-MM-dd}";
+
+        //Pagination
+        public const int NumOfItemsPerPage = 2; //Remember to change in solr javascript file as well
     }
 }

@@ -1,4 +1,6 @@
-﻿@model Research_Repository_Models.ViewModels.ItemListVM
+﻿@using Research_Repository_Utility;
+
+@model Research_Repository_Models.ViewModels.ItemListVM
 
 <div class="container p-3">
     <div class="row pt-4">
@@ -14,98 +16,98 @@
 
     <br /><br />
 
-          <div id="filters">
-              <!-- Text Search Box -->
-              <input type="text" id="text-search" />
-              <br />
-              <!-- Date Range -->
-              <input class="form-control" id="start-date-search" type="date" data-val="true" data-val-required="The Start date field is required." value="0001-01-01">
-              <input class="form-control" id="end-date-search" type="date" data-val="true" data-val-required="The End date field is required." value="@DateTime.Now.ToString("yyyy-MM-dd")">
+    <div id="filters">
+        <!-- Text Search Box -->
+        <input type="text" id="text-search" />
+        <br />
+        <!-- Date Range -->
+        <input class="form-control" id="start-date-search" type="date" data-val="true" data-val-required="The Start date field is required." value="0001-01-01">
+        <input class="form-control" id="end-date-search" type="date" data-val="true" data-val-required="The End date field is required." value="@DateTime.Now.ToString(WC.YearMonthDay)">
 
-              <!-- Tag Checkboxes -->
-              <div id="tag-checkbox-filter">
-                  @if (Model.TagCheckboxes != null && Model.TagCheckboxes.Count > 0)
-                  {
-                      for (int i = 0; i < Model.TagCheckboxes.Count; i++)
-                      {
-                          <label>
-                              <input asp-for="@Model.TagCheckboxes[i].CheckedState" id="tag-input-id-@Model.TagCheckboxes[i].Value" data-name="@Model.TagCheckboxes[i].Name" />@Model.TagCheckboxes[i].Name
-                          </label>
-                          <input asp-for="@Model.TagCheckboxes[i].Value" id="tag-id-@Model.TagCheckboxes[i].Value" hidden />
-                      }
-                  }
-              </div>
+        <!-- Tag Checkboxes -->
+        <div id="tag-checkbox-filter">
+            @if (Model.TagCheckboxes != null && Model.TagCheckboxes.Count > 0)
+            {
+                for (int i = 0; i < Model.TagCheckboxes.Count; i++)
+                {
+                    <label>
+                        <input asp-for="@Model.TagCheckboxes[i].CheckedState" id="tag-input-id-@Model.TagCheckboxes[i].Value" data-name="@Model.TagCheckboxes[i].Name" />@Model.TagCheckboxes[i].Name
+                    </label>
+                    <input asp-for="@Model.TagCheckboxes[i].Value" id="tag-id-@Model.TagCheckboxes[i].Value" hidden />
+                }
+            }
+        </div>
 
-              <!-- Theme Checkboxes -->
-              <div id="theme-checkbox-filter">
-                  @if (Model.ThemeCheckboxes != null && Model.ThemeCheckboxes.Count > 0)
-                  {
-                      for (int i = 0; i < Model.ThemeCheckboxes.Count; i++)
-                      {
-                          <label>
-                              <input asp-for="@Model.ThemeCheckboxes[i].CheckedState" id="theme-input-id-@Model.ThemeCheckboxes[i].Value" data-name="@Model.ThemeCheckboxes[i].Name" />@Model.ThemeCheckboxes[i].Name
-                          </label>
-                          <input asp-for="@Model.ThemeCheckboxes[i].Value" id="theme-id-@Model.ThemeCheckboxes[i].Value" hidden />
-                      }
-                  }
-              </div>
+        <!-- Theme Checkboxes -->
+        <div id="theme-checkbox-filter">
+            @if (Model.ThemeCheckboxes != null && Model.ThemeCheckboxes.Count > 0)
+            {
+                for (int i = 0; i < Model.ThemeCheckboxes.Count; i++)
+                {
+                    <label>
+                        <input asp-for="@Model.ThemeCheckboxes[i].CheckedState" id="theme-input-id-@Model.ThemeCheckboxes[i].Value" data-name="@Model.ThemeCheckboxes[i].Name" />@Model.ThemeCheckboxes[i].Name
+                    </label>
+                    <input asp-for="@Model.ThemeCheckboxes[i].Value" id="theme-id-@Model.ThemeCheckboxes[i].Value" hidden />
+                }
+            }
+        </div>
 
-              <!-- Team Checkboxes -->
-              <div id="team-checkbox-filter">
-                  @if (Model.TeamCheckboxes != null && Model.TeamCheckboxes.Count > 0)
-                  {
-                      for (int i = 0; i < Model.TeamCheckboxes.Count; i++)
-                      {
-                          <label>
-                              <input asp-for="@Model.TeamCheckboxes[i].CheckedState" id="team-input-id-@Model.TeamCheckboxes[i].Value" data-name="@Model.TeamCheckboxes[i].Name" />@Model.TeamCheckboxes[i].Name
-                          </label>
-                          <input asp-for="@Model.TeamCheckboxes[i].Value" id="team-id-@Model.TeamCheckboxes[i].Value" hidden />
-                      }
-                  }
-              </div>
+        <!-- Team Checkboxes -->
+        <div id="team-checkbox-filter">
+            @if (Model.TeamCheckboxes != null && Model.TeamCheckboxes.Count > 0)
+            {
+                for (int i = 0; i < Model.TeamCheckboxes.Count; i++)
+                {
+                    <label>
+                        <input asp-for="@Model.TeamCheckboxes[i].CheckedState" id="team-input-id-@Model.TeamCheckboxes[i].Value" data-name="@Model.TeamCheckboxes[i].Name" />@Model.TeamCheckboxes[i].Name
+                    </label>
+                    <input asp-for="@Model.TeamCheckboxes[i].Value" id="team-id-@Model.TeamCheckboxes[i].Value" hidden />
+                }
+            }
+        </div>
 
-              <!-- Project Checkboxes -->
-              <div id="project-checkbox-filter">
-                  @if (Model.ProjectCheckboxes != null && Model.ProjectCheckboxes.Count > 0)
-                  {
-                      for (int i = 0; i < Model.ProjectCheckboxes.Count; i++)
-                      {
-                          <label>
-                              <input asp-for="@Model.ProjectCheckboxes[i].CheckedState" id="project-input-id-@Model.ProjectCheckboxes[i].Value" data-name="@Model.ProjectCheckboxes[i].Name" />@Model.ProjectCheckboxes[i].Name
-                          </label>
-                          <input asp-for="@Model.ProjectCheckboxes[i].Value" id="project-id-@Model.ProjectCheckboxes[i].Value" hidden />
-                      }
-                  }
-              </div>
+        <!-- Project Checkboxes -->
+        <div id="project-checkbox-filter">
+            @if (Model.ProjectCheckboxes != null && Model.ProjectCheckboxes.Count > 0)
+            {
+                for (int i = 0; i < Model.ProjectCheckboxes.Count; i++)
+                {
+                    <label>
+                        <input asp-for="@Model.ProjectCheckboxes[i].CheckedState" id="project-input-id-@Model.ProjectCheckboxes[i].Value" data-name="@Model.ProjectCheckboxes[i].Name" />@Model.ProjectCheckboxes[i].Name
+                    </label>
+                    <input asp-for="@Model.ProjectCheckboxes[i].Value" id="project-id-@Model.ProjectCheckboxes[i].Value" hidden />
+                }
+            }
+        </div>
 
-              <!-- Sensitivity Checkboxes -->
-              <div id="sensitivity-checkbox-filter">
-                  @if (Model.SensitivityCheckboxes != null && Model.SensitivityCheckboxes.Count > 0)
-                  {
-                      for (int i = 0; i < Model.SensitivityCheckboxes.Count; i++)
-                      {
-                          <label>
-                              <input asp-for="@Model.SensitivityCheckboxes[i].CheckedState" id="sensitivity-input-id-@Model.SensitivityCheckboxes[i].Value" data-name="@Model.SensitivityCheckboxes[i].Name" />@Model.SensitivityCheckboxes[i].Name
-                          </label>
-                          <input asp-for="@Model.SensitivityCheckboxes[i].Value" id="sensitivity-id-@Model.SensitivityCheckboxes[i].Value" hidden />
-                      }
-                  }
-              </div>
+        <!-- Sensitivity Checkboxes -->
+        <div id="sensitivity-checkbox-filter">
+            @if (Model.SensitivityCheckboxes != null && Model.SensitivityCheckboxes.Count > 0)
+            {
+                for (int i = 0; i < Model.SensitivityCheckboxes.Count; i++)
+                {
+                    <label>
+                        <input asp-for="@Model.SensitivityCheckboxes[i].CheckedState" id="sensitivity-input-id-@Model.SensitivityCheckboxes[i].Value" data-name="@Model.SensitivityCheckboxes[i].Name" />@Model.SensitivityCheckboxes[i].Name
+                    </label>
+                    <input asp-for="@Model.SensitivityCheckboxes[i].Value" id="sensitivity-id-@Model.SensitivityCheckboxes[i].Value" hidden />
+                }
+            }
+        </div>
 
-              <!-- Approval Checkboxes -->
-              <div id="approval-checkbox-filter">
-                  @if (Model.ApprovalCheckboxes != null && Model.ApprovalCheckboxes.Count > 0)
-                  {
-                      for (int i = 0; i < Model.ApprovalCheckboxes.Count; i++)
-                      {
-                          <label>
-                              <input asp-for="@Model.ApprovalCheckboxes[i].CheckedState" id="approval-input-id-@Model.ApprovalCheckboxes[i].Value" data-name="@Model.ApprovalCheckboxes[i].Name" />@Model.ApprovalCheckboxes[i].Name
-                          </label>
-                          <input asp-for="@Model.ApprovalCheckboxes[i].Value" id="approval-id-@Model.ApprovalCheckboxes[i].Value" hidden />
-                      }
-                  }
-              </div>
-          </div>
+        <!-- Approval Checkboxes -->
+        <div id="approval-checkbox-filter">
+            @if (Model.ApprovalCheckboxes != null && Model.ApprovalCheckboxes.Count > 0)
+            {
+                for (int i = 0; i < Model.ApprovalCheckboxes.Count; i++)
+                {
+                    <label>
+                        <input asp-for="@Model.ApprovalCheckboxes[i].CheckedState" id="approval-input-id-@Model.ApprovalCheckboxes[i].Value" data-name="@Model.ApprovalCheckboxes[i].Name" />@Model.ApprovalCheckboxes[i].Name
+                    </label>
+                    <input asp-for="@Model.ApprovalCheckboxes[i].Value" id="approval-id-@Model.ApprovalCheckboxes[i].Value" hidden />
+                }
+            }
+        </div>
+    </div>
 
     @if (Model.Items.Count() > 0)
     {
@@ -113,24 +115,14 @@
             <thead>
                 <tr>
                     <th>Item Name</th>
+                    <th>Item Team</th>
+                    <th>Item Abstract</th>
                     <th></th>
 
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var obj in Model.Items)
-                {
-                    <tr>
-                        <td width="50%">@obj.Title</td>
-                        <td class="text-center">
-                            <div class="w-75 btn-group" role="group">
-                                <a asp-action="View" asp-route-Id="@obj.Id" class="btn btn-primary mx-2">
-                                    View
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                }
+            <tbody id="published-item-list">
+                <!-- Populated with published items on page load using javascript -->
             </tbody>
         </table>
     }
@@ -138,5 +130,6 @@
     {
         <p>No item exists.</p>
     }
+    <div id="item-list-pagination"></div>
 </div>
 

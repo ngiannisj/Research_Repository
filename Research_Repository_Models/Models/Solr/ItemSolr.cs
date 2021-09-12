@@ -1,4 +1,5 @@
-﻿using SolrNet.Attributes;
+﻿using Research_Repository_Utility;
+using SolrNet.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Research_Repository_Models.Solr
             this.Title = model.Title;
             this.Abstract = model.Abstract;
             this.Collaborator = model.Collaborator;
-            this.DateRange = $"[{model.StartDate.ToString("yyyy-MM-dd")} TO {model.EndDate.ToString("yyyy-MM-dd")}]";
+            this.DateRange = $"[{model.StartDate.ToString(WC.YearMonthDay)} TO {model.EndDate.ToString("yyyy-MM-dd")}]";
             if (model.Theme != null)
             {
                 this.Theme = model.Theme.Name;
@@ -25,6 +26,10 @@ namespace Research_Repository_Models.Solr
             if (model.Project != null)
             {
                 this.Project = model.Project.Name;
+            }
+            if (model.Project.Team != null)
+            {
+                this.Team= model.Project.Team.Name;
             }
             if (model.ItemTags != null && model.ItemTags.Count() > 0)
             {
@@ -53,6 +58,8 @@ namespace Research_Repository_Models.Solr
         public string Theme { get; set; }
         [SolrField("project_tti")]
         public string Project { get; set; }
+        [SolrField("team_tti")]
+        public string Team { get; set; }
         [SolrField("tags_tti")]
         public ICollection<string> Tags { get; set; }
         [SolrField("keyInsights_tti")]

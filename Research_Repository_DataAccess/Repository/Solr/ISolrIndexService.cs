@@ -14,6 +14,6 @@ namespace Research_Repository_DataAccess.Repository.Solr
         bool AddUpdate(T document);
         bool Delete(T document);
 
-        SolrQueryResults<T> FilterItems(ItemQueryParams itemQueryParams);
+        ItemQueryResponse<T> FilterItems(ItemQueryParams itemQueryParams);
     }
 }

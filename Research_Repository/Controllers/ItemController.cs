@@ -284,7 +284,7 @@ namespace Research_Repository.Controllers
         }
 
         //GET - GETFILTEREDITEMS (FROM AJAX CALL)
-        public SolrQueryResults<ItemSolr> GetFilteredItems(string itemQueryJson)
+        public ItemQueryResponse<ItemSolr> GetFilteredItems(string itemQueryJson)
         {
             ItemQueryParams itemQueryParams = JsonConvert.DeserializeObject<ItemQueryParams>(itemQueryJson);
             return _solr.FilterItems(itemQueryParams);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Research_Repository_Utility;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,15 +23,15 @@ namespace Research_Repository_Models
 
         [Display(Name = "Start date")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = WC.YearMonthDayTagHelper, ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
         [Display(Name = "End date")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = WC.YearMonthDayTagHelper, ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
         [Display(Name = "Date of publish")]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = WC.YearMonthDayTagHelper, ApplyFormatInEditMode = true)]
         public DateTime LastUpdatedDate { get; set; }
 
 
