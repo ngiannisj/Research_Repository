@@ -5,6 +5,7 @@ using SolrNet.Commands.Parameters;
 using SolrNet.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,7 +59,7 @@ namespace Research_Repository_DataAccess.Repository.Solr
 
             if (!string.IsNullOrEmpty(itemQueryParams.SearchText))
             {
-                query = new SolrQuery(itemQueryParams.SearchText);
+                query = new SolrQuery($"indexed_text:{itemQueryParams.SearchText}");
             }
             else
             {
@@ -66,21 +67,27 @@ namespace Research_Repository_DataAccess.Repository.Solr
             }
 
             //Convert string date to dateTime format
-            DateTime startDate = DateTime.ParseExact(itemQueryParams.StartDate, "d", null);
-            DateTime endDate = DateTime.ParseExact(itemQueryParams.EndDate, "d", null);
+            DateTime startDate = DateTime.ParseExact(itemQueryParams.StartDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            DateTime endDate = DateTime.ParseExact(itemQueryParams.EndDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
             SolrQueryResults<T> items = _solr.Query(query, new QueryOptions
             {
                 FilterQueries = new ISolrQuery[] {
-                    itemQueryParams.Themes[0] != "" ? new SolrQueryInList("themes", itemQueryParams.Themes) : null,
-                    itemQueryParams.Teams[0] != "" ? new SolrQueryInList("teams", itemQueryParams.Teams) : null,
-                    itemQueryParams.Projects[0] != "" ? new SolrQueryInList("projects", itemQueryParams.Projects) : null,
-                    itemQueryParams.Tags[0] != "" ? new SolrQueryInList("tags",  itemQueryParams.Tags) : null,
-                    itemQueryParams.Sensitivity[0] != "" ? new SolrQueryInList("sensitivity", itemQueryParams.Sensitivity) : null,
-                    itemQueryParams.Approvals[0] != "" ? new SolrQueryInList("approvals", itemQueryParams.Approvals) : null,
-                    startDate != endDate ? new SolrQueryByRange<DateTime>("dateRange", startDate, endDate): null,
-                }
+                    new SolrQueryInList(itemQueryParams.Themes != null && itemQueryParams.Themes.Count() > 0 ? "theme_tti" : null, itemQueryParams.Themes),
+                    new SolrQueryInList(itemQueryParams.Teams != null && itemQueryParams.Teams.Count() > 0 ? "team_tti" : null, itemQueryParams.Teams),
+                    new SolrQueryInList(itemQueryParams.Projects != null && itemQueryParams.Projects.Count() > 0 ? "project_tti" : null, itemQueryParams.Projects),
+                    new SolrQueryInList(itemQueryParams.Tags != null && itemQueryParams.Tags.Count() > 0 ? "tags_tti" : null, itemQueryParams.Tags),
+                    new SolrQueryInList(itemQueryParams.Sensitivity != null && itemQueryParams.Sensitivity.Count() > 0 ? "sensitivity" : null, itemQueryParams.Sensitivity),
+                    new SolrQueryInList(itemQueryParams.Approvals != null && itemQueryParams.Approvals.Count() > 0 ? "approvedUse" : null, itemQueryParams.Approvals),
+                    new SolrQueryByRange<DateTime>("dateRange", startDate, endDate)
+                },
+                Fields = new[] { "id", "title_tti", "team_tti", "abstract_tti", "tags_tti" }, //Fields returned from solr
+                OrderBy = new[] { new SortOrder("lastUpdatedDate", Order.DESC), SortOrder.Parse("lastUpdatedDate asc") },
+                StartOrCursor = new StartOrCursor.Start(0), //Where pagination starts from (May need to make number a dynamic variable)
+                Rows = 10 //How many items are returned for pagination
             });
+
+
             return items;
         }
     }

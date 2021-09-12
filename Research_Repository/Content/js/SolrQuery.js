@@ -1,13 +1,13 @@
 ﻿let queryParameters = {
-    searchText = "*",
+    searchText = "",
     themes =[],
     teams =[],
     projects =[],
     tags =[],
     sensitivity =[],
     approvals =[],
-    startDate = "*",
-    endDate = "*"
+    startDate = "00-00-0001",
+    endDate = "00-00-0001"
 };
 
 $(document).ready(function () {
@@ -17,9 +17,9 @@ $(document).ready(function () {
         filterProjectsForItemsList();
     });
 
-    $("#filters #text-search, #filters #start-date-search, #filters #end-date-search").keypress(function () {
+    $("#filters #text-search, #filters #start-date-search, #filters #end-date-search").keyup(function () {
         queryParameters.searchText = $("#text-search").val();
-        /*filterItemList();*/
+        filterProjectsForItemsList();
     });
 });
 
@@ -50,10 +50,12 @@ function updateFilterParameters() {
     });
     queryParameters.startDate = $("#start-date-search").val();
     queryParameters.endDate = $("#end-date-search").val();
-    console.log(queryParameters);
+
+    filterItemList();
 };
 
 function filterItemList() {
+    console.log(queryParameters);
     let stringifiedParameters = JSON.stringify(queryParameters);
     $.ajax({
         type: "GET",
