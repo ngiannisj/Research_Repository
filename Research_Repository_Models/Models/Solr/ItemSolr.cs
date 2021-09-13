@@ -40,8 +40,12 @@ namespace Research_Repository_Models.Solr
             this.Limitations = model.Limitations;
             this.ApprovedUse = model.ApprovedUse;
             this.Sensitivity = model.Sensitivity;
+            this.Status = model.Status;
+            this.NotifyUploader = model.NotifyUploader;
+            this.NotifyLibrarian = model.NotifyLibrarian;
             this.Uploader = model.Uploader.FullName;
             this.LastUpdatedDate = model.LastUpdatedDate;
+            this.DateCreated = model.DateCreated;
         }
 
         [SolrUniqueKey("id")]
@@ -72,9 +76,19 @@ namespace Research_Repository_Models.Solr
         public string ApprovedUse { get; set; }
         [SolrField("sensitivity")]
         public string Sensitivity { get; set; }
+        [SolrField("status")]
+        public string Status { get; set; }
+        [SolrField("notifyUploader")]
+        public bool NotifyUploader { get; set; }
+        [SolrField("notifyLibrarian")]
+        public bool NotifyLibrarian { get; set; }
         [SolrField("uploader_tti")]
         public string Uploader { get; set; }
+        [SolrField("uploaderId")]
+        public string UploaderId { get; set; }
         [SolrField("lastUpdatedDate")]
         public DateTime LastUpdatedDate { get; set; }
+        [SolrField("dateCreated")]
+        public DateTime DateCreated { get; set; }
     }
 }

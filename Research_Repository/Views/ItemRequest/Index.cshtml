@@ -10,64 +10,40 @@
     </div>
 
     <br /><br />
-          <ul>
-              <li class="nav-item">
-                  <a class="nav-link text-dark" asp-area="" asp-controller="Theme" asp-action="Index">Themes</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link text-dark" asp-area="" asp-controller="ItemRequest" asp-action="Index">Requests</a>
-              </li>
-          </ul>
+    <ul>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Theme" asp-action="Index">Themes</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="ItemRequest" asp-action="Index">Requests</a>
+        </li>
+    </ul>
 
     <div>Notifications: @Model.NotificationCount</div>
 
     @if (Model.Items != null && Model.Items.Count() > 0)
     {
-        <div>
-            <button id="submitted-filter-btn" class="selected" onclick="filterProfileItems('@WC.Submitted')">Submitted</button>
-            <button id="published-filter-btn" onclick="filterProfileItems('@WC.Published')">Published</button>
-            <button id="rejected-filter-btn" onclick="filterProfileItems('@WC.Rejected')">Rejected</button>
+        <div id="filters" class="librarian-filters">
+            <button id="submitted-filter-btn" onclick="updateFilterParameters(0, '@WC.Submitted')">Submitted</button>
+            <button id="published-filter-btn" onclick="updateFilterParameters(0, '@WC.Published')">Published</button>
+            <button id="rejected-filter-btn" onclick="updateFilterParameters(0, '@WC.Rejected')">Rejected</button>
         </div>
+
         <table class="table table-bordered table-striped" style="width: 100%">
             <thead>
                 <tr>
                     <th>Item Name</th>
-                    <th>Action</th>
+                    <th>Item Team</th>
+                    <th>Item Abstract</th>
+                    <th></th>
+
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var obj in Model.Items)
-                {
-                    if (obj != null)
-                    {
-                        <tr class="item" data-status="@obj.Status" style="display:none;">
-                            <td width="50%">@obj.Title</td>
-                            <td class="text-center">
-                                <div class="w-75 btn-group" role="group">
-                                    @if (obj.Status == WC.Draft || User.IsInRole(WC.LibrarianRole))
-                                    {
-                                        <a asp-controller="Item" asp-action="Upsert" asp-route-Id="@obj.Id" class="btn btn-primary mx-2">
-                                            Edit
-                                        </a>
-                                        <a asp-controller="Item" asp-action="Delete" asp-route-Id="@obj.Id" class="btn btn-danger">
-                                            Delete
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a asp-controller="Item" asp-action="View" asp-route-Id="@obj.Id" class="btn btn-primary mx-2">
-                                            View
-                                        </a>
-                                    }
-
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                }
+            <tbody id="item-list">
+                <!-- Populated with published items on page load using javascript -->
             </tbody>
         </table>
     }

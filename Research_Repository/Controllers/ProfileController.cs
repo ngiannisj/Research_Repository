@@ -58,5 +58,11 @@ namespace Research_Repository.Controllers
             return RedirectToAction("index");
         }
 
+        //GET - USER ID (FROM AJAX CALL)
+        public string GetUserId()
+        {
+            return _userManager.GetUserId(User);
+        }
+
     }
 }

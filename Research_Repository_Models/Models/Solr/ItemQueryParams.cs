@@ -17,6 +17,8 @@ namespace Research_Repository_Models.Models.Solr
         public IList<string> Tags { get; set; }
         public IList<string> Sensitivity { get; set; }
         public IList<string> Approvals { get; set; }
+        public IList<string> Status { get; set; }
+        public IList<string> UploaderId { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
         public string PaginationStartItem { get; set; }

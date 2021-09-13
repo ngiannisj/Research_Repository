@@ -48,6 +48,10 @@ namespace Research_Repository_Utility
         public const string SolrLimitations = "limitations_tti";
         public const string SolrApprovedUse = "approvedUse";
         public const string SolrSensitivity = "sensitivity";
+        public const string SolrNotifyUploader = "notifyUploader";
+        public const string SolrNotifyLibrarian = "notifyLibrarian";
+        public const string SolrStatus = "status";
+        public const string SolrUploaderId = "userId";
         public const string SolrUploader = "uploader_tti";
         public const string SolrLastUpdatedDate = "lastUpdatedDate";
 

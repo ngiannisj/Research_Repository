@@ -81,10 +81,12 @@ namespace Research_Repository_DataAccess.Repository.Solr
                     new SolrQueryInList(itemQueryParams.Tags != null && itemQueryParams.Tags.Count() > 0 ? WC.SolrTags : null, itemQueryParams.Tags),
                     new SolrQueryInList(itemQueryParams.Sensitivity != null && itemQueryParams.Sensitivity.Count() > 0 ? WC.SolrSensitivity : null, itemQueryParams.Sensitivity),
                     new SolrQueryInList(itemQueryParams.Approvals != null && itemQueryParams.Approvals.Count() > 0 ? WC.SolrApprovedUse : null, itemQueryParams.Approvals),
+                    new SolrQueryInList(itemQueryParams.Status != null && itemQueryParams.Status.Count() > 0 ? WC.SolrStatus : null, itemQueryParams.Status),
+                    new SolrQueryInList(itemQueryParams.UploaderId != null && itemQueryParams.UploaderId.Count() > 0 ? WC.SolrUploaderId : null, itemQueryParams.UploaderId),
                     new SolrQueryByRange<DateTime>(WC.SolrDateRange, startDate, endDate)
                 },
-                Fields = new[] { WC.SolrId, WC.SolrTitle, WC.SolrTeam, WC.SolrAbstract, WC.SolrTags }, //Fields returned from solr
-                OrderBy = new[] { new SortOrder(WC.SolrLastUpdatedDate, Order.DESC), SortOrder.Parse($"{WC.SolrLastUpdatedDate} asc") },
+                Fields = new[] { WC.SolrId, WC.SolrTitle, WC.SolrTeam, WC.SolrAbstract, WC.SolrTags, WC.SolrNotifyUploader, WC.SolrUploader, WC.SolrNotifyLibrarian }, //Fields returned from solr
+                //OrderBy = new[] { new SortOrder(WC.SolrLastUpdatedDate, Order.DESC), SortOrder.Parse($"{WC.SolrLastUpdatedDate} asc") },
                 StartOrCursor = new StartOrCursor.Start(Int32.Parse(itemQueryParams.PaginationStartItem)), //What item pagination starts from
                 Rows = WC.NumOfItemsPerPage //How many items are returned for pagination
             });

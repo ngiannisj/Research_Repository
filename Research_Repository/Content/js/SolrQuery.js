@@ -6,15 +6,18 @@
     tags =[],
     sensitivity =[],
     approvals =[],
-    startDate = "00-00-0001",
-    endDate = "00-00-0001",
+    status=["Published"],
+    userIds=[],
+    startDate = "0001-01-01",
+    endDate = "0001-01-01",
     paginationStartItem = "0"
 };
 
 const numOfItemsPerPage = 2;
 
 $(document).ready(function () {
-    $("#filters input:not(#text-search), #filters select").change(function (async) {
+
+    $("#filters input:not(#text-search), #filters select").change(function () {
         //Filter project list from team selection
         filterProjectsForItemsList();
     });
@@ -24,13 +27,36 @@ $(document).ready(function () {
         filterProjectsForItemsList();
     });
 
-    if ($('#filters').length) {
-        updateFilterParameters(queryParameters.paginationStartItem);
+    if ($('#filters.published-filters').length) {
+        updateFilterParameters(queryParameters.paginationStartItem, "Published");
+    }
+
+    if ($('#filters.librarian-filters').length) {
+        updateFilterParameters(queryParameters.paginationStartItem, "Submitted");
+    }
+
+    if ($('#filters.profile-filters').length) {
+        //Get userId
+        $.ajax({
+            type: "GET",
+            url: "/Profile/GetUserId",
+            dataType: "text",
+            success: function (data) {
+                queryParameters.userId = [];
+                queryParameters.userId.push(data);
+                console.log(data);
+            },
+            error: function () {
+                alert("Error occured!!")
+            }
+        });
+
+        updateFilterParameters(queryParameters.paginationStartItem, "Draft");
     }
 });
 
 
-function updateFilterParameters(page) {
+function updateFilterParameters(page, itemStatus) {
     queryParameters.themes = [];
     queryParameters.teams = [];
     queryParameters.projects = [];
@@ -55,14 +81,31 @@ function updateFilterParameters(page) {
     $("#project-checkbox-filter input:visible:checked").each(function (index, element) {
         queryParameters.projects.push($(this).data("name"));
     });
-    queryParameters.startDate = $("#start-date-search").val();
-    queryParameters.endDate = $("#end-date-search").val();
-    console.log(page);
+
+    if ($("#start-date-search").length) {
+        queryParameters.startDate = $("#start-date-search").val();
+    }
+
+    if ($("#end-date-search").length) {
+        queryParameters.endDate = $("#end-date-search").val();
+    } else {
+        let date = new Date();
+        const offset = date.getTimezoneOffset();
+        date = new Date(date.getTime() - (offset * 60 * 1000));
+        queryParameters.endDate = date.toISOString().split('T')[0];
+    }
+
     queryParameters.paginationStartItem = (page * numOfItemsPerPage);
-    filterItemList();
+
+    if (itemStatus) {
+        queryParameters.status = [];
+        queryParameters.status.push(itemStatus);
+    }
+
+    filterItemList(itemStatus);
 };
 
-function filterItemList() {
+function filterItemList(itemStatus) {
     let stringifiedParameters = JSON.stringify(queryParameters);
     $.ajax({
         type: "GET",
@@ -71,7 +114,42 @@ function filterItemList() {
         success: function (data) {
             let itemListHtml = "";
             for (let i = 0; i < data.items.length; i++) {
+
+                //Profile items
+                if (itemStatus == "Draft") {
                 itemListHtml += `<tr>
+                    <td width="33%">${data.items[i].title}</td>
+                    <td width="33%">${data.items[i].team}</td>
+                    <td width="33%">${data.items[i].abstract}</td>
+                    <td class="text-center">
+                        <div class="w-75 btn-group" role="group">
+                            <a class="btn btn-primary mx-2" href="/Item/Upsert/${data.items[i].id}">
+                                View
+                            </a>
+                        </div>
+                    </td>
+                </tr>`;
+                }
+
+                //Librarian portal items
+                if (itemStatus == "Submitted") {
+                    itemListHtml += `<tr>
+                    <td width="33%">${data.items[i].title}</td>
+                    <td width="33%">${data.items[i].team}</td>
+                    <td width="33%">${data.items[i].abstract}</td>
+                    <td class="text-center">
+                        <div class="w-75 btn-group" role="group">
+                            <a class="btn btn-primary mx-2" href="/Item/Upsert/${data.items[i].id}">
+                                View
+                            </a>
+                        </div>
+                    </td>
+                </tr>`;
+                }
+
+                //Library items
+                if (itemStatus == "Published" || itemStatus == "Rejected") {
+                    itemListHtml += `<tr>
                     <td width="33%">${data.items[i].title}</td>
                     <td width="33%">${data.items[i].team}</td>
                     <td width="33%">${data.items[i].abstract}</td>
@@ -83,8 +161,13 @@ function filterItemList() {
                         </div>
                     </td>
                 </tr>`;
+                }
+
+
             };
-            $("#published-item-list").html(itemListHtml);
+            console.log(queryParameters);
+            console.log(data);
+            $("#item-list").html(itemListHtml);
 
             //Pagination
             let itemListPaginationHtml = "";
@@ -96,7 +179,7 @@ function filterItemList() {
             }
 
             for (let i = 0; i <= numOfPages; i++) {
-                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i})">${i + 1}</button>`;
+                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
                 $("#item-list-pagination").html(itemListPaginationHtml);
             };
         },
@@ -129,7 +212,7 @@ function filterTagsForItemsList() {
             } else {
                 $("#tag-checkbox-filter label").show();
             }
-            updateFilterParameters(queryParameters.paginationStartItem);
+            updateFilterParameters(queryParameters.paginationStartItem, "Published");
         },
         error: function () {
             alert("Error occured!!")

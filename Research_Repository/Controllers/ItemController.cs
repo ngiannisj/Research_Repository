@@ -53,6 +53,12 @@ namespace Research_Repository.Controllers
         {
 
             ItemVM itemVM = _itemRepo.GetItemVM(id);
+
+            if (id != null && User.IsInRole(WC.UploaderRole) && (itemVM.Item.Status == WC.Submitted || itemVM.Item.Status == WC.Published))
+            {
+                return RedirectToAction("View", id);
+            }
+
             //Create new temp folder for files
             string webRootPath = _webHostEnvironment.WebRootPath;
             string targetFileLocation = WC.ItemFilePath + "temp\\";
@@ -141,7 +147,7 @@ namespace Research_Repository.Controllers
                     itemVM.Item.NotifyUploader = false;
                     itemVM.Item.NotifyLibrarian = false;
                 }
-
+                itemVM.Item.DateCreated = DateTime.Today;
                 //Creating
                 _itemRepo.Add(itemVM.Item);
                 _itemRepo.Save();
@@ -181,8 +187,6 @@ namespace Research_Repository.Controllers
             _itemRepo.Save();
 
             //Update solr
-            if (itemVM.Item.Status == WC.Published)
-            {
                 //Get item from db to include navigation fields
                 Item dbItem = _itemRepo.FirstOrDefault(u => u.Id == itemVM.Item.Id, isTracking: false, include: source => source
         .Include(a => a.Project)
@@ -191,9 +195,8 @@ namespace Research_Repository.Controllers
         .ThenInclude(a => a.Tag)
         .Include(a => a.Theme)
         .Include(a => a.Uploader));
-
-                _solr.AddUpdate(new ItemSolr(dbItem));
-            }
+        
+            _solr.AddUpdate(new ItemSolr(dbItem));
 
             return RedirectToAction("Index", "Profile");
         }

@@ -29,10 +29,14 @@ namespace Research_Repository_Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = WC.YearMonthDayTagHelper, ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
-        [Display(Name = "Date of publish")]
+        [Display(Name = "Last updated")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = WC.YearMonthDayTagHelper, ApplyFormatInEditMode = true)]
         public DateTime LastUpdatedDate { get; set; }
+        [Display(Name = "Date created")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = WC.YearMonthDayTagHelper, ApplyFormatInEditMode = true)]
+        public DateTime DateCreated { get; set; }
 
 
         [Display(Name = "Theme Type")]
