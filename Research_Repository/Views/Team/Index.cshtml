@@ -47,7 +47,10 @@
 
                             <tr class="team">
                                 <td width="50%">
-                                    <input class="form-control team-name" asp-for="@Model[y].Name" />
+                                    <div class="team-name-text">@Model[y].Name</div>
+                                    <input class="form-control team-name-input" asp-for="@Model[y].Name" style="display:none;" />
+                                    <button class="edit-team-name-btn">Edit</button>
+                                    <button class="apply-team-name-btn" style="display:none;">Save</button>
                                     <input asp-for="@Model[y].Id" class="team-id" hidden />
                                 </td>
                                 <td class="text-center">

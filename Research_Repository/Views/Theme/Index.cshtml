@@ -48,7 +48,10 @@
 
                                 <td width="50%">
                                     <input asp-for="@Model[y].Theme.Id" class="theme-id" hidden />
-                                    <input asp-for="@Model[y].Theme.Name" class="form-control theme-name" />
+                                    <div class="theme-name-text">@Model[y].Theme.Name</div>
+                                    <input asp-for="@Model[y].Theme.Name" class="form-control theme-name-input" style="display:none;"/>
+                                    <button class="edit-theme-name-btn">Edit</button>
+                                    <button class="apply-theme-name-btn" style="display:none;">Save</button>
                                     <span asp-validation-for="@Model[y].Theme.Name" class="text-danger"></span>
                                 </td>
                                 <td>
