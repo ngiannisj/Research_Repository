@@ -82,6 +82,5 @@ namespace Research_Repository_Models
 
         //Notifications
         public bool NotifyUploader { get; set; }
-        public bool NotifyLibrarian { get; set; }
     }
 }

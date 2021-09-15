@@ -28,8 +28,7 @@ namespace Research_Repository_DataAccess.Repository
 
             ItemRequestVM itemRequestVM = new ItemRequestVM
             {
-                Items = _db.Items.Where(i => i.Status != WC.Draft).ToList(),
-                NotificationCount = _db.Items.Where(i => i.NotifyLibrarian == true).Count(),
+                Items = _db.Items.Where(i => i.Status != WC.Draft).ToList()
             };
 
             return itemRequestVM;

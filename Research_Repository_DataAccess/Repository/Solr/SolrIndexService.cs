@@ -85,7 +85,7 @@ namespace Research_Repository_DataAccess.Repository.Solr
                     new SolrQueryInList(itemQueryParams.UploaderId != null && itemQueryParams.UploaderId.Count() > 0 ? WC.SolrUploaderId : null, itemQueryParams.UploaderId),
                     new SolrQueryByRange<DateTime>(WC.SolrDateRange, startDate, endDate)
                 },
-                Fields = new[] { WC.SolrId, WC.SolrTitle, WC.SolrTeam, WC.SolrAbstract, WC.SolrTags, WC.SolrNotifyUploader, WC.SolrUploader, WC.SolrNotifyLibrarian }, //Fields returned from solr
+                Fields = new[] { WC.SolrId, WC.SolrTitle, WC.SolrTeam, WC.SolrAbstract, WC.SolrTags, WC.SolrNotifyUploader, WC.SolrUploader }, //Fields returned from solr
                 //OrderBy = new[] { new SortOrder(WC.SolrLastUpdatedDate, Order.DESC), SortOrder.Parse($"{WC.SolrLastUpdatedDate} asc") },
                 StartOrCursor = new StartOrCursor.Start(Int32.Parse(itemQueryParams.PaginationStartItem)), //What item pagination starts from
                 Rows = WC.NumOfItemsPerPage //How many items are returned for pagination

@@ -1,5 +1,8 @@
 ﻿@using Research_Repository_Utility;
 
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor;
+
 @model IList<Research_Repository_Models.ViewModels.ThemeVM>
 
 @{
@@ -15,17 +18,21 @@
         </div>
 
         <br /><br />
-        <ul>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Theme" asp-action="Index">Themes</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="ItemRequest" asp-action="Index">Requests</a>
-            </li>
-        </ul>
+              <ul>
+                  <li class="nav-item">
+                      <a class="nav-link text-dark" asp-area="" asp-controller="Theme" asp-action="Index">Themes</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link text-dark item-request-link" asp-area="" asp-controller="ItemRequest" asp-action="Index">Requests</a>
+                      <span id="item-request-count"></span>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Create admin user</a>
+                  </li>
+              </ul>
 
         @if (Model.Count() > 0)
         {
@@ -49,9 +56,9 @@
                                 <td width="50%">
                                     <input asp-for="@Model[y].Theme.Id" class="theme-id" hidden />
                                     <div class="theme-name-text">@Model[y].Theme.Name</div>
-                                    <input asp-for="@Model[y].Theme.Name" class="form-control theme-name-input" style="display:none;"/>
-                                    <button class="edit-theme-name-btn">Edit</button>
-                                    <button class="apply-theme-name-btn" style="display:none;">Save</button>
+                                    <input asp-for="@Model[y].Theme.Name" class="form-control theme-name-input" style="display:none;" />
+                                    <button class="edit-theme-name-btn" onclick="editName(this, 'theme')">Edit</button>
+                                    <button class="apply-theme-name-btn" style="display:none;" onclick="applyName(this, 'theme')">Save</button>
                                     <span asp-validation-for="@Model[y].Theme.Name" class="text-danger"></span>
                                 </td>
                                 <td>

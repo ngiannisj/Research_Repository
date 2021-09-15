@@ -11,15 +11,13 @@
 
     <br /><br />
 
-    <div>Notifications: @Model.NotificationCount</div>
-
     @if (Model.User.Items != null && Model.User.Items.Count() > 0)
     {
         <div id="filters" class="profile-filters">
-            <button id="drafts-filter-btn" class="selected" onclick="updateFilterParameters(0, '@WC.Draft')">Drafts</button>
+            <button id="drafts-filter-btn" class="selected" onclick="updateFilterParameters(0, '@WC.Draft')"><span id="profile-draft-notification"></span>Drafts</button>
             <button id="submitted-filter-btn" onclick="updateFilterParameters(0, '@WC.Submitted')">Submitted</button>
-            <button id="published-filter-btn" onclick="updateFilterParameters(0, '@WC.Published')">Published</button>
-            <button id="rejected-filter-btn" onclick="updateFilterParameters(0, '@WC.Rejected')">Rejected</button>
+            <button id="published-filter-btn" onclick="updateFilterParameters(0, '@WC.Published')"><span id="profile-published-notification"></span>Published</button>
+            <button id="rejected-filter-btn" onclick="updateFilterParameters(0, '@WC.Rejected')"><span id="profile-rejected-notification"></span>Rejected</button>
         </div>
 
         <table class="table table-bordered table-striped" style="width: 100%">

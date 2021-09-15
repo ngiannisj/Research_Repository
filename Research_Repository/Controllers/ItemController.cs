@@ -65,15 +65,23 @@ namespace Research_Repository.Controllers
             string sourceFileLocation = WC.ItemFilePath + id + "\\";
             FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, true);
 
-            if (itemVM.Item.Status == WC.Submitted && itemVM.Item.NotifyLibrarian == true)
+
+            if (itemVM.Item.NotifyUploader == true && itemVM.Item.UploaderId == _userManager.GetUserId(User))
             {
-                itemVM.Item.NotifyLibrarian = false;
-                _itemRepo.Update(itemVM.Item);
-                _itemRepo.Save();
-            } else if (itemVM.Item.Status == WC.Draft && itemVM.Item.NotifyUploader == true) {
                 itemVM.Item.NotifyUploader = false;
                 _itemRepo.Update(itemVM.Item);
                 _itemRepo.Save();
+
+                //Update solr
+                //Get item from db to include navigation fields
+                Item dbItem = _itemRepo.FirstOrDefault(u => u.Id == itemVM.Item.Id, isTracking: false, include: source => source
+        .Include(a => a.Project)
+        .ThenInclude(a => a.Team)
+        .Include(a => a.ItemTags)
+        .ThenInclude(a => a.Tag)
+        .Include(a => a.Theme)
+        .Include(a => a.Uploader));
+                _solr.AddUpdate(new ItemSolr(itemVM.Item));
             }
 
             if (id == null)
@@ -137,15 +145,9 @@ namespace Research_Repository.Controllers
                 {
                     itemVM.Item.NotifyUploader = true;
                 }
-                else if (itemVM.Item.Status == WC.Submitted)
-                {
-                    itemVM.Item.NotifyLibrarian = true;
-
-                }
                 else
                 {
                     itemVM.Item.NotifyUploader = false;
-                    itemVM.Item.NotifyLibrarian = false;
                 }
                 itemVM.Item.DateCreated = DateTime.Today;
                 //Creating
@@ -168,10 +170,6 @@ namespace Research_Repository.Controllers
                 if (_itemRepo.FirstOrDefault(i => i.Id == itemVM.Item.Id, isTracking: false).Status != itemVM.Item.Status && itemVM.Item.Status != WC.Submitted)
                 {
                     itemVM.Item.NotifyUploader = true;
-                }
-                else if (itemVM.Item.Status == WC.Submitted && _itemRepo.FirstOrDefault(i => i.Id == itemVM.Item.Id, isTracking: false).Status != WC.Submitted)
-                {
-                    itemVM.Item.NotifyLibrarian = true;
                 }
 
                 _itemRepo.Update(itemVM.Item);
@@ -291,6 +289,29 @@ namespace Research_Repository.Controllers
         {
             ItemQueryParams itemQueryParams = JsonConvert.DeserializeObject<ItemQueryParams>(itemQueryJson);
             return _solr.FilterItems(itemQueryParams);
+        }
+
+        //SET - SESSION NOTIFICATION VALUE (FROM AJAX CALL)
+        public IList<string> AddNotificationsToSession()
+        {
+            IList<string> notificationStatusList = _itemRepo.GetAll(filter: u => u.UploaderId == _userManager.GetUserId(User), isTracking: false).Where(u => u.NotifyUploader == true).Select(u => u.Status).ToList();
+
+            return notificationStatusList;
+        }
+
+        //SET - SESSION ITEM REQUEST COUNT VALUES (FROM AJAX CALL)
+        public int AddItemRequestCountToSession()
+        {
+            if (User.IsInRole(WC.LibrarianRole))
+            {
+                int itemRequestCount = _itemRepo.GetAll(filter: u => u.Status == WC.Submitted, isTracking: false).Count();
+                return itemRequestCount;
+
+            }else
+            {
+                return 0;
+            }
+            
         }
     }
 }

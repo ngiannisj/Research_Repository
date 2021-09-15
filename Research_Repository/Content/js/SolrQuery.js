@@ -13,7 +13,7 @@
     paginationStartItem = "0"
 };
 
-const numOfItemsPerPage = 2;
+const numOfItemsPerPage = 1;
 
 $(document).ready(function () {
 
@@ -102,10 +102,10 @@ function updateFilterParameters(page, itemStatus) {
         queryParameters.status.push(itemStatus);
     }
 
-    filterItemList(itemStatus);
+    filterItemList(itemStatus, page);
 };
 
-function filterItemList(itemStatus) {
+function filterItemList(itemStatus, page) {
     let stringifiedParameters = JSON.stringify(queryParameters);
     $.ajax({
         type: "GET",
@@ -116,15 +116,15 @@ function filterItemList(itemStatus) {
             for (let i = 0; i < data.items.length; i++) {
 
                 //Profile items
-                if (itemStatus == "Draft") {
-                itemListHtml += `<tr>
+                if ($('#filters.profile-filters').length) {
+                    itemListHtml += `<tr>
                     <td width="33%">${data.items[i].title}</td>
                     <td width="33%">${data.items[i].team}</td>
                     <td width="33%">${data.items[i].abstract}</td>
                     <td class="text-center">
                         <div class="w-75 btn-group" role="group">
                             <a class="btn btn-primary mx-2" href="/Item/Upsert/${data.items[i].id}">
-                                View
+                                View${(itemStatus != "Submitted" && data.items[i].notifyUploader) ? "!" : ""}
                             </a>
                         </div>
                     </td>
@@ -132,7 +132,7 @@ function filterItemList(itemStatus) {
                 }
 
                 //Librarian portal items
-                if (itemStatus == "Submitted") {
+                if ($('#filters.librarian-filters').length) {
                     itemListHtml += `<tr>
                     <td width="33%">${data.items[i].title}</td>
                     <td width="33%">${data.items[i].team}</td>
@@ -148,7 +148,7 @@ function filterItemList(itemStatus) {
                 }
 
                 //Library items
-                if (itemStatus == "Published" || itemStatus == "Rejected") {
+                if ($('#filters.published-filters').length) {
                     itemListHtml += `<tr>
                     <td width="33%">${data.items[i].title}</td>
                     <td width="33%">${data.items[i].team}</td>
@@ -165,8 +165,6 @@ function filterItemList(itemStatus) {
 
 
             };
-            console.log(queryParameters);
-            console.log(data);
             $("#item-list").html(itemListHtml);
 
             //Pagination
@@ -177,11 +175,48 @@ function filterItemList(itemStatus) {
             } else {
                 numOfPages = Math.ceil(data.numOfTotalResults / numOfItemsPerPage) - 1;
             }
+            //Previous and last pagination buttons
+            if (page >= 1) {
+                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${page - 1}, '${itemStatus}')">&#60;Prev</button>`;
+            } else {
+                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${page - 1}, '${itemStatus}')" disabled>&#60;Prev</button>`;
+            }
+            itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${0}, '${itemStatus}')">1</button>`;
 
-            for (let i = 0; i <= numOfPages; i++) {
-                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
-                $("#item-list-pagination").html(itemListPaginationHtml);
-            };
+            //...
+            if (page > 2) {
+                itemListPaginationHtml += `<button class="pagination-item">...</button>`;
+            }
+
+            //Render 3 pagination buttons if selected button is not page 1 or 2
+            if (page <= 1) {
+                for (let i = page; i <= 3; i++) {
+                    if (i > 0) {
+                        itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
+                    }
+                };
+            } else {
+                for (let i = page - 1; i <= page + 1; i++) {
+                    if (i > 0 && i != numOfPages) {
+                        itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
+                    }
+                };
+            }
+
+            //...
+            if (page < data.numOfTotalResults - 3) {
+                itemListPaginationHtml += `<button class="pagination-item">...</button>`;
+            }
+
+            //Next and last pagination buttons
+            itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${numOfPages}, '${itemStatus}')">${numOfPages + 1}</button>`;
+            if (page < numOfPages) {
+                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${page + 1}, '${itemStatus}')">Next&#62;</button>`;
+            } else {
+                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${page + 1}, '${itemStatus}')" disabled>Next&#62;</button>`;
+            }
+
+            $("#item-list-pagination").html(itemListPaginationHtml);
         },
         error: function () {
             alert("Error occured!!")

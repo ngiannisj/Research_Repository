@@ -62,7 +62,7 @@ function getThemes() {
         let tagSelectList = [];
 
         const themeId = $(element).find(".theme-id").first().val();
-        const themeName = $(element).find(".theme-name").first().val();
+        const themeName = $(element).find(".theme-name-input").first().val();
         const theme = {Id: themeId, Name: themeName, Image: ""}
 
         $(element).find(".tag-checkbox").each(function (i, e) {

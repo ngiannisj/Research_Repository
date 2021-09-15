@@ -40,7 +40,12 @@ namespace Research_Repository
 
             //Used for accessing current user properties
             services.AddHttpContextAccessor();
-
+            services.AddSession(Options =>
+            {
+                Options.IdleTimeout = TimeSpan.FromMinutes(10);
+                Options.Cookie.HttpOnly = true;
+                Options.Cookie.IsEssential = true;
+            });
             services.AddScoped<IThemeRepository, ThemeRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
@@ -78,7 +83,7 @@ namespace Research_Repository
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();

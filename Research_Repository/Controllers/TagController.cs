@@ -30,8 +30,7 @@ namespace Research_Repository.Controllers
         //POST - UPDATE
         public IEnumerable<Tag> UpdateTag(int id, string tagName, string actionName)
         {
-            IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("themes");
-            TempData.Keep();
+            IList<ThemeVM> tempThemes = HttpContext.Session.Get<IList<ThemeVM>>("themes");
             if (actionName == "Add" && id == 0)
             {
 
@@ -69,9 +68,9 @@ namespace Research_Repository.Controllers
                 }
             }
 
-            TempData.Put("themes", tempThemes);
+            HttpContext.Session.Set("themes", tempThemes);
             IList<Tag> tempTags = tempThemes[0].TagCheckboxes.Select(u => new Tag{ Id = u.Value, Name = u.Name }).ToList();
-            IList<ThemeVM> tempThems = TempData.Get<IList<ThemeVM>>("themes");
+            IList<ThemeVM> tempThems = HttpContext.Session.Get<IList<ThemeVM>>("themes");
             return tempTags;
             }
 
@@ -81,8 +80,7 @@ namespace Research_Repository.Controllers
             string tagName = "newTag";
             if (id != null)
             {
-                IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("themes");
-                TempData.Keep();
+                IList<ThemeVM> tempThemes = HttpContext.Session.Get<IList<ThemeVM>>("themes");
                 tagName = tempThemes[0].TagCheckboxes.FirstOrDefault(u => u.Value == id).Name;
             }
             return tagName;

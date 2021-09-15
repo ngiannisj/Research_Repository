@@ -18,7 +18,11 @@
             <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="ItemRequest" asp-action="Index">Requests</a>
+            <a class="nav-link text-dark item-request-link" asp-area="" asp-controller="ItemRequest" asp-action="Index">Requests</a>
+            <span id="item-request-count"></span>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Create admin user</a>
         </li>
     </ul>
 
@@ -49,5 +53,7 @@
     {
         <p>No items exist</p>
     }
+    <!-- Pagination -->
+    <div id="item-list-pagination"></div>
 </div>
 

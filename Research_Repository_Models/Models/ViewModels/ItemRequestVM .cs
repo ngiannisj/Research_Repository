@@ -12,8 +12,6 @@ namespace Research_Repository_Models.ViewModels
 {
     public class ItemRequestVM
     {
-        public int NotificationCount { get; set; }
-
         public IEnumerable<Item> Items { get; set; }
     }
 

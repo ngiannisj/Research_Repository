@@ -34,7 +34,6 @@ namespace Research_Repository_DataAccess.Repository
             ProfileVM profileVM = new ProfileVM
             {
                 User = user,
-                NotificationCount = user.Items.Where(i => i.NotifyUploader == true).Count(),
                 TeamSelectList = GetTeamSelectList()
             };
 

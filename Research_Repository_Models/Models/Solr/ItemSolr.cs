@@ -15,10 +15,18 @@ namespace Research_Repository_Models.Solr
         public ItemSolr(Item model)
         {
             this.Id = model.Id.ToString();
-            this.Title = model.Title;
-            this.Abstract = model.Abstract;
-            this.Collaborator = model.Collaborator;
-            this.DateRange = $"[{model.StartDate.ToString(WC.YearMonthDay)} TO {model.EndDate.ToString("yyyy-MM-dd")}]";
+            if (!string.IsNullOrEmpty(model.Title))
+            {
+                this.Title = model.Title;
+            }
+            if (!string.IsNullOrEmpty(model.Abstract))
+            {
+                this.Abstract = model.Abstract;
+            }
+            if (!string.IsNullOrEmpty(model.Collaborator))
+            {
+                this.Collaborator = model.Collaborator;
+            }
             if (model.Theme != null)
             {
                 this.Theme = model.Theme.Name;
@@ -26,24 +34,50 @@ namespace Research_Repository_Models.Solr
             if (model.Project != null)
             {
                 this.Project = model.Project.Name;
+
+                if (model.Project.Team != null)
+                {
+                    this.Team = model.Project.Team.Name;
+                }
             }
-            if (model.Project.Team != null)
-            {
-                this.Team= model.Project.Team.Name;
-            }
+
             if (model.ItemTags != null && model.ItemTags.Count() > 0)
             {
                 this.Tags = model.ItemTags.Select(i => i.Tag.Name).ToList();
             }
-            this.KeyInsights = model.KeyInsights.Split("~~");
-            this.Methodology = model.Methodology;
-            this.Limitations = model.Limitations;
-            this.ApprovedUse = model.ApprovedUse;
-            this.Sensitivity = model.Sensitivity;
-            this.Status = model.Status;
+            if (!string.IsNullOrEmpty(model.KeyInsights))
+            {
+                this.KeyInsights = model.KeyInsights.Split("~~");
+            }
+            if (!string.IsNullOrEmpty(model.Methodology))
+            {
+                this.Methodology = model.Methodology;
+            }
+            if (!string.IsNullOrEmpty(model.Limitations))
+            {
+                this.Limitations = model.Limitations;
+            }
+            if (!string.IsNullOrEmpty(model.ApprovedUse))
+            {
+                this.ApprovedUse = model.ApprovedUse;
+            }
+            if (!string.IsNullOrEmpty(model.Sensitivity))
+            {
+                this.Sensitivity = model.Sensitivity;
+            }
+            if (!string.IsNullOrEmpty(model.Status))
+            {
+                this.Status = model.Status;
+            }
+            if (model.Uploader != null)
+            {
+                if (!string.IsNullOrEmpty(model.Uploader.FullName))
+                {
+                    this.Uploader = model.Uploader.FullName;
+                }
+            }
+            this.DateRange = $"[{model.StartDate.ToString(WC.YearMonthDay)} TO {model.EndDate.ToString("yyyy-MM-dd")}]";
             this.NotifyUploader = model.NotifyUploader;
-            this.NotifyLibrarian = model.NotifyLibrarian;
-            this.Uploader = model.Uploader.FullName;
             this.LastUpdatedDate = model.LastUpdatedDate;
             this.DateCreated = model.DateCreated;
         }
@@ -80,8 +114,6 @@ namespace Research_Repository_Models.Solr
         public string Status { get; set; }
         [SolrField("notifyUploader")]
         public bool NotifyUploader { get; set; }
-        [SolrField("notifyLibrarian")]
-        public bool NotifyLibrarian { get; set; }
         [SolrField("uploader_tti")]
         public string Uploader { get; set; }
         [SolrField("uploaderId")]

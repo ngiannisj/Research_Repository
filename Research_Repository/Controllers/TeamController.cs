@@ -44,7 +44,7 @@ namespace Research_Repository.Controllers
                 }
                 else
                 {
-                    IList<Team> tempTeams = TempData.Get<IList<Team>>("teams");
+                    IList<Team> tempTeams = HttpContext.Session.Get<IList<Team>>("teams");
                     
 
                     foreach (Team team in tempTeams)
@@ -56,7 +56,6 @@ namespace Research_Repository.Controllers
                     }
                     IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(tempTeams);
                     TempData.Put("teamSelectList", teamsSelectList);
-                    TempData.Keep();
                     ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
                     return View(tempTeams);
                 }
@@ -73,13 +72,13 @@ namespace Research_Repository.Controllers
         {
             IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(teams);
             TempData.Put("teamSelectList", teamsSelectList);
-            TempData.Put("teams", teams);
+            HttpContext.Session.Set("teams", teams);
             return teamsSelectList;
         }
 
         public IActionResult SaveTeams(IList<Team> teams)
         {
-            IList<Team> tempTeams = TempData.Get<IList<Team>>("teams");
+            IList<Team> tempTeams = HttpContext.Session.Get<IList<Team>>("teams");
             foreach(Team team in teams)
             {
                 if (tempTeams != null && tempTeams.Count() > 0)
@@ -147,7 +146,7 @@ namespace Research_Repository.Controllers
         public IActionResult AddTeam(IList<Team> teams)
         {
             int newId = 1;
-            IList<Team> teamList = TempData.Get<IList<Team>>("teams");
+            IList<Team> teamList = HttpContext.Session.Get<IList<Team>>("teams");
             if(teamList == null)
             {
                 teamList = teams;

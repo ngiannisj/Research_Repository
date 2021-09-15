@@ -49,7 +49,6 @@ namespace Research_Repository_Utility
         public const string SolrApprovedUse = "approvedUse";
         public const string SolrSensitivity = "sensitivity";
         public const string SolrNotifyUploader = "notifyUploader";
-        public const string SolrNotifyLibrarian = "notifyLibrarian";
         public const string SolrStatus = "status";
         public const string SolrDateCreated = "dateCreated";
         public const string SolrUploaderId = "userId";
@@ -61,6 +60,6 @@ namespace Research_Repository_Utility
         public const string YearMonthDayTagHelper = "{0:yyyy-MM-dd}";
 
         //Pagination
-        public const int NumOfItemsPerPage = 2; //Remember to change in solr javascript file as well
+        public const int NumOfItemsPerPage = 1; //Remember to change in solr javascript file as well
     }
 }

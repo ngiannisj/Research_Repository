@@ -32,11 +32,11 @@ function getTeams() {
         let projectsList = [];
 
         const teamId = $(element).find(".team-id").first().val();
-        const teamName = $(element).find(".team-name").first().val();
+        const teamName = $(element).find(".team-name-input").first().val();
 
         $(element).find(".project").each(function (i, e) {
             const projectId = $(e).find(".project-id").first().val();
-            const projectName = $(e).find(".project-name").first().val();
+            const projectName = $(e).find(".project-name-input").first().val();
             const project = { Id: projectId, Name: projectName, TeamId: teamId }
             projectsList.push(project);
         })
@@ -104,7 +104,8 @@ function updateTeamProjects() {
 function openProjectModal(project) {
     $("#project-delete-button").show().prop('disabled', false);
     $("#project-submit-button").val("Update");
-    const projectName = $(project).siblings(".project-name").first().val();
+    const projectName = $(project).siblings(".project-name-input").first().val();
+    console.log(project);
     const projectId = $(project).siblings(".project-id").first().val();
     const teamId = $(project).closest(".team").find(".team-id").first().val();
     const oldTeamId = $(project).siblings("#project-oldTeamId-modal-input").first().val();

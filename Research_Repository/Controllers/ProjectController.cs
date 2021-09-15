@@ -30,7 +30,7 @@ namespace Research_Repository.Controllers
         public void UpdateProject(int id, string projectName, int teamId, int oldTeamId, string actionName)
         {
             IList<Project> tempProjects = new List<Project>();
-            IList<Team> tempTeams = TempData.Get<IList<Team>>("teams");
+            IList<Team> tempTeams = HttpContext.Session.Get<IList<Team>>("teams");
 
             Team newTeam = tempTeams.FirstOrDefault(u => u.Id == teamId);
             foreach (Team tempTeam in tempTeams)
@@ -58,14 +58,12 @@ namespace Research_Repository.Controllers
                 }
 
                 newTeam.Projects.Add(new Project { Id = newId, Name = projectName, TeamId = teamId });
-                TempData.Put("teams", tempTeams);
-                TempData.Keep();
+                HttpContext.Session.Set("teams", tempTeams);
 
             }
             else if (actionName == "Update")
             {
-                tempTeams = TempData.Get<IList<Team>>("teams");
-                TempData.Keep();
+                tempTeams = HttpContext.Session.Get<IList<Team>>("teams");
                 Team tempTeam = tempTeams.FirstOrDefault(u => u.Id == teamId);
                 Team oldTeam = tempTeams.FirstOrDefault(u => u.Id == oldTeamId);
                 int newId = tempProjects.Select(u => u.Id).ToList().Max() + 1;
@@ -77,18 +75,16 @@ namespace Research_Repository.Controllers
                     tempProject = tempTeam.Projects.FirstOrDefault(u => u.Id == newId);
                 }
                 tempProject.Name = projectName;
-                TempData.Put("teams", tempTeams);
-                TempData.Keep();
+                HttpContext.Session.Set("teams", tempTeams);
 
             }
             else if (actionName == "Delete")
             {
-                tempTeams = TempData.Get<IList<Team>>("teams");
+                tempTeams = HttpContext.Session.Get<IList<Team>>("teams");
                 Team tempTeam = tempTeams.FirstOrDefault(u => u.Id == teamId);
                 Project tempProject = tempTeam.Projects.FirstOrDefault(u => u.Id == id);
                 tempTeam.Projects.Remove(tempProject);
-                TempData.Put("teams", tempTeams);
-                TempData.Keep();
+                HttpContext.Session.Set("teams", tempTeams);
             }
         }
 

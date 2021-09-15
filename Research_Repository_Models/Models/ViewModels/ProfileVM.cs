@@ -14,8 +14,6 @@ namespace Research_Repository_Models.ViewModels
     {
         public ApplicationUser User { get; set; }
 
-        public int NotificationCount { get; set; }
-
         public IEnumerable<SelectListItem> TeamSelectList { get; set; }
     }
 

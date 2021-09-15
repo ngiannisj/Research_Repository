@@ -60,8 +60,7 @@ namespace Research_Repository.Controllers
                 }
                 else
                 {
-                    IList<ThemeVM> tempThemes = TempData.Get<IList<ThemeVM>>("themes");
-                    TempData.Keep();
+                    IList<ThemeVM> tempThemes = HttpContext.Session.Get<IList<ThemeVM>>("themes");
                     //Update first theme model with the tag select dropdown list
                     if (tempThemes != null && tempThemes.Count > 0)
                     {
@@ -89,7 +88,7 @@ namespace Research_Repository.Controllers
 
         public void SaveThemesState([FromBody]IList<ThemeVM> themes)
         {
-            TempData.Put("themes", themes);
+            HttpContext.Session.Set("themes", themes);
 
         }
 
@@ -131,42 +130,6 @@ namespace Research_Repository.Controllers
                     _themeRepo.Save();
                     _themeRepo.UpdateThemeTagsList(theme);
                 }
-
-
-                //if (obj.Theme.Id == 0)
-                //{
-                //    //Creating
-                //    //if (files.Count != 0)
-                //    //{
-                //    //    //Upload Image
-                //    //    obj.Theme.Image = FileHelper.UploadFiles(files, webRootPath, WC.ImagePath);
-                //    //}
-
-
-                //}
-                //else
-                //{
-                //    //Updating
-                //    //var objFromDb = _themeRepo.FirstOrDefault(filter: u => u.Id == obj.Theme.Id, isTracking: false);
-
-                //    //if (files.Count > 0)
-                //    //{
-
-                //    //    if (objFromDb.Image != null)
-                //    //    {
-                //    //        List<string> filesArray = objFromDb.Image.Split(',').Where(u => !string.IsNullOrWhiteSpace(u)).ToList();
-                //    //        FileHelper.DeleteFile(webRootPath, filesArray[0], WC.ImagePath);
-                //    //    }
-
-                //    //    obj.Theme.Image = FileHelper.UploadFiles(files, webRootPath, WC.ImagePath);
-                //    //}
-                //    //else
-                //    //{
-                //    //    obj.Theme.Image = objFromDb.Image;
-                //    //}
-                //    _themeRepo.Update(obj.Theme);
-                //    _themeRepo.UpdateThemeTagsList(obj);
-                //}
 
             }
             _themeRepo.Save();
