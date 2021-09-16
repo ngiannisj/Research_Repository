@@ -14,6 +14,8 @@ namespace Research_Repository_Models.ViewModels
     {
         public IEnumerable<Item> Items { get; set; }
 
+        public string SearchText { get; set; }
+
         public IList<CheckboxVM> TeamCheckboxes { get; set; }
 
         public IList<CheckboxVM> StatusCheckboxes { get; set; }

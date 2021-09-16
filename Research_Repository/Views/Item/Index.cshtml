@@ -18,7 +18,7 @@
 
     <div id="filters" class="published-filters">
         <!-- Text Search Box -->
-        <input type="text" id="text-search" />
+        <input type="text" id="text-search" value="@Model.SearchText"/>
         <br />
         <!-- Date Range -->
         <input class="form-control" id="start-date-search" type="date" data-val="true" data-val-required="The Start date field is required." value="0001-01-01">
@@ -107,6 +107,7 @@
                 }
             }
         </div>
+        <button id="clear-filters">Clear filters</button>
     </div>
 
     @if (Model.Items.Count() > 0)

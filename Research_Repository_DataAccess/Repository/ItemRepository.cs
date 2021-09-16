@@ -127,7 +127,7 @@ namespace Research_Repository_DataAccess.Repository
         }
 
         //GET - GetAssignedProjects
-        public ItemListVM GetItemListVM()
+        public ItemListVM GetItemListVM(string filterType, string checkedCheckbox, string searchText = "")
         {
             IEnumerable<Item> items = _db.Items.Where(u => u.Status == WC.Published).Include(i => i.Theme);
             string[] sensitivityArray = { WC.Unclassified, WC.Protected };
@@ -138,6 +138,7 @@ namespace Research_Repository_DataAccess.Repository
             ItemListVM itemListVM = new ItemListVM
             {
                 Items = items,
+                SearchText = searchText,
                 TagCheckboxes = _db.Tags.AsNoTracking().Select(i => new CheckboxVM
                 {
                     Value = i.Id,
@@ -148,7 +149,7 @@ namespace Research_Repository_DataAccess.Repository
                 {
                     Value = i.Id,
                     Name = i.Name,
-                    CheckedState = false
+                    CheckedState = filterType == "theme" && checkedCheckbox == i.Name ? true : false
                 }).ToList(),
                 TeamCheckboxes = _db.Teams.AsNoTracking().Select(i => new CheckboxVM
                 {
@@ -160,7 +161,7 @@ namespace Research_Repository_DataAccess.Repository
                 {
                     Value = i.Id,
                     Name = i.Name,
-                    CheckedState = false
+                    CheckedState = filterType == "project" && checkedCheckbox == i.Name ? true : false
                 }).ToList(),
                 SensitivityCheckboxes = sensitivityList.Select(i => new CheckboxVM
                 {

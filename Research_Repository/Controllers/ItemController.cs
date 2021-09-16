@@ -41,9 +41,9 @@ namespace Research_Repository.Controllers
 
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string filterType, string checkedCheckbox, string searchText)
         {
-            ItemListVM itemListVM = _itemRepo.GetItemListVM();
+            ItemListVM itemListVM = _itemRepo.GetItemListVM(filterType, checkedCheckbox, searchText);
             return View(itemListVM);
         }
 

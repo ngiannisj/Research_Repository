@@ -10,7 +10,7 @@
     userIds=[],
     startDate = "0001-01-01",
     endDate = "0001-01-01",
-    paginationStartItem = "0"
+    paginationStartItem = 0
 };
 
 const numOfItemsPerPage = 1;
@@ -18,12 +18,12 @@ const numOfItemsPerPage = 1;
 $(document).ready(function () {
 
     $("#filters input:not(#text-search), #filters select").change(function () {
-        //Filter project list from team selection
+        queryParameters.paginationStartItem = 0;
         filterProjectsForItemsList();
     });
 
     $("#filters #text-search, #filters #start-date-search, #filters #end-date-search").keyup(function () {
-        queryParameters.searchText = $("#text-search").val();
+        queryParameters.paginationStartItem = 0;
         filterProjectsForItemsList();
     });
 
@@ -44,7 +44,6 @@ $(document).ready(function () {
             success: function (data) {
                 queryParameters.userId = [];
                 queryParameters.userId.push(data);
-                console.log(data);
             },
             error: function () {
                 alert("Error occured!!")
@@ -53,16 +52,23 @@ $(document).ready(function () {
 
         updateFilterParameters(queryParameters.paginationStartItem, "Draft");
     }
+
+    $("#clear-filters").click(function () {
+        clearFilters();
+    })
 });
 
 
-function updateFilterParameters(page, itemStatus) {
+function updateFilterParameters(pageId, itemStatus) {
     queryParameters.themes = [];
     queryParameters.teams = [];
     queryParameters.projects = [];
     queryParameters.tags = [];
     queryParameters.sensitivity = [];
     queryParameters.approvals = [];
+    queryParameters.searchText = "";
+
+    queryParameters.searchText = $("#text-search").val();
     $("#approval-checkbox-filter input:visible:checked").each(function (index, element) {
         queryParameters.approvals.push($(this).data("name"));
     });
@@ -95,17 +101,17 @@ function updateFilterParameters(page, itemStatus) {
         queryParameters.endDate = date.toISOString().split('T')[0];
     }
 
-    queryParameters.paginationStartItem = (page * numOfItemsPerPage);
+    queryParameters.paginationStartItem = (pageId * numOfItemsPerPage);
 
     if (itemStatus) {
         queryParameters.status = [];
         queryParameters.status.push(itemStatus);
     }
 
-    filterItemList(itemStatus, page);
+    filterItemList(itemStatus, pageId);
 };
 
-function filterItemList(itemStatus, page) {
+function filterItemList(itemStatus, pageId) {
     let stringifiedParameters = JSON.stringify(queryParameters);
     $.ajax({
         type: "GET",
@@ -169,51 +175,67 @@ function filterItemList(itemStatus, page) {
 
             //Pagination
             let itemListPaginationHtml = "";
-            let numOfPages = 0;
+            let numOfTotalPages = 0;
+            let numOfMiddlePages = 0;
             if (data.numOfTotalResults <= numOfItemsPerPage) {
-                numOfPages = 0;
+                numOfTotalPages = 0;
+                numOfMiddlePages = 0;
             } else {
-                numOfPages = Math.ceil(data.numOfTotalResults / numOfItemsPerPage) - 1;
+                numOfTotalPages = Math.ceil(data.numOfTotalResults / numOfItemsPerPage);
+                numOfMiddlePages = numOfTotalPages - 2;
             }
+            pageNum = pageId + 1;
+
             //Previous and last pagination buttons
-            if (page >= 1) {
-                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${page - 1}, '${itemStatus}')">&#60;Prev</button>`;
+            //If selected pageId is not the first pageId
+            if (pageNum >= 2) {
+                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${pageId - 1}, '${itemStatus}')">&#60;Prev</button>`;
             } else {
-                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${page - 1}, '${itemStatus}')" disabled>&#60;Prev</button>`;
+                itemListPaginationHtml += `<button class="pagination-item" disabled>&#60;Prev</button>`;
             }
+            //First pageId
             itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${0}, '${itemStatus}')">1</button>`;
 
             //...
-            if (page > 2) {
+            if (pageNum >= 4) {
                 itemListPaginationHtml += `<button class="pagination-item">...</button>`;
             }
 
-            //Render 3 pagination buttons if selected button is not page 1 or 2
-            if (page <= 1) {
-                for (let i = page; i <= 3; i++) {
-                    if (i > 0) {
-                        itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
+            //If number of pageIds is 3 or more
+            if (numOfMiddlePages >= 1) {
+                //If selected button is not pageNum 1 or 2
+                if (pageNum <= 2) {
+                    for (let i = pageId; i <= 3; i++) {
+                        if (i > 0) {
+                            itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
+                        }
+                    };
+                    //If selected button is not the final 2 pageIds
+                } else if (pageNum >= numOfTotalPages - 1) {
+                    for (let i = numOfMiddlePages - 2; i <= numOfMiddlePages; i++) {
+                            itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
                     }
-                };
-            } else {
-                for (let i = page - 1; i <= page + 1; i++) {
-                    if (i > 0 && i != numOfPages) {
-                        itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
-                    }
-                };
+                } else {
+                    for (let i = pageId - 1; i <= pageId + 1; i++) {
+                            itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
+                    };
+                }
             }
 
             //...
-            if (page < data.numOfTotalResults - 3) {
+            if (pageNum <= numOfTotalPages - 3) {
                 itemListPaginationHtml += `<button class="pagination-item">...</button>`;
             }
 
-            //Next and last pagination buttons
-            itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${numOfPages}, '${itemStatus}')">${numOfPages + 1}</button>`;
-            if (page < numOfPages) {
-                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${page + 1}, '${itemStatus}')">Next&#62;</button>`;
+            if (numOfTotalPages >= 1) {
+                //Last page
+                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${numOfTotalPages - 1}, '${itemStatus}')">${numOfTotalPages}</button>`;
+            }
+            //Next page
+            if (pageNum < numOfTotalPages) {
+                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${pageId + 1}, '${itemStatus}')">Next&#62;</button>`;
             } else {
-                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${page + 1}, '${itemStatus}')" disabled>Next&#62;</button>`;
+                itemListPaginationHtml += `<button class="pagination-item" disabled>Next&#62;</button>`;
             }
 
             $("#item-list-pagination").html(itemListPaginationHtml);
@@ -285,4 +307,26 @@ function filterProjectsForItemsList() {
             alert("Error occured!!")
         }
     });
+}
+
+function clearFilters() {
+    queryParameters.searchText = $("#text-search").val("");
+    $("#approval-checkbox-filter input:checked").prop('checked', false);
+    $("#sensitivity-checkbox-filter input:checked").prop('checked', false);
+    $("#tag-checkbox-filter input:checked").prop('checked', false);
+    $("#team-checkbox-filter input:checked").prop('checked', false);
+    $("#theme-checkbox-filter input:checked").prop('checked', false);
+    $("#project-checkbox-filter input:checked").prop('checked', false);
+
+    $("#filters label").show();
+
+        $("#start-date-search").val("0001-01-01");
+
+    //Set end date as todays date
+        let date = new Date();
+        const offset = date.getTimezoneOffset();
+        date = new Date(date.getTime() - (offset * 60 * 1000));
+    $("#end-date-search").val(date.toISOString().split('T')[0]);
+
+    updateFilterParameters(0, "Published");
 }

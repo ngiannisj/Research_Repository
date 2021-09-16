@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Research_Repository_DataAccess.Repository.IRepository;
 using Research_Repository_Models;
+using Research_Repository_Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,27 +14,28 @@ namespace Research_Repository.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IThemeRepository _themeRepo;
+        private readonly ITeamRepository _teamRepo;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IThemeRepository themeRepo, ITeamRepository teamRepo)
         {
-            _logger = logger;
+            _themeRepo = themeRepo;
+            _teamRepo = teamRepo;
         }
 
         public IActionResult Index()
         {
-            return View();
+
+            HomeVM homeVM = new HomeVM
+            {
+
+                Themes = _themeRepo.GetAll().ToList(),
+
+                Teams = _teamRepo.GetAll(include: source => source
+                .Include(a => a.Projects)).ToList()
+            };
+            return View(homeVM);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }

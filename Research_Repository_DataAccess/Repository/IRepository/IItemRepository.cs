@@ -14,7 +14,7 @@ namespace Research_Repository_DataAccess.Repository.IRepository
 
         public void UpdateItemTagsList(ItemVM itemVM);
 
-        public ItemListVM GetItemListVM();
+        public ItemListVM GetItemListVM(string filterType, string checkedCheckbox, string searchText);
 
         public ICollection<int> GetAssignedProjects(IList<int> ids);
 
