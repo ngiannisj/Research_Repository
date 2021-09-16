@@ -4,11 +4,13 @@
         //Show inputs for user details
         $("#profile-save-btn").show();
         $("#user-role-input").show();
-        $("#user-name-input").show();
+        $("#user-firstName-input").show();
+        $("#user-lastName-input").show();
         $("#user-team-selector").show();
 
         //Hide display text for user details
-        $("#user-name-text").hide();
+        $("#user-firstName-text").hide();
+        $("#user-lastName-text").hide();
         $("#user-team-text").hide();
         $("#user-role-text").hide();
         $(this).hide();

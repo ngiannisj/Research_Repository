@@ -45,8 +45,14 @@
     <form method="post" enctype="multipart/form-data">
         <div class="form-group row">
             <div class="col-8 row">
-                <input asp-for="User.FullName" id="user-name-input" class="form-control" style="display:none;" />
-                <div id="user-name-text">@Model.User.FullName</div>
+                <input asp-for="User.FirstName" id="user-firstName-input" class="form-control" style="display:none;" />
+                <div id="user-firstName-text">@Model.User.FirstName</div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-8 row">
+                <input asp-for="User.LastName" id="user-lastName-input" class="form-control" style="display:none;" />
+                <div id="user-lastName-text">@Model.User.LastName</div>
             </div>
         </div>
         <div class="form-group row">

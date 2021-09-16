@@ -48,7 +48,8 @@ namespace Research_Repository.Controllers
         {
             string userId = _userManager.GetUserId(User);
             ApplicationUser user = _profileRepo.FirstOrDefault(u => u.Id == userId);
-            user.FullName = profileVM.User.FullName;
+            user.FirstName = profileVM.User.FirstName;
+            user.LastName = profileVM.User.LastName;
             user.TeamId = profileVM.User.TeamId;
             user.Role = profileVM.User.Role;
 

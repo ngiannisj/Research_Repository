@@ -71,9 +71,9 @@ namespace Research_Repository_Models.Solr
             }
             if (model.Uploader != null)
             {
-                if (!string.IsNullOrEmpty(model.Uploader.FullName))
+                if (!string.IsNullOrEmpty(model.Uploader.FirstName) && !string.IsNullOrEmpty(model.Uploader.LastName))
                 {
-                    this.Uploader = model.Uploader.FullName;
+                    this.Uploader = model.Uploader.FirstName + " " + model.Uploader.LastName;
                 }
             }
             this.DateRange = $"[{model.StartDate.ToString(WC.YearMonthDay)} TO {model.EndDate.ToString("yyyy-MM-dd")}]";
