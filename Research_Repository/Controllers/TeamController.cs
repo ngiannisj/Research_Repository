@@ -40,7 +40,8 @@ namespace Research_Repository.Controllers
                     }
                     IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(objList);
                     TempData.Put("teamSelectList", teamsSelectList);
-                    return View(objList);
+                    TeamVM teamVM = new TeamVM { Teams = objList.ToList(), NewTeamName = "" };
+                    return View(teamVM);
                 }
                 else
                 {
@@ -57,14 +58,18 @@ namespace Research_Repository.Controllers
                     IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(tempTeams);
                     TempData.Put("teamSelectList", teamsSelectList);
                     ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
-                    return View(tempTeams);
+
+                    TeamVM teamVM = new TeamVM { Teams = tempTeams, NewTeamName = "" };
+                    return View(teamVM);
                 }
             }
             else
             {
                 IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(teams);
                 TempData.Put("teamSelectList", teamsSelectList);
-                return View(teams);
+                TeamVM teamVM = new TeamVM { Teams = teams, NewTeamName = "" };
+
+                return View(teamVM);
             };
         }
 
@@ -143,23 +148,23 @@ namespace Research_Repository.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult AddTeam(IList<Team> teams)
+        public IActionResult AddTeam(TeamVM teamVM)
         {
             int newId = 1;
             IList<Team> teamList = HttpContext.Session.Get<IList<Team>>("teams");
             if(teamList == null)
             {
-                teamList = teams;
+                teamList = teamVM.Teams;
             }
 
             if (teamList.Count > 0)
             {
                 newId = teamList[teamList.Count - 1].Id + 1;
             }
-            teams.Add(new Team{ Id = newId, Name = "", Projects = new List<Project>() });
+            teamVM.Teams.Add(new Team{ Id = newId, Name = teamVM.NewTeamName, Projects = new List<Project>() });
 
             ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
-            SaveTeamsState(teams);
+            SaveTeamsState(teamVM.Teams);
             return RedirectToAction("Index", new { redirect = true });
         }
 
