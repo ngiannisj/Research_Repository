@@ -96,7 +96,8 @@ namespace Research_Repository.Controllers
         .Include(a => a.Projects));
             IList<int> dbTeamIdList = _teamRepo.GetTeamIds(dbTeamList);
 
-            if(teams == null || teams.Count() < 1)
+            //If there are no teams in the list, delete all remaining projects
+            if(teams == null || teams.Count() == 0)
             {
                 _teamRepo.DeleteProjects(null, true);
             }

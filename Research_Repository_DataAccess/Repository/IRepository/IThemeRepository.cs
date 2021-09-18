@@ -16,11 +16,11 @@ namespace Research_Repository_DataAccess.Repository.IRepository
 
         IEnumerable<SelectListItem> GetTagList();
 
-        ThemeVM CreateThemeVM(int newId, IList<ThemeVM> themeVMs, int? id = null);
+        ThemeObjectVM CreateThemeVM(int newId, IList<ThemeObjectVM> themeVMs, string newThemeName = "", int? id = null);
 
-        void UpdateThemeTagsList(ThemeVM themeVM);
+        void UpdateThemeTagsList(ThemeObjectVM themeVM);
 
-        void UpdateTagsDb(IList<ThemeVM> tempThemes);
+        void UpdateTagsDb(IList<ThemeObjectVM> tempThemes);
 
         bool HasItems(int id);
 

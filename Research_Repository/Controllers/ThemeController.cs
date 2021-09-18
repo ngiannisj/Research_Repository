@@ -29,19 +29,19 @@ namespace Research_Repository.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index(IList<ThemeVM> themes, bool redirect)
+        public IActionResult Index(ThemeVM themeVM, bool redirect)
         {
             IEnumerable<Theme> themeList = _themeRepo.GetAll(isTracking: false);
 
-            if (themes.Count == 0)
+            if (themeVM.ThemeObjects == null || themeVM.ThemeObjects.Count == 0)
             {
                 if (redirect == false)
                 {
                     //If no form button is clicked
-                    IList<ThemeVM> themeVMList = new List<ThemeVM>();
+                    IList<ThemeObjectVM> themeVMList = new List<ThemeObjectVM>();
                     foreach (Theme theme in themeList)
                     {
-                        themeVMList.Add(_themeRepo.CreateThemeVM(0, themes, theme.Id));
+                        themeVMList.Add(_themeRepo.CreateThemeVM(0, themeVM.ThemeObjects, null, theme.Id));
                     }
                     //Update first theme model with the tag select dropdown list
                     if (themeVMList != null && themeVMList.Count > 0)
@@ -56,11 +56,13 @@ namespace Research_Repository.Controllers
                             TempData.Put("tagSelectList", tagSelectList);
                         }
                     }
-                    return View(themeVMList);
+
+                    ThemeVM themeVMObject = new ThemeVM { ThemeObjects = themeVMList, NewThemeName = "" };
+                    return View(themeVMObject);
                 }
                 else
                 {
-                    IList<ThemeVM> tempThemes = HttpContext.Session.Get<IList<ThemeVM>>("themes");
+                    IList<ThemeObjectVM> tempThemes = HttpContext.Session.Get<IList<ThemeObjectVM>>("themes");
                     //Update first theme model with the tag select dropdown list
                     if (tempThemes != null && tempThemes.Count > 0)
                     {
@@ -77,30 +79,36 @@ namespace Research_Repository.Controllers
 
 
                     ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
-                    return View(tempThemes);
+                    ThemeVM themeVMObject = new ThemeVM { ThemeObjects = tempThemes, NewThemeName = "" };
+                    return View(themeVMObject);
                 }
             }
             else
             {
-                return View(themes);
+                ThemeVM themeVMObject = new ThemeVM { ThemeObjects = themeVM.ThemeObjects, NewThemeName = "" };
+
+                return View(themeVMObject);
             };
         }
 
-        public void SaveThemesState([FromBody]IList<ThemeVM> themes)
+        public void SaveThemesState([FromBody]IList<ThemeObjectVM> themes)
         {
             HttpContext.Session.Set("themes", themes);
 
         }
 
-        public IActionResult SaveThemes(IList<ThemeVM> themes)
+        public IActionResult SaveThemes(ThemeVM themeVM)
         {
-                _themeRepo.UpdateTagsDb(themes);
+                _themeRepo.UpdateTagsDb(themeVM.ThemeObjects);
 
             IList<int> themeIdListFromThemeVM = new List<int>();
-            foreach (ThemeVM theme in themes)
+            if(themeVM.ThemeObjects != null && themeVM.ThemeObjects.Count > 0)
             {
-                //Get themes from themeVM
-                themeIdListFromThemeVM.Add(theme.Theme.Id);
+                foreach (ThemeObjectVM theme in themeVM.ThemeObjects)
+                {
+                    //Get themes from themeVM
+                    themeIdListFromThemeVM.Add(theme.Theme.Id);
+                }
             }
 
             IEnumerable<Theme> dbThemeList = _themeRepo.GetAll(isTracking: false);
@@ -114,23 +122,26 @@ namespace Research_Repository.Controllers
                     _themeRepo.Save();
                 }
             }
-            foreach (ThemeVM theme in themes)
+            if (themeVM.ThemeObjects != null && themeVM.ThemeObjects.Count > 0)
             {
-
-                if (dbThemeIdList.Contains(theme.Theme.Id))
+                foreach (ThemeObjectVM theme in themeVM.ThemeObjects)
                 {
-                    _themeRepo.UpdateThemeTagsList(theme);
-                    _themeRepo.Update(theme.Theme);
-                    _themeRepo.Save();
-                }
-                else
-                {
-                    theme.Theme.Id = 0;
-                    _themeRepo.Add(theme.Theme);
-                    _themeRepo.Save();
-                    _themeRepo.UpdateThemeTagsList(theme);
-                }
 
+                    if (dbThemeIdList.Contains(theme.Theme.Id))
+                    {
+                        _themeRepo.UpdateThemeTagsList(theme);
+                        _themeRepo.Update(theme.Theme);
+                        _themeRepo.Save();
+                    }
+                    else
+                    {
+                        theme.Theme.Id = 0;
+                        _themeRepo.Add(theme.Theme);
+                        _themeRepo.Save();
+                        _themeRepo.UpdateThemeTagsList(theme);
+                    }
+
+                }
             }
             _themeRepo.Save();
             ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
@@ -139,32 +150,35 @@ namespace Research_Repository.Controllers
 
 
 
-        public IActionResult DeleteTheme(IList<ThemeVM> themes, int deleteId)
+        public IActionResult DeleteTheme(ThemeVM themeVM, int deleteId)
         {
-            ThemeVM itemToRemove = themes.FirstOrDefault(u => u.Theme.Id == deleteId);
+            ThemeObjectVM itemToRemove = themeVM.ThemeObjects.FirstOrDefault(u => u.Theme.Id == deleteId);
             if (!_themeRepo.HasItems(itemToRemove.Theme.Id))
             {
-                themes.Remove(itemToRemove);
+                themeVM.ThemeObjects.Remove(itemToRemove);
             }
             else
             {
                 //Give warning to not delete until items are removed
             }
             ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
-            SaveThemesState(themes);
+            SaveThemesState(themeVM.ThemeObjects);
             return RedirectToAction("Index", new { redirect = true });
         }
 
-        public IActionResult AddTheme(IList<ThemeVM> themes)
+        public IActionResult AddTheme(ThemeVM themeVM)
         {
             int newId = 1;
-            if (themes.Count > 0)
+            if (themeVM.ThemeObjects != null && themeVM.ThemeObjects.Count > 0)
             {
-                newId = themes[themes.Count - 1].Theme.Id + 1;
+                newId = themeVM.ThemeObjects[themeVM.ThemeObjects.Count - 1].Theme.Id + 1;
+            } else
+            {
+                themeVM.ThemeObjects = new List<ThemeObjectVM>();
             }
-            themes.Add(_themeRepo.CreateThemeVM(newId, themes, null));
+            themeVM.ThemeObjects.Add(_themeRepo.CreateThemeVM(newId, themeVM.ThemeObjects, themeVM.NewThemeName, null));
             ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
-            SaveThemesState(themes);
+            SaveThemesState(themeVM.ThemeObjects);
             return RedirectToAction("Index", new { redirect = true });
         }
 

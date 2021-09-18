@@ -25,7 +25,7 @@ namespace Research_Repository_DataAccess.Repository
         }
 
         //Updates tags assigned to themes
-        public void UpdateThemeTagsList(ThemeVM themeVM)
+        public void UpdateThemeTagsList(ThemeObjectVM themeVM)
         {
             ICollection<ThemeTag> ThemeTagsList = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == themeVM.Theme.Id).ToList();
             ICollection<int> ThemeTagsIdList = ThemeTagsList.Select(i => i.TagId).ToList();
@@ -38,6 +38,7 @@ namespace Research_Repository_DataAccess.Repository
                     {
                         if (!ThemeTagsIdList.Contains(tag.Value))
                         {
+                            //If the tag checkbox has been checked and its previous state was unchecked
                             _db.ThemeTags.Add(new ThemeTag
                             {
                                 ThemeId = themeVM.Theme.Id,
@@ -48,6 +49,7 @@ namespace Research_Repository_DataAccess.Repository
                     }
                     else
                     {
+                        //If the tag checkbox is not checked
                         if (ThemeTagsIdList.Contains(tag.Value))
                         {
                             _db.Remove(ThemeTagsList.FirstOrDefault(i => i.TagId == tag.Value));
@@ -57,29 +59,15 @@ namespace Research_Repository_DataAccess.Repository
             }
         }
 
-        public void UpdateTagsDb(IList<ThemeVM> tempThemes)
+        public void UpdateTagsDb(IList<ThemeObjectVM> tempThemes)
         {
             IList<Tag> dbTagList = _db.Tags.AsNoTracking().ToList();
             IList<int> dbTagIdList = dbTagList.Select(u => u.Id).ToList();
-            IList<int> tagIdListFromThemeVM = new List<int>();
 
-            foreach (Tag tag in dbTagList)
-            {
-                if (!tagIdListFromThemeVM.Contains(tag.Id))
-                {
-                    _db.Tags.Remove(tag);
-                }
-            }
-
-            if (tempThemes.Count > 0 && tempThemes[0].TagCheckboxes != null)
+            if (tempThemes != null && tempThemes[0].TagCheckboxes != null && tempThemes.Count > 0)
             {
                 if (tempThemes[0].TagCheckboxes.Count > 0)
                 {
-                    foreach (CheckboxVM tagCheckbox in tempThemes[0].TagCheckboxes)
-                    {
-                        tagIdListFromThemeVM.Add(tagCheckbox.Value);
-                    }
-
                     foreach (CheckboxVM tagCheckbox in tempThemes[0].TagCheckboxes)
                     {
                         int index = 0;
@@ -91,7 +79,7 @@ namespace Research_Repository_DataAccess.Repository
 
                             //Update tags with new ID
                             index = tempThemes[0].TagCheckboxes.IndexOf(tagCheckbox);
-                            foreach (ThemeVM themeVM in tempThemes)
+                            foreach (ThemeObjectVM themeVM in tempThemes)
                             {
                                 themeVM.TagCheckboxes[index].Value = newTag.Id;
                             }
@@ -104,6 +92,25 @@ namespace Research_Repository_DataAccess.Repository
                         }
 
                     }
+
+                    IList<int> tagIdListFromThemeVM = new List<int>();
+                    if(tempThemes.Count() !=0 )
+                    {
+                        foreach (CheckboxVM tagCheckbox in tempThemes[0].TagCheckboxes)
+                        {
+                            tagIdListFromThemeVM.Add(tagCheckbox.Value);
+                        }
+
+                        //here
+                        foreach (Tag tag in dbTagList)
+                        {
+                            if (!tagIdListFromThemeVM.Contains(tag.Id))
+                            {
+                                _db.Tags.Remove(tag);
+                            }
+                        }
+                    }
+                   
                 }
             }
         }
@@ -138,9 +145,9 @@ namespace Research_Repository_DataAccess.Repository
             }
             else
             {
-                IList<CheckboxVM> tagCheckboxes = tempTagCheckboxes.Select(i => new CheckboxVM
+                IList<CheckboxVM> tagCheckboxes = _db.Tags.AsNoTracking().Select(i => new CheckboxVM
                 {
-                    Value = i.Value,
+                    Value = i.Id,
                     Name = i.Name,
                     CheckedState = false
                 }).ToList();
@@ -161,12 +168,13 @@ namespace Research_Repository_DataAccess.Repository
         }
 
 
-        public ThemeVM CreateThemeVM(int newId, IList<ThemeVM> themeVMs, int? id = null)
+        public ThemeObjectVM CreateThemeVM(int newId, IList<ThemeObjectVM> themeVMs, string newThemeName, int? id = null)
         {
-            ThemeVM themeVM = new ThemeVM();
+            ThemeObjectVM themeVM = new ThemeObjectVM();
 
             IList<CheckboxVM> tempThemeCheckboxes = new List<CheckboxVM>();
-            if (themeVMs.Count() > 0)
+            //Get tag checkboxes from themes if they are available
+            if (themeVMs != null && themeVMs.Count() > 0)
             {
                 if (themeVMs[0].TagCheckboxes.Count() > 0)
                 {
@@ -174,11 +182,13 @@ namespace Research_Repository_DataAccess.Repository
                 }
             }
 
+
             //Assign theme
             if (id == null)
             {
                 themeVM.Theme = new Theme();
                 themeVM.Theme.Id = newId;
+                themeVM.Theme.Name = newThemeName;
                 themeVM.TagCheckboxes = GetTagCheckboxes(null, tempThemeCheckboxes);
             }
             else

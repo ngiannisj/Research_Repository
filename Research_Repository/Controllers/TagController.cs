@@ -30,7 +30,7 @@ namespace Research_Repository.Controllers
         //POST - UPDATE
         public IEnumerable<Tag> UpdateTag(int id, string tagName, string actionName)
         {
-            IList<ThemeVM> tempThemes = HttpContext.Session.Get<IList<ThemeVM>>("themes");
+            IList<ThemeObjectVM> tempThemes = HttpContext.Session.Get<IList<ThemeObjectVM>>("themes");
             if (actionName == "Add" && id == 0)
             {
 
@@ -46,14 +46,14 @@ namespace Research_Repository.Controllers
                     Name = tagName,
                     CheckedState = false
     };
-                foreach(ThemeVM tempThemeVM in tempThemes)
+                foreach(ThemeObjectVM tempThemeVM in tempThemes)
                 {
                     tempThemeVM.TagCheckboxes.Add(tagCheckbox);
                 }
             }
             else if (actionName == "Update" && id != 0)
             {
-                foreach (ThemeVM tempThemeVM in tempThemes)
+                foreach (ThemeObjectVM tempThemeVM in tempThemes)
                 {
                     CheckboxVM tagCheckbox = tempThemeVM.TagCheckboxes.FirstOrDefault(u => u.Value == id);
                     tagCheckbox.Name = tagName;
@@ -61,7 +61,7 @@ namespace Research_Repository.Controllers
             }
             else if (actionName == "Delete")
             {
-                foreach (ThemeVM tempThemeVM in tempThemes)
+                foreach (ThemeObjectVM tempThemeVM in tempThemes)
                 {
                     CheckboxVM tagCheckbox = tempThemeVM.TagCheckboxes.FirstOrDefault(u => u.Value == id);
                     tempThemeVM.TagCheckboxes.Remove(tagCheckbox);
@@ -70,7 +70,7 @@ namespace Research_Repository.Controllers
 
             HttpContext.Session.Set("themes", tempThemes);
             IList<Tag> tempTags = tempThemes[0].TagCheckboxes.Select(u => new Tag{ Id = u.Value, Name = u.Name }).ToList();
-            IList<ThemeVM> tempThems = HttpContext.Session.Get<IList<ThemeVM>>("themes");
+            IList<ThemeObjectVM> tempThems = HttpContext.Session.Get<IList<ThemeObjectVM>>("themes");
             return tempTags;
             }
 
@@ -80,7 +80,7 @@ namespace Research_Repository.Controllers
             string tagName = "newTag";
             if (id != null)
             {
-                IList<ThemeVM> tempThemes = HttpContext.Session.Get<IList<ThemeVM>>("themes");
+                IList<ThemeObjectVM> tempThemes = HttpContext.Session.Get<IList<ThemeObjectVM>>("themes");
                 tagName = tempThemes[0].TagCheckboxes.FirstOrDefault(u => u.Value == id).Name;
             }
             return tagName;

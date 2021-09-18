@@ -3,7 +3,7 @@
 @using Microsoft.AspNetCore.Http;
 @inject IHttpContextAccessor HttpContextAccessor;
 
-@model IList<Research_Repository_Models.ViewModels.ThemeVM>
+@model Research_Repository_Models.ViewModels.ThemeVM
 
 @{
     IEnumerable<SelectListItem> tagSelectList = TempData.Get<IEnumerable<SelectListItem>>("tagSelectList");
@@ -18,23 +18,23 @@
         </div>
 
         <br /><br />
-              <ul>
-                  <li class="nav-item">
-                      <a class="nav-link text-dark" asp-area="" asp-controller="Theme" asp-action="Index">Themes</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link text-dark item-request-link" asp-area="" asp-controller="ItemRequest" asp-action="Index">Requests</a>
-                      <span id="item-request-count"></span>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Create admin user</a>
-                  </li>
-              </ul>
+        <ul>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Theme" asp-action="Index">Themes</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark item-request-link" asp-area="" asp-controller="ItemRequest" asp-action="Index">Requests</a>
+                <span id="item-request-count"></span>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Create admin user</a>
+            </li>
+        </ul>
 
-        @if (Model.Count() > 0)
+        @if (Model.ThemeObjects != null && Model.ThemeObjects.Count() > 0)
         {
 
             <table class="table table-bordered table-striped" style="width: 100%">
@@ -47,40 +47,40 @@
                 </thead>
                 <tbody>
 
-                    @for (int y = 0; y < Model.Count; y++)
+                    @for (int y = 0; y < Model.ThemeObjects.Count; y++)
                     {
-                        if (Model[y].Theme != null)
+                        if (Model.ThemeObjects[y].Theme != null)
                         {
                             <tr class="theme">
 
                                 <td width="50%">
-                                    <input asp-for="@Model[y].Theme.Id" class="theme-id" hidden />
-                                    <div class="theme-name-text">@Model[y].Theme.Name</div>
-                                    <input asp-for="@Model[y].Theme.Name" class="form-control theme-name-input" style="display:none;" />
+                                    <input asp-for="@Model.ThemeObjects[y].Theme.Id" class="theme-id" hidden />
+                                    <div class="theme-name-text">@Model.ThemeObjects[y].Theme.Name</div>
+                                    <input asp-for="@Model.ThemeObjects[y].Theme.Name" class="form-control theme-name-input" style="display:none;" />
                                     <button class="edit-theme-name-btn" onclick="editName(this, 'theme')">Edit</button>
                                     <button class="apply-theme-name-btn" style="display:none;" onclick="applyName(this, 'theme')">Save</button>
-                                    <span asp-validation-for="@Model[y].Theme.Name" class="text-danger"></span>
+                                    <span asp-validation-for="@Model.ThemeObjects[y].Theme.Name" class="text-danger"></span>
                                 </td>
                                 <td>
-                                    @if (Model[y].TagCheckboxes != null)
+                                    @if (Model.ThemeObjects[y].TagCheckboxes != null)
                                     {
-                                        @for (int i = 0; i < Model[y].TagCheckboxes.Count; i++)
+                                        @for (int i = 0; i < Model.ThemeObjects[y].TagCheckboxes.Count; i++)
                                         {
                                             <div class="tag-checkbox">
-                                                <input asp-for="@Model[y].TagCheckboxes[i].Name" hidden class="tag-checkbox-name" />
-                                                <label>@Model[y].TagCheckboxes[i].Name</label>
-                                                <input asp-for="@Model[y].TagCheckboxes[i].CheckedState" class="tag-checkbox-state" />
-                                                <input asp-for="@Model[y].TagCheckboxes[i].Value" hidden class="tag-checkbox-id" />
+                                                <input asp-for="@Model.ThemeObjects[y].TagCheckboxes[i].Name" hidden class="tag-checkbox-name" />
+                                                <label>@Model.ThemeObjects[y].TagCheckboxes[i].Name</label>
+                                                <input asp-for="@Model.ThemeObjects[y].TagCheckboxes[i].CheckedState" class="tag-checkbox-state" />
+                                                <input asp-for="@Model.ThemeObjects[y].TagCheckboxes[i].Value" hidden class="tag-checkbox-id" />
                                             </div>
                                         }
-                                        <span asp-validation-for="@Model[y].TagCheckboxes"></span>
+                                        <span asp-validation-for="@Model.ThemeObjects[y].TagCheckboxes"></span>
                                     }
 
 
                                 </td>
                                 <td class="text-center">
                                     <div class="w-75 btn-group" role="group">
-                                        <button type="submit" asp-action="DeleteTheme" class="btn btn-danger delete-theme" name="deleteId" value="@Model[y].Theme.Id">Delete</button>
+                                        <button type="submit" asp-action="DeleteTheme" class="btn btn-danger delete-theme" name="deleteId" value="@Model.ThemeObjects[y].Theme.Id">Delete</button>
                                     </div>
                                 </td>
                             </tr>
@@ -97,11 +97,28 @@
             <p>No theme exists.</p>
         }
         <input type="submit" class="btn btn-info w-100" name="save" value="Save" asp-action="SaveThemes" />
-        <input type="submit" class="btn btn-info w-100" name="add" value="Add" asp-action="AddTheme" />
-        @if (Model.Count > 0)
+        <button id="open-add-theme-modal-button">Add theme</button>
+        
+        @if (Model.ThemeObjects != null && Model.ThemeObjects.Count > 0)
         {
             <input type="submit" class="btn btn-info w-100" id="myTagBtn" name="openModal" value="Add/Edit Tags" />
         }
+
+        <div id="addThemeModal" class="modal add-team-modal" style="display: none;">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="themeModalClose">&times;</span>
+                <input type="text" id="add-theme-input" asp-for="NewThemeName" />
+
+                <div class="form-group row">
+                    <div class="col-8 row">
+                        <button id="close-add-theme-modal-button">Cancel</button>
+                        <input type="submit" id="add-team-submit-button" class="btn btn-info w-100" name="add" value="Add" asp-action="AddTheme" />
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 </div>
 

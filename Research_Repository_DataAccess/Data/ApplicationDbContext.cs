@@ -36,7 +36,7 @@ namespace Research_Repository.Data
             modelBuilder.Entity<Project>()
                 .HasOne(b => b.Team)
                 .WithMany(a => a.Projects)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Item>()
                 .HasOne(b => b.Theme)
@@ -47,6 +47,11 @@ namespace Research_Repository.Data
                 .HasOne(b => b.Project)
                 .WithMany(a => a.Items)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<ApplicationUser>()
+    .HasOne(b => b.Team)
+    .WithMany(a => a.Users)
+    .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
