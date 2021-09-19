@@ -158,9 +158,13 @@ namespace Research_Repository.Controllers
                 teamList = teamVM.Teams;
             }
 
-            if (teamList.Count > 0)
+            if (teamList != null && teamList.Count != 0)
             {
                 newId = teamList[teamList.Count - 1].Id + 1;
+            }
+            if(teamVM.Teams == null)
+            {
+                teamVM.Teams = new List<Team>();
             }
             teamVM.Teams.Add(new Team{ Id = newId, Name = teamVM.NewTeamName, Projects = new List<Project>() });
 
@@ -169,20 +173,19 @@ namespace Research_Repository.Controllers
             return RedirectToAction("Index", new { redirect = true });
         }
 
-        public IActionResult DeleteTeam(IList<Team> teams, int deleteId)
+        public IActionResult DeleteTeam(TeamVM teamVM, int deleteId)
         {
-            IList<Project> tempProjects = _teamRepo.GetProjectsFromTeams(teams);
-            Team itemToRemove = teams.FirstOrDefault(u => u.Id == deleteId);
-            if (!_teamRepo.HasProjects(itemToRemove.Id, tempProjects))
+            if(teamVM.Teams != null && teamVM.Teams.Count() != 0)
             {
-                teams.Remove(itemToRemove);
+                //IList<Project> tempProjects = _teamRepo.GetProjectsFromTeams(teamVM.Teams);
+                Team itemToRemove = teamVM.Teams.FirstOrDefault(u => u.Id == deleteId);
+                if (itemToRemove != null)
+                {
+                    teamVM.Teams.Remove(itemToRemove);
+                }
+                ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
+                SaveTeamsState(teamVM.Teams);
             }
-            else
-            {
-                //Give warning to not delete until items are removed
-            }
-            ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
-            SaveTeamsState(teams);
             return RedirectToAction("Index", new { redirect = true });
         }
 

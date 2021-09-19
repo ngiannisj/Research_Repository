@@ -74,3 +74,24 @@
     </form>
 </div>
 
+<!-- Delete item modal -->
+<div id="deleteItemModal" class="modal delete-item-modal" style="display: none;">
+    <div class="modal-content">
+        <span class="itemModalClose">&times;</span>
+
+        <!-- New item name input field -->
+        <p>Are you sure you want to delete this team. All projects under this team will be deleted. All items assigned this team or subsequent projects will be unnasigned.</p>
+
+        <!-- Buttons -->
+        <div class="form-group row">
+            <div class="col-8 row">
+                <button id="close-delete-item-modal-button">Cancel</button>
+                <button id="delete-item-modal-button" class="btn btn-danger" value="">
+                    Delete
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+

@@ -1,4 +1,23 @@
 ﻿$(document).ready(function () {
+    $("#submission-item-button").click(function () {
+        $("#itemSubmissionConfirmModal").show();
+        event.preventDefault();
+    });
+
+    $("#close-submission-confirm-modal-button, submissionConfirmModalClose").click(function () {
+        window.location.href = '/profile';
+    });
+
+    $(document).mouseup(function (e) {
+        const modal = $("#itemSubmissionConfirmModal");
+        if (modal.is(":visible")) {
+            // if the target of the click isn't the container nor a descendant of the container
+            if (modal.is(e.target) && modal.has(e.target).length === 0) {
+                window.location.href = '/profile';
+            }
+        }
+    });
+
     $("#file-upload-box").change(function () {
         handleFiles(this);
     });

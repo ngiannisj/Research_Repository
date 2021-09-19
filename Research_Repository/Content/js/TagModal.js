@@ -4,9 +4,9 @@
     $("#myTagBtn").click(function () {
         event.preventDefault();
         $("#tag-name-input").hide();
-        $("#tag-delete-button").hide();
+        $("#open-delete-tag-modal-btn").hide();
         $("#tag-submit-button").hide();
-        $("#tag-delete-button").prop('disabled', true);
+        $("#open-delete-tag-modal-btn").prop('disabled', true);
         $("#tag-submit-button").prop('disabled', true);
         $("#myTagModal").show();
         saveTempThemes(getThemes());
@@ -18,9 +18,9 @@
         $("#tag-name-input").val("");
         $("#tag-name-input").hide();
         $("#tag-select-dropdown").val(0);
-        $("#tag-delete-button").hide();
+        $("#open-delete-tag-modal-btn").hide();
         $("#tag-submit-button").hide();
-        $("#tag-delete-button").prop('disabled', true);
+        $("#open-delete-tag-modal-btn").prop('disabled', true);
         $("#tag-submit-button").prop('disabled', true);
         updateThemeTags();
     })
@@ -35,9 +35,9 @@
                 $("#tag-name-input").val("");
                 $("#tag-name-input").hide();
                 $("#tag-select-dropdown").val(0);
-                $("#tag-delete-button").hide();
+                $("#open-delete-tag-modal-btn").hide();
                 $("#tag-submit-button").hide();
-                $("#tag-delete-button").prop('disabled', true);
+                $("#open-delete-tag-modal-btn").prop('disabled', true);
                 $("#tag-submit-button").prop('disabled', true);
                 updateThemeTags();
             }
@@ -113,13 +113,13 @@ function populateTagNameField($this) {
             if (data == "newTag") {
                 $("#tag-name-input").val("");
                 $("#tag-submit-button").val("Add");
-                $("#tag-delete-button").hide();
-                $("#tag-delete-button").prop('disabled', true);
+                $("#open-delete-tag-modal-btn").hide();
+                $("#open-delete-tag-modal-btn").prop('disabled', true);
             } else {
                 $("#tag-name-input").val(data);
                 $("#tag-submit-button").val("Update");
-                $("#tag-delete-button").show();
-                $("#tag-delete-button").prop('disabled', false);
+                $("#open-delete-tag-modal-btn").show();
+                $("#open-delete-tag-modal-btn").prop('disabled', false);
             }
             $("#tag-name-input").show();
             $("#tag-submit-button").show();
@@ -135,7 +135,7 @@ function populateTagNameField($this) {
 //Update tags
 function updateTags($this) {
 
-    let selectedTagId = $this.closest(".modal-content").find("#tag-select-dropdown").first().find(":selected").attr("value");
+    let selectedTagId = $("#tag-select-dropdown").first().find(":selected").attr("value");
 
     if (selectedTagId == "newTag") {
         selectedTagId = 0;
@@ -143,7 +143,7 @@ function updateTags($this) {
         selectedTagId = parseInt(selectedTagId);
     }
 
-    let tagName = $this.closest(".modal-content").find("#tag-name-input").first().val();
+    let tagName = $("#tag-name-input").first().val();
 
     let formAction = $this.val();
 

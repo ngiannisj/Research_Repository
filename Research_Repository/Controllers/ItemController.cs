@@ -224,17 +224,9 @@ namespace Research_Repository.Controllers
 
 
         //DELETE - DELETE
-        public IActionResult Delete(int? id)
+        public void Delete(int? id)
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
             var obj = _itemRepo.Find(id.GetValueOrDefault());
-            if (obj == null)
-            {
-                return NotFound();
-            }
             if (obj.Files != null)
             {
                 string webRootPath = _webHostEnvironment.WebRootPath;
@@ -244,7 +236,6 @@ namespace Research_Repository.Controllers
             }
             _itemRepo.Remove(obj);
             _itemRepo.Save();
-            return RedirectToAction("Index");
         }
 
         //POST - POSTFILES (FROM AJAX CALL)

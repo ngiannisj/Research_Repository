@@ -80,7 +80,7 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="w-75 btn-group" role="group">
-                                        <button type="submit" asp-action="DeleteTheme" class="btn btn-danger delete-theme" name="deleteId" value="@Model.ThemeObjects[y].Theme.Id">Delete</button>
+                                        <button class="btn btn-danger open-delete-theme-modal-btn" value="@Model.ThemeObjects[y].Theme.Id">Delete</button>
                                     </div>
                                 </td>
                             </tr>
@@ -98,36 +98,58 @@
         }
         <input type="submit" class="btn btn-info w-100" name="save" value="Save" asp-action="SaveThemes" />
         <button id="open-add-theme-modal-button">Add theme</button>
-        
-        @if (Model.ThemeObjects != null && Model.ThemeObjects.Count > 0)
-        {
-            <input type="submit" class="btn btn-info w-100" id="myTagBtn" name="openModal" value="Add/Edit Tags" />
-        }
 
+
+        <input type="submit" class="btn btn-info w-100" id="myTagBtn" name="openModal" value="Add/Edit Tags" />
+
+        <!-- Add theme modal -->
         <div id="addThemeModal" class="modal add-team-modal" style="display: none;">
-
-            <!-- Modal content -->
             <div class="modal-content">
                 <span class="themeModalClose">&times;</span>
+
+                <!-- New theme name input field-->
                 <input type="text" id="add-theme-input" asp-for="NewThemeName" />
 
+                <!-- Buttons -->
                 <div class="form-group row">
                     <div class="col-8 row">
                         <button id="close-add-theme-modal-button">Cancel</button>
                         <input type="submit" id="add-team-submit-button" class="btn btn-info w-100" name="add" value="Add" asp-action="AddTheme" />
                     </div>
                 </div>
+
             </div>
         </div>
+
+        <!-- Delete theme modal -->
+        <div id="deleteThemeModal" class="modal delete-theme-modal" style="display: none;">
+            <div class="modal-content">
+                <span class="themeModalClose">&times;</span>
+
+                <!-- New team name input field -->
+                <p>Are you sure you want to delete this team. All projects under this team will be deleted. All items assigned this team or subsequent projects will be unnasigned.</p>
+
+                <!-- Buttons -->
+                <div class="form-group row">
+                    <div class="col-8 row">
+                        <button id="close-delete-theme-modal-button">Cancel</button>
+                        <button id="delete-theme-confirm-btn" asp-action="DeleteTheme" class="btn btn-danger delete-theme" name="deleteId" value="">Delete</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </form>
 </div>
 
+<!-- Tag modal -->
 <div id="myTagModal" class="modal tag-modal" style="display:none;">
-
-    <!-- Modal content -->
     <div class="modal-content">
         <span class="tagModalClose">&times;</span>
         <p>Some text in the Modal..</p>
+
+        <!-- Tag select list -->
         <div class="form-group row">
             <div class="col-8 row">
                 <select id="tag-select-dropdown" asp-items="@tagSelectList" class="form-control">
@@ -137,19 +159,38 @@
             </div>
         </div>
 
+        <!-- Tag name input field -->
         <div class="form-group row">
             <div class="col-8 row">
                 <input id="tag-name-input" class="form-control" />
                 <span class="text-danger"></span>
             </div>
         </div>
-
+        <!-- Buttons -->
         <div class="form-group row">
             <div class="col-8 row">
                 <input type="button" id="tag-submit-button" class="btn btn-info w-100 tag-modal-btn" value="Update" />
-                <input type="button" id="tag-delete-button" class="btn btn-info w-100 tag-modal-btn" value="Delete" />
-
+                <button id="open-delete-tag-modal-btn" class="btn btn-info w-100">Delete</button>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Delete tag modal -->
+<div id="deleteTagModal" class="modal delete-tag-modal" style="display: none;">
+    <div class="modal-content">
+        <span class="tagModalClose">&times;</span>
+
+        <!-- New team name input field -->
+        <p>Are you sure you want to delete this team. All projects under this team will be deleted. All items assigned this team or subsequent projects will be unnasigned.</p>
+
+        <!-- Buttons -->
+        <div class="form-group row">
+            <div class="col-8 row">
+                <button id="close-delete-tag-modal-button">Cancel</button>
+                <input type="button" id="tag-delete-button" class="btn btn-info w-100 tag-modal-btn" value="Delete" />
+            </div>
+        </div>
+
     </div>
 </div>

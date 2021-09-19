@@ -10,7 +10,7 @@
         fileNames = Model.Files.Split(",").ToList();
 
         //Remove empty space from list
-        if(fileNames != null && fileNames.Count() > 1)
+        if (fileNames != null && fileNames.Count() > 1)
         {
             fileNames.RemoveAt(fileNames.Count - 1);
         }
@@ -46,7 +46,7 @@
                     {
                         @Model.Title
                     }
-                    </div>
+                </div>
             </div>
 
             <!-- Collaborator -->
@@ -56,7 +56,7 @@
                     {
                         @Model.Collaborator
                     }
-                    </div>
+                </div>
             </div>
 
             <!-- Suggested Team -->
@@ -76,7 +76,7 @@
                     {
                         @Model.Project.Name
                     }
-                    </div>
+                </div>
             </div>
 
             <!-- Theme -->
@@ -86,7 +86,7 @@
                     {
                         @Model.Theme
                     }
-                    </div>
+                </div>
             </div>
 
             <!-- Tags -->
@@ -109,7 +109,7 @@
                     {
                         @Model.Title
                     }
-                    </div>
+                </div>
             </div>
 
             <!-- Abstract -->
@@ -119,7 +119,7 @@
                     {
                         @Model.Abstract
                     }
-                    </div>
+                </div>
             </div>
 
             <!-- Key Insights -->
@@ -139,7 +139,7 @@
                     {
                         @Model.Methodology
                     }
-                    </div>
+                </div>
             </div>
 
             <!-- Key Limitations -->
@@ -149,7 +149,7 @@
                     {
                         @Model.Limitations
                     }
-                    </div>
+                </div>
             </div>
 
             <!-- Start Date -->
@@ -159,7 +159,7 @@
                     {
                         @Model.StartDate
                     }
-                    </div>
+                </div>
             </div>
 
             <!-- End Date -->
@@ -169,7 +169,7 @@
                     {
                         @Model.EndDate
                     }
-                    </div>
+                </div>
             </div>
 
             <!-- Approved Use -->
@@ -179,7 +179,7 @@
                     {
                         @Model.ApprovedUse
                     }
-                    </div>
+                </div>
             </div>
 
             <!-- Sensitivity Use -->
@@ -189,7 +189,7 @@
                     {
                         @Model.Sensitivity
                     }
-                    </div>
+                </div>
             </div>
 
             <!-- Files -->
@@ -203,21 +203,42 @@
             </div>
             @if (User.IsInRole(WC.LibrarianRole))
             {
-                <form method="post" enctype="multipart/form-data">
-                    @if (Model.Id != 0)
-                    {
-                        <input asp-for="Id" hidden />
-                    }
+        <form method="post" enctype="multipart/form-data">
+            @if (Model.Id != 0)
+            {
+                <input asp-for="Id" hidden />
+            }
+            <!-- Buttons -->
+            <div class="form-group">
+                <a asp-action="Upsert" asp-route-Id="@Model.Id" class="btn btn-primary mx-2">
+                    Edit
+                </a>
+                <button class="btn btn-danger" id="open-delete-item-modal-btn" value="@Model.Id">
+                    Delete
+                </button>
+            </div>
+
+            <!-- Delete item modal -->
+            <div id="deleteItemModal" class="modal delete-item-modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="itemModalClose">&times;</span>
+
+                    <!-- New item name input field -->
+                    <p>Are you sure you want to delete this team. All projects under this team will be deleted. All items assigned this team or subsequent projects will be unnasigned.</p>
+
                     <!-- Buttons -->
-                <div class="form-group">
-                    <a asp-action="Upsert" asp-route-Id="@Model.Id" class="btn btn-primary mx-2">
-                        Edit
-                    </a>
-                    <a asp-action="Delete" asp-route-Id="@Model.Id" class="btn btn-danger">
-                        Delete
-                    </a>
+                    <div class="form-group row">
+                        <div class="col-8 row">
+                            <button id="close-delete-item-modal-button">Cancel</button>
+                            <button id="delete-item-modal-button" class="btn btn-danger" value="">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
-                </form>
+            </div>
+        </form>
             }
         </div>
     </div>

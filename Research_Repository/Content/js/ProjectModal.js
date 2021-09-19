@@ -75,11 +75,10 @@ function saveTempTeams(teamsList, teamId) {
 
 //Update projects
 function updateProjects($this) {
-    const $modal = $this.closest(".project-modal");
-    const projectId = $modal.find("#project-id-modal-input").first().val();
-    const teamId = $modal.find("#project-teamId-modal-input").find(":selected").attr("value");
-    const oldTeamId = $modal.find("#project-oldTeamId-modal-input").val();
-    const projectName = $modal.find("#project-name-modal-input").first().val();
+    const projectId = $("#project-id-modal-input").first().val();
+    const teamId = $("#project-teamId-modal-input").find(":selected").attr("value");
+    const oldTeamId = $("#project-oldTeamId-modal-input").val();
+    const projectName = $("#project-name-modal-input").first().val();
     const formAction = $this.val();
 
     $.ajax({

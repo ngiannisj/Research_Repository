@@ -37,6 +37,8 @@ namespace Research_Repository.Controllers
             {
                 if (redirect == false)
                 {
+                    HttpContext.Session.Set("tags", _themeRepo.GetTags());
+
                     //If no form button is clicked
                     IList<ThemeObjectVM> themeVMList = new List<ThemeObjectVM>();
                     foreach (Theme theme in themeList)
@@ -44,18 +46,14 @@ namespace Research_Repository.Controllers
                         themeVMList.Add(_themeRepo.CreateThemeVM(0, themeVM.ThemeObjects, null, theme.Id));
                     }
                     //Update first theme model with the tag select dropdown list
-                    if (themeVMList != null && themeVMList.Count > 0)
+                    IList<Tag>tempTags = HttpContext.Session.Get<IList<Tag>>("tags");
+                    IEnumerable<SelectListItem> tagSelectList = tempTags.Select(i => new SelectListItem
                     {
-                        if(themeVMList[0].TagCheckboxes != null && themeVMList[0].TagCheckboxes.Count() > 0)
-                        {
-                            IEnumerable<SelectListItem> tagSelectList = themeVMList[0].TagCheckboxes.Select(i => new SelectListItem
-                            {
-                                Text = i.Name,
-                                Value = i.Value.ToString()
-                            }).ToList();
-                            TempData.Put("tagSelectList", tagSelectList);
-                        }
-                    }
+                        Text = i.Name,
+                        Value = i.Id.ToString()
+                    }).ToList();
+                    TempData.Put("tagSelectList", tagSelectList);
+
 
                     ThemeVM themeVMObject = new ThemeVM { ThemeObjects = themeVMList, NewThemeName = "" };
                     return View(themeVMObject);
@@ -64,18 +62,13 @@ namespace Research_Repository.Controllers
                 {
                     IList<ThemeObjectVM> tempThemes = HttpContext.Session.Get<IList<ThemeObjectVM>>("themes");
                     //Update first theme model with the tag select dropdown list
-                    if (tempThemes != null && tempThemes.Count > 0)
+                    IList<Tag> tempTags = HttpContext.Session.Get<IList<Tag>>("tags");
+                    IEnumerable<SelectListItem> tagSelectList = tempTags.Select(i => new SelectListItem
                     {
-                        if (tempThemes[0].TagCheckboxes != null && tempThemes[0].TagCheckboxes.Count() > 0)
-                        {
-                            IEnumerable<SelectListItem> tagSelectList = tempThemes[0].TagCheckboxes.Select(i => new SelectListItem
-                            {
-                                Text = i.Name,
-                                Value = i.Value.ToString()
-                            }).ToList();
-                            TempData.Put("tagSelectList", tagSelectList);
-                        }
-                    }
+                        Text = i.Name,
+                        Value = i.Id.ToString()
+                    }).ToList();
+                    TempData.Put("tagSelectList", tagSelectList);
 
 
                     ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
@@ -99,7 +92,7 @@ namespace Research_Repository.Controllers
 
         public IActionResult SaveThemes(ThemeVM themeVM)
         {
-                _themeRepo.UpdateTagsDb(themeVM.ThemeObjects);
+                _themeRepo.UpdateTagsDb(themeVM.ThemeObjects, HttpContext.Session.Get<IList<Tag>>("tags"));
 
             IList<int> themeIdListFromThemeVM = new List<int>();
             if(themeVM.ThemeObjects != null && themeVM.ThemeObjects.Count > 0)
@@ -153,14 +146,11 @@ namespace Research_Repository.Controllers
         public IActionResult DeleteTheme(ThemeVM themeVM, int deleteId)
         {
             ThemeObjectVM itemToRemove = themeVM.ThemeObjects.FirstOrDefault(u => u.Theme.Id == deleteId);
-            if (!_themeRepo.HasItems(itemToRemove.Theme.Id))
+            if (itemToRemove != null)
             {
                 themeVM.ThemeObjects.Remove(itemToRemove);
             }
-            else
-            {
-                //Give warning to not delete until items are removed
-            }
+
             ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
             SaveThemesState(themeVM.ThemeObjects);
             return RedirectToAction("Index", new { redirect = true });

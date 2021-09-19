@@ -132,6 +132,10 @@ function filterItemList(itemStatus, pageId) {
                             <a class="btn btn-primary mx-2" href="/Item/Upsert/${data.items[i].id}">
                                 View${(itemStatus != "Submitted" && data.items[i].notifyUploader) ? "!" : ""}
                             </a>
+                            ${itemStatus == "Draft" ?
+                        `<button class="btn btn-danger" id="open-delete-item-modal-btn" value="${data.items[i].id}" onclick="showItemDeleteModal(this)">
+                            Delete
+                         </button>` : ""}
                         </div>
                     </td>
                 </tr>`;

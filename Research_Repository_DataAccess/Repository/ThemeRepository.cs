@@ -59,7 +59,7 @@ namespace Research_Repository_DataAccess.Repository
             }
         }
 
-        public void UpdateTagsDb(IList<ThemeObjectVM> tempThemes)
+        public void UpdateTagsDb(IList<ThemeObjectVM> tempThemes, IList<Tag> tempTags)
         {
             IList<Tag> dbTagList = _db.Tags.AsNoTracking().ToList();
             IList<int> dbTagIdList = dbTagList.Select(u => u.Id).ToList();
@@ -76,6 +76,7 @@ namespace Research_Repository_DataAccess.Repository
                             Tag newTag = new Tag { Id = 0, Name = tagCheckbox.Name };
                             _db.Tags.Add(newTag);
                             _db.SaveChanges();
+                            dbTagList = _db.Tags.AsNoTracking().ToList();
 
                             //Update tags with new ID
                             index = tempThemes[0].TagCheckboxes.IndexOf(tagCheckbox);
@@ -101,7 +102,6 @@ namespace Research_Repository_DataAccess.Repository
                             tagIdListFromThemeVM.Add(tagCheckbox.Value);
                         }
 
-                        //here
                         foreach (Tag tag in dbTagList)
                         {
                             if (!tagIdListFromThemeVM.Contains(tag.Id))
@@ -111,6 +111,51 @@ namespace Research_Repository_DataAccess.Repository
                         }
                     }
                    
+                }
+            } else
+            {
+                if (tempTags != null)
+                {
+                    foreach (Tag tempTag in tempTags)
+                    {
+                        if (!dbTagIdList.Contains(tempTag.Id))
+                        {
+                            //Add tags
+                            Tag newTag = new Tag { Id = 0, Name = tempTag.Name };
+                            _db.Tags.Add(newTag);
+                            _db.SaveChanges();
+                            dbTagList = _db.Tags.AsNoTracking().ToList();
+
+                            //Update tags with new ID
+                            tempTag.Id = newTag.Id;
+                        }
+                        else
+                        {
+                            //Update tags
+                            Tag tag = _db.Tags.FirstOrDefault(u => u.Id == tempTag.Id);
+                            tag.Name = tempTag.Name;
+                            _db.Tags.Update(tag);
+                        }
+
+                    }
+
+                    //Delete tags
+                    IList<int> tempTagIdList = new List<int>();
+                    if (tempTags.Count() != 0)
+                    {
+                        foreach (Tag tempTag in tempTags)
+                        {
+                            tempTagIdList.Add(tempTag.Id);
+                        }
+
+                        foreach (Tag tag in dbTagList)
+                        {
+                            if (!tempTagIdList.Contains(tag.Id))
+                            {
+                                _db.Tags.Remove(tag);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -155,8 +200,13 @@ namespace Research_Repository_DataAccess.Repository
             }
         }
 
-        //Get dropdown list of all tags
-        public IEnumerable<SelectListItem> GetTagList()
+        public IEnumerable<Tag> GetTags()
+        {
+            return _db.Tags;
+        }
+
+            //Get dropdown list of all tags
+            public IEnumerable<SelectListItem> GetTagList()
         {
             IEnumerable<SelectListItem> tagSelectList = _db.Tags.AsNoTracking().Select(i => new SelectListItem
             {
