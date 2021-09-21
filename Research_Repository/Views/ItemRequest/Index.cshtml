@@ -26,6 +26,10 @@
         </li>
     </ul>
 
+    <form>
+        <input asp-action="ReindexItems" type="submit" />
+    </form>
+
     @if (Model.Items != null && Model.Items.Count() > 0)
     {
         <div id="filters" class="librarian-filters">

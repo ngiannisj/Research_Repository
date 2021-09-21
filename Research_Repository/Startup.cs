@@ -1,3 +1,4 @@
+using CommonServiceLocator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +13,8 @@ using Research_Repository_DataAccess.Repository.IRepository;
 using Research_Repository_DataAccess.Repository.Solr;
 using Research_Repository_Models.Solr;
 using SolrNet;
+using SolrNet.Impl;
+using SolrNet.Impl.ResponseParsers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +62,11 @@ namespace Research_Repository
             //Solr
             services.AddSolrNet<ItemSolr>($"http://localhost:8983/solr/research_repository_items");
             services.AddScoped<ISolrIndexService<ItemSolr>, SolrIndexService<ItemSolr, ISolrOperations<ItemSolr>>>();
+
+            //Set up solr admin
+            const string solrUrl = "http://localhost:8983/solr";
+            ISolrCoreAdmin solrCoreAdmin = new SolrCoreAdmin(new SolrConnection(solrUrl), new HeaderResponseParser<string>(), new SolrStatusResponseParser());
+            services.AddSingleton(solrCoreAdmin);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

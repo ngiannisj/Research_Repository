@@ -55,6 +55,59 @@ namespace Research_Repository_DataAccess.Repository.Solr
             }
         }
 
+        public bool DeleteAll()
+        {
+            try
+            {             
+                _solr.Delete(_solr.Query(SolrQuery.All));
+                _solr.Commit();
+                return true;
+            }
+            catch (SolrNetException)
+            {
+                //Log exception
+                return false;
+            }
+        }
+
+        public bool AddAll(IList<T> documentList)
+        {
+            try
+            {
+                foreach(T document in documentList)
+                {
+                    _solr.Add(document);
+                }
+                _solr.Commit();
+                return true;
+            }
+            catch (SolrNetException)
+            {
+                //Log exception
+                return false;
+            }
+        }
+
+        public bool Reindex(IList<T> documentList)
+        {
+            try
+            {
+                _solr.Delete(_solr.Query(SolrQuery.All));
+
+                foreach (T document in documentList)
+                {
+                    _solr.Add(document);
+                }
+                _solr.Commit();
+                return true;
+            }
+            catch (SolrNetException)
+            {
+                //Log exception
+                return false;
+            }
+        }
+
         public ItemQueryResponse<T> FilterItems(ItemQueryParams itemQueryParams)
         {
             ISolrQuery query;

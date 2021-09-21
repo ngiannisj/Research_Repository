@@ -206,13 +206,17 @@ namespace Research_Repository.Controllers
         .Include(a => a.Project)
         .ThenInclude(a => a.Team)
         .Include(a => a.ItemTags)
-        .ThenInclude(a => a.Tag));
+        .ThenInclude(a => a.Tag)
+        .Include(a => a.Theme)
+        .Include(a => a.Uploader));
 
             if (item.NotifyUploader == true && item.UploaderId == _userManager.GetUserId(User))
             {
                 item.NotifyUploader = false;
                 _itemRepo.Update(item);
                 _itemRepo.Save();
+
+                _solr.AddUpdate(new ItemSolr(item));
             }
 
             if (item == null)
@@ -236,6 +240,18 @@ namespace Research_Repository.Controllers
             }
             _itemRepo.Remove(obj);
             _itemRepo.Save();
+
+            //Update solr
+            //Get item from db to include navigation fields
+            Item dbItem = _itemRepo.FirstOrDefault(u => u.Id == id, isTracking: false, include: source => source
+    .Include(a => a.Project)
+    .ThenInclude(a => a.Team)
+    .Include(a => a.ItemTags)
+    .ThenInclude(a => a.Tag)
+    .Include(a => a.Theme)
+    .Include(a => a.Uploader));
+
+            _solr.Delete(new ItemSolr(dbItem));
         }
 
         //POST - POSTFILES (FROM AJAX CALL)
