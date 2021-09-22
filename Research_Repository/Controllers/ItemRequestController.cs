@@ -48,8 +48,10 @@ namespace Research_Repository.Controllers
             return View(itemRequestVM);
         }
 
+        //Delete all existing solr indexes and add all solr items
         public IActionResult ReindexItems()
         {
+            //Get all items from database with navigational properties
             IList<Item> items = _itemRepo.GetAll(isTracking: false, include: source => source
     .Include(a => a.Project)
     .ThenInclude(a => a.Team)
@@ -58,13 +60,14 @@ namespace Research_Repository.Controllers
     .Include(a => a.Theme)
     .Include(a => a.Uploader)).ToList();
 
+            //Transform items list into solritems list so they can be indexed in solr
             IList<ItemSolr> solrItemsList = new List<ItemSolr>();
             foreach (Item item in items)
             {
                 solrItemsList.Add(new ItemSolr(item));
             }
 
-            //Delete all existing solr indexes and add all items from database
+            //Delete all existing solr indexes and add all solr items
             _solr.Reindex(solrItemsList);
 
             return RedirectToAction(nameof(Index));

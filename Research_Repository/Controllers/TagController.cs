@@ -28,6 +28,7 @@ namespace Research_Repository.Controllers
         }
 
         //POST - UPDATE
+        //Update 'tempTags' object in session with added/updated/deleted tag
         public IEnumerable<Tag> UpdateTag(int id, string tagName, string actionName)
         {
             IList<ThemeObjectVM> tempThemes = HttpContext.Session.Get<IList<ThemeObjectVM>>("themes");

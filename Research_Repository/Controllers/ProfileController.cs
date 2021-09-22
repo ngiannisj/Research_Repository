@@ -46,22 +46,23 @@ namespace Research_Repository.Controllers
         //GET - UPSERT
         public IActionResult SaveProfile(ProfileVM profileVM)
         {
+            //Update user field values in database
             string userId = _userManager.GetUserId(User);
             ApplicationUser user = _profileRepo.FirstOrDefault(u => u.Id == userId);
             user.FirstName = profileVM.User.FirstName;
             user.LastName = profileVM.User.LastName;
             user.TeamId = profileVM.User.TeamId;
             user.Role = profileVM.User.Role;
-
-            _profileRepo.Attach(user);
+            _profileRepo.Attach(user); //Unlike update, 'attach' replaces only the changed fields instead of the whole record
             _profileRepo.Save();
 
-            return RedirectToAction("index");
+            return RedirectToAction(nameof(Index));
         }
 
         //GET - USER ID (FROM AJAX CALL)
         public string GetUserId()
         {
+            //Get id of current user from database
             return _userManager.GetUserId(User);
         }
 
