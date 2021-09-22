@@ -23,6 +23,7 @@
         }
     });
 
+    //======================================================================================================
 
     //Delete project modal
     $("#open-project-delete-modal-btn").click(function () {
@@ -48,6 +49,8 @@
         }
     });
 
+    //======================================================================================================
+
     //Delete theme modal
     $(".open-delete-theme-modal-btn").click(function () {
         $("#deleteThemeModal").show();
@@ -72,6 +75,8 @@
         }
     });
 
+    //======================================================================================================
+
     //Delete tag modal
     $("#open-delete-tag-modal-btn").click(function () {
         $("#myTagModal").hide();
@@ -95,6 +100,8 @@
             }
         }
     });
+
+    //======================================================================================================
 
     //Delete item modal
     $("#open-delete-item-modal-btn").click(function () {
@@ -132,6 +139,7 @@
 
 });
 
+//This function exists for item links loaded through solr. Because they are loaded after page load.
 function showItemDeleteModal($this) {
     $("#deleteItemModal").show();
     const itemId = $this.value;

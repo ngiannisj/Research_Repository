@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
+    //On edit profile button click
     $("#profile-edit-btn").click(function () {
-        event.preventDefault();
+
         //Show inputs for user details
         $("#profile-save-btn").show();
         $("#user-role-input").show();
@@ -14,14 +15,10 @@
         $("#user-team-text").hide();
         $("#user-role-text").hide();
         $(this).hide();
+
+        event.preventDefault();
     });
 
+    //Click selected item filter on initial load to load solr items
     $(".selected").first().click();
 });
-
-function filterProfileItems(status) {
-    $(".item").hide();
-    $(`.item[data-status='${status}']`).show();
-    $(".selected").removeClass("selected");
-    $(this).addClass("selected");
-}

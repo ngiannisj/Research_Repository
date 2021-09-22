@@ -1,4 +1,5 @@
-﻿let queryParameters = {
+﻿//Solr query object
+let queryParameters = {
     searchText = "",
     themes =[],
     teams =[],
@@ -13,30 +14,35 @@
     paginationStartItem = 0
 };
 
+//Number of items per pagination page (also need to update in WC constants)
 const numOfItemsPerPage = 1;
 
 $(document).ready(function () {
-
+    //On text change in text box
     $("#filters input:not(#text-search), #filters select").change(function () {
         queryParameters.paginationStartItem = 0;
         filterProjectsForItemsList();
     });
 
+    //On date field value change
     $("#filters #text-search, #filters #start-date-search, #filters #end-date-search").keyup(function () {
         queryParameters.paginationStartItem = 0;
         filterProjectsForItemsList();
     });
 
+    //If items library page is displayed, query solr for items with a 'Published' state
     if ($('#filters.published-filters').length) {
         updateFilterParameters(queryParameters.paginationStartItem, "Published");
     }
 
+    //If item requests page is displayed, query solr for items with a 'Submitted' state
     if ($('#filters.librarian-filters').length) {
         updateFilterParameters(queryParameters.paginationStartItem, "Submitted");
     }
 
+    //If profile page is displayed, query solr for items with a 'Draft' state and created by the user
     if ($('#filters.profile-filters').length) {
-        //Get userId
+        //Get userId from session
         $.ajax({
             type: "GET",
             url: "/Profile/GetUserId",
@@ -45,21 +51,23 @@ $(document).ready(function () {
                 queryParameters.userId = [];
                 queryParameters.userId.push(data);
             },
-            error: function () {
-                alert("Error occured!!")
+            error: function (error) {
+                console.log(error);
             }
         });
 
         updateFilterParameters(queryParameters.paginationStartItem, "Draft");
     }
 
+    //If the clear filter button is clicked
     $("#clear-filters").click(function () {
         clearFilters();
     })
 });
 
-
+//Update solr query object with selected filter options
 function updateFilterParameters(pageId, itemStatus) {
+    //Clear current filter options
     queryParameters.themes = [];
     queryParameters.teams = [];
     queryParameters.projects = [];
@@ -68,50 +76,65 @@ function updateFilterParameters(pageId, itemStatus) {
     queryParameters.approvals = [];
     queryParameters.searchText = "";
 
+    //Set search parameter
     queryParameters.searchText = $("#text-search").val();
     $("#approval-checkbox-filter input:visible:checked").each(function (index, element) {
         queryParameters.approvals.push($(this).data("name"));
     });
+    //Set sensitivity parameter
     $("#sensitivity-checkbox-filter input:visible:checked").each(function (index, element) {
         queryParameters.sensitivity.push($(this).data("name"));
     });
+    //Set tag parameter
     $("#tag-checkbox-filter input:visible:checked").each(function (index, element) {
         queryParameters.tags.push($(this).data("name"));
     });
+    //Set team parameter
     $("#team-checkbox-filter input:visible:checked").each(function (index, element) {
         queryParameters.teams.push($(this).data("name"));
     });
+    //Set theme parameter
     $("#theme-checkbox-filter input:visible:checked").each(function (index, element) {
         queryParameters.themes.push($(this).data("name"));
     });
+    //Set project parameter
     $("#project-checkbox-filter input:visible:checked").each(function (index, element) {
         queryParameters.projects.push($(this).data("name"));
     });
 
+    //Set start date parameter
     if ($("#start-date-search").length) {
         queryParameters.startDate = $("#start-date-search").val();
     }
-
+    //Set end date parameter
     if ($("#end-date-search").length) {
         queryParameters.endDate = $("#end-date-search").val();
     } else {
+        //Get todays date
         let date = new Date();
         const offset = date.getTimezoneOffset();
         date = new Date(date.getTime() - (offset * 60 * 1000));
         queryParameters.endDate = date.toISOString().split('T')[0];
     }
 
+    //Get pagination start item
     queryParameters.paginationStartItem = (pageId * numOfItemsPerPage);
 
+    //Set status parameter
     if (itemStatus) {
+        //Clear status parameter
         queryParameters.status = [];
+        //Add status parameter
         queryParameters.status.push(itemStatus);
     }
 
+    //Filter items list
     filterItemList(itemStatus, pageId);
 };
 
+//Filter items list
 function filterItemList(itemStatus, pageId) {
+    //Stringify solr query parameter list
     let stringifiedParameters = JSON.stringify(queryParameters);
     $.ajax({
         type: "GET",
@@ -133,7 +156,7 @@ function filterItemList(itemStatus, pageId) {
                                 View${(itemStatus != "Submitted" && data.items[i].notifyUploader) ? "!" : ""}
                             </a>
                             ${itemStatus == "Draft" ?
-                        `<button class="btn btn-danger" id="open-delete-item-modal-btn" value="${data.items[i].id}" onclick="showItemDeleteModal(this)">
+                            `<button class="btn btn-danger" id="open-delete-item-modal-btn" value="${data.items[i].id}" onclick="showItemDeleteModal(this)">
                             Delete
                          </button>` : ""}
                         </div>
@@ -172,9 +195,8 @@ function filterItemList(itemStatus, pageId) {
                     </td>
                 </tr>`;
                 }
-
-
             };
+            //Add items to HTML
             $("#item-list").html(itemListHtml);
 
             //Pagination
@@ -217,11 +239,11 @@ function filterItemList(itemStatus, pageId) {
                     //If selected button is not the final 2 pageIds
                 } else if (pageNum >= numOfTotalPages - 1) {
                     for (let i = numOfMiddlePages - 2; i <= numOfMiddlePages; i++) {
-                            itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
+                        itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
                     }
                 } else {
                     for (let i = pageId - 1; i <= pageId + 1; i++) {
-                            itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
+                        itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
                     };
                 }
             }
@@ -244,8 +266,8 @@ function filterItemList(itemStatus, pageId) {
 
             $("#item-list-pagination").html(itemListPaginationHtml);
         },
-        error: function () {
-            alert("Error occured!!")
+        error: function (error) {
+            console.log(error);
         }
     })
 };
@@ -275,8 +297,8 @@ function filterTagsForItemsList() {
             }
             updateFilterParameters(queryParameters.paginationStartItem, "Published");
         },
-        error: function () {
-            alert("Error occured!!")
+        error: function (error) {
+            console.log(error);
         }
     });
 }
@@ -307,12 +329,13 @@ function filterProjectsForItemsList() {
             //Filter tag list from theme selection
             filterTagsForItemsList();
         },
-        error: function () {
-            alert("Error occured!!")
+        error: function (error) {
+            console.log(error);
         }
     });
 }
 
+//Clear filter list
 function clearFilters() {
     queryParameters.searchText = $("#text-search").val("");
     $("#approval-checkbox-filter input:checked").prop('checked', false);
@@ -324,12 +347,12 @@ function clearFilters() {
 
     $("#filters label").show();
 
-        $("#start-date-search").val("0001-01-01");
+    $("#start-date-search").val("0001-01-01");
 
     //Set end date as todays date
-        let date = new Date();
-        const offset = date.getTimezoneOffset();
-        date = new Date(date.getTime() - (offset * 60 * 1000));
+    let date = new Date();
+    const offset = date.getTimezoneOffset();
+    date = new Date(date.getTime() - (offset * 60 * 1000));
     $("#end-date-search").val(date.toISOString().split('T')[0]);
 
     updateFilterParameters(0, "Published");

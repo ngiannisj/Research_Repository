@@ -1,13 +1,14 @@
 ﻿$(document).ready(function () {
+    //When uploaders (not librarians) click the submit button on a 'Draft' item
     $("#submission-item-button").click(function () {
         $("#itemSubmissionConfirmModal").show();
         event.preventDefault();
     });
 
+    //Open the 'profile' page when the item submission modal closes
     $("#close-submission-confirm-modal-button, submissionConfirmModalClose").click(function () {
         window.location.href = '/profile';
     });
-
     $(document).mouseup(function (e) {
         const modal = $("#itemSubmissionConfirmModal");
         if (modal.is(":visible")) {
@@ -18,34 +19,37 @@
         }
     });
 
+    //When a file is uploaded
     $("#file-upload-box").change(function () {
         handleFiles(this);
     });
 
+    //Disable tag dropdown list if no theme is selected
     if ($("#theme-selector").val() != null && $("#theme-selector").val() != 0) {
         $("#tag-selector select").prop('disabled', false);
     }
 
+    //Disable project dropdown list if no team is selected
     if ($("#team-selector").val()) {
         $("#project-selector").prop('disabled', false);
     }
 
+    //Enable project dropdown list if a team is selected
     $("#team-selector").change(function () {
-
         if ($(this).val() != 0) {
             $("#project-selector").prop("selectedIndex", 0);
             $("#project-selector").prop('disabled', false);
         }
     });
 
+    //Enable tag dropdown list if a theme is selected
     $("#theme-selector").change(function () {
-
         if ($(this).val() != 0) {
-            
             $("#tag-selector select").prop('disabled', false);
         }
     });
 
+    //If status of the item is set to rejected, show the comment textbox (To explain the reason for rejection)
     $("#status-selector").change(function () {
         if ($(this).val() == "Rejected") {
             $("#comment-input").show();
@@ -56,6 +60,7 @@
 
 });
 
+//Add a key insight field when add new insight field button is clicked
 function addKeyInsightField(buttonRef) {
     const numberOfKeyInsights = $(buttonRef).parent().find(".key-insight-field").length;
     const lastKeyInsight = $(buttonRef).parent();
@@ -74,6 +79,7 @@ function addKeyInsightField(buttonRef) {
     event.preventDefault();
 }
 
+//Add a suggested tag field when add new tag field button is clicked
 function addSuggestedTagField(buttonRef) {
     const numberOfSuggestedTags = $(buttonRef).parent().find(".suggested-tag-field").length;
     const lastSuggestedTag = $(buttonRef).parent();
@@ -95,12 +101,22 @@ function addSuggestedTagField(buttonRef) {
     event.preventDefault();
 }
 
+//Generic show field function
 function showField(button, fieldId) {
     $("#" + fieldId).show();
     $(button).hide();
     event.preventDefault();
 }
 
+//Generic hide field function
+function hideField(fieldId, addButton) {
+    $("#" + fieldId + " input").val('');
+    $("#" + fieldId).hide();
+    $("#" + addButton).show();
+    event.preventDefault();
+}
+
+//Generic remove field function
 function removeField(buttonRef, field) {
     $(buttonRef).parent().parent().remove();
     if (field == "suggestedTag") {
@@ -112,22 +128,16 @@ function removeField(buttonRef, field) {
     event.preventDefault();
 }
 
-function hideField(fieldId, addButton) {
-    $("#" + fieldId + " input").val('');
-    $("#" + fieldId).hide();
-    $("#" + addButton).show();
-    event.preventDefault();
-}
-
+//Update custom files list
 function handleFiles(fileUploadBox) {
+    //Create custom form data object for file list
     const fileList = fileUploadBox.files;
-
-    //Save files to directory
     var form_data = new FormData();
     for (var i = 0; i < fileList.length; i++) {
         form_data.append(fileList[i].name, fileList[i]);
     }
 
+    //Post files to server
     $.ajax({
         url: "/Item/PostFiles",
         cache: false,
@@ -146,19 +156,19 @@ function handleFiles(fileUploadBox) {
                 let filesHtml = "";
                 for (let i = 0; i < newFileNames.length; i++) {
                     let downloadLink = "/Item/GetDownloadedFile/?filePath=\\files\\documents\\items\\temp\\" + newFileNames[i];
-                   filesHtml += `<div class="file"><a href="${downloadLink}"><h2>${newFileNames[i]}</h2></a><button onclick="removeFile(this)">Delete</button><br><br></div>`;
+                    filesHtml += `<div class="file"><a href="${downloadLink}"><h2>${newFileNames[i]}</h2></a><button onclick="removeFile(this)">Delete</button><br><br></div>`;
                 };
                 $("#files-list").append(filesHtml);
             }
         },
         error: function (error) {
             console.log(error);
-            alert("An error occurred!!!")
         }
     });
     event.preventDefault();
 }
 
+//Remove file from custom file list and delete from server
 function removeFile(buttonRef) {
     const fileName = $(buttonRef).parent().find("h2").first().text();
     $.ajax({
@@ -170,11 +180,9 @@ function removeFile(buttonRef) {
         success: function () {
             let newFileNameString = $("#file-names").val().replace(fileName + ",", '');
             $("#file-names").val(newFileNameString);
-            console.log($("#file-names").val());
         },
         error: function (error) {
             console.log(error);
-            alert("An error occurred!!!")
         }
     });
     $(buttonRef).parent().remove();

@@ -1,12 +1,14 @@
 ﻿$(document).ready(function () {
+    //On page load set notification value for new items in header
     setNotificationValue();
 
+    //If 'Item request' page nav link is showing on screen, update number of item request value
     if ($(".item-request-link").length) {
         setItemRequestValue();
     }
 });
 
-//Update notification value in session
+//Update notification value for updated item statuses in session
 function setNotificationValue() {
     $.ajax({
         url: "/Item/AddNotificationsToSession",
@@ -42,11 +44,12 @@ function setNotificationValue() {
         },
         error: function (request, error) {
             alert("Request: " + JSON.stringify(request));
+            console.log(error);
         }
     });
 };
 
-//Update notification value in session
+//Update notification value for items in 'Submitted' state for librarians in session
 function setItemRequestValue() {
     $.ajax({
         url: "/Item/AddItemRequestCountToSession",
@@ -57,6 +60,7 @@ function setItemRequestValue() {
         },
         error: function (request, error) {
             alert("Request: " + JSON.stringify(request));
+            console.log(error);
         }
     });
 };

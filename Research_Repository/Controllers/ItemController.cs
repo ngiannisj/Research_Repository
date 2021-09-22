@@ -27,9 +27,8 @@ namespace Research_Repository.Controllers
     [Authorize(Roles = WC.LibrarianRole)]
     public class ItemController : Controller
     {
-
         private readonly IItemRepository _itemRepo;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IWebHostEnvironment _webHostEnvironment; //Used for file upload
         private readonly UserManager<IdentityUser> _userManager; //Used for accessing current user properties
         private readonly ISolrIndexService<ItemSolr> _solr;
         public ItemController(IItemRepository itemRepo, IWebHostEnvironment webHostEnvironment, UserManager<IdentityUser> userManager, ISolrIndexService<ItemSolr> solr)
@@ -38,7 +37,6 @@ namespace Research_Repository.Controllers
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
             _solr = solr;
-
         }
 
         public IActionResult Index(string filterType, string checkedCheckbox, string searchText)
@@ -54,25 +52,24 @@ namespace Research_Repository.Controllers
 
             ItemVM itemVM = _itemRepo.GetItemVM(id);
 
+            //Redirect to view page for item if the current user is an uploader not librarian
             if (id != null && User.IsInRole(WC.UploaderRole) && (itemVM.Item.Status == WC.Submitted || itemVM.Item.Status == WC.Published))
             {
-                return RedirectToAction("View", id);
+                return RedirectToAction(nameof(View), id);
             }
 
-            //Create new temp folder for files
             string webRootPath = _webHostEnvironment.WebRootPath;
-            string targetFileLocation = WC.ItemFilePath + "temp\\";
-            string sourceFileLocation = WC.ItemFilePath + id + "\\";
-            FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, true);
+            string targetFileLocation = WC.ItemFilePath + "temp\\"; //Get new temp folder for temp files not yet added to item
+            string sourceFileLocation = WC.ItemFilePath + id + "\\"; //Get item folder for files in this item
+            FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, true); //Copy from temp folder to item folder
 
-
+            //Update item notification status in database and solr index if the customer who created the item is viewing it
             if (itemVM.Item.NotifyUploader == true && itemVM.Item.UploaderId == _userManager.GetUserId(User))
             {
                 itemVM.Item.NotifyUploader = false;
                 _itemRepo.Update(itemVM.Item);
                 _itemRepo.Save();
 
-                //Update solr
                 //Get item from db to include navigation fields
                 Item dbItem = _itemRepo.FirstOrDefault(u => u.Id == itemVM.Item.Id, isTracking: false, include: source => source
         .Include(a => a.Project)
@@ -81,9 +78,10 @@ namespace Research_Repository.Controllers
         .ThenInclude(a => a.Tag)
         .Include(a => a.Theme)
         .Include(a => a.Uploader));
-                _solr.AddUpdate(new ItemSolr(itemVM.Item));
+                _solr.AddUpdate(new ItemSolr(itemVM.Item)); //Update solr
             }
 
+            //If creating a new item
             if (id == null)
             {
                 //Creating
@@ -91,9 +89,9 @@ namespace Research_Repository.Controllers
             }
             else
             {
-                //Updating
+                //If updating an existing item
                 itemVM.Item = _itemRepo.FirstOrDefault(filter: i => i.Id == id, include: i => i.Include(a => a.Project));
-                if (itemVM.Item.Project != null)
+                if (itemVM.Item != null && itemVM.Item.Project != null)
                 {
                     itemVM.TeamId = itemVM.Item.Project.TeamId;
                 }
@@ -112,79 +110,90 @@ namespace Research_Repository.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Upsert(ItemVM itemVM, string submit)
         {
-            itemVM.Item.LastUpdatedDate = DateTime.Today;
-
-            if (User.IsInRole(WC.UploaderRole) && submit != "Submit" || itemVM.Item.Status == null || itemVM.Item.Status == "")
+            if (itemVM != null)
             {
-                itemVM.Item.Status = WC.Draft;
-            }
-            else if (User.IsInRole(WC.UploaderRole) && submit == "Submit")
-            {
-                itemVM.Item.Status = WC.Submitted;
-            }
+                //Set lastUpdatedDate to todays date
+                itemVM.Item.LastUpdatedDate = DateTime.Today;
 
-            if (itemVM.SuggestedTagList != null && itemVM.SuggestedTagList.Count > 0)
-            {
-                itemVM.Item.SuggestedTags = string.Join("~~", itemVM.SuggestedTagList);
-            }
-            if (itemVM.KeyInsightsList != null && itemVM.KeyInsightsList.Count > 0)
-            {
-                itemVM.Item.KeyInsights = string.Join("~~", itemVM.KeyInsightsList);
-            }
-
-            //File parameters
-            string sourceFileLocation = WC.ItemFilePath + "temp\\";
-            string webRootPath = _webHostEnvironment.WebRootPath;
-
-            if (itemVM.Item.Id == 0)
-            {
-                itemVM.Item.UploaderId = _userManager.GetUserId(User);
-
-                //Update notifications
-                if (itemVM.Item.Status == WC.Published || itemVM.Item.Status == WC.Rejected)
+                //Update item status
+                if (User.IsInRole(WC.UploaderRole) && submit != "Submit" || itemVM.Item.Status == null || itemVM.Item.Status == "")
                 {
-                    itemVM.Item.NotifyUploader = true;
+                    itemVM.Item.Status = WC.Draft;
+                }
+                else if (User.IsInRole(WC.UploaderRole) && submit == "Submit")
+                {
+                    itemVM.Item.Status = WC.Submitted;
+                }
+
+                //Join all suggested tags into one string
+                if (itemVM.SuggestedTagList != null && itemVM.SuggestedTagList.Count > 0)
+                {
+                    itemVM.Item.SuggestedTags = string.Join("~~", itemVM.SuggestedTagList);
+                }
+                //Join all key insights into one string
+                if (itemVM.KeyInsightsList != null && itemVM.KeyInsightsList.Count > 0)
+                {
+                    itemVM.Item.KeyInsights = string.Join("~~", itemVM.KeyInsightsList);
+                }
+
+                //File parameters
+                string sourceFileLocation = WC.ItemFilePath + "temp\\"; //Get temp file folder
+                string webRootPath = _webHostEnvironment.WebRootPath;
+
+                //If new item is being created
+                if (itemVM.Item.Id == 0)
+                {
+                    itemVM.Item.UploaderId = _userManager.GetUserId(User); //Get current user
+
+                    //Update notifications for items who created the item
+                    if (itemVM.Item.Status == WC.Published || itemVM.Item.Status == WC.Rejected)
+                    {
+                        itemVM.Item.NotifyUploader = true;
+                    }
+                    else
+                    {
+                        itemVM.Item.NotifyUploader = false;
+                    }
+
+                    //Set date created to todays date
+                    itemVM.Item.DateCreated = DateTime.Today;
+                    //Add to database
+                    _itemRepo.Add(itemVM.Item);
+                    _itemRepo.Save();
+
+                    //Copy files folder from temp files to item file folder
+                    string targetFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
+                    FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, false);
+
+                    //Update tags associated with a the item
+                    _itemRepo.UpdateItemTagsList(itemVM);
                 }
                 else
                 {
-                    itemVM.Item.NotifyUploader = false;
+                    //Update files
+                    string targetFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
+                    FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, true); //Copy files from temp folder to item folder
+
+                    //Update notify uploader status
+                    if (_itemRepo.FirstOrDefault(i => i.Id == itemVM.Item.Id, isTracking: false).Status != itemVM.Item.Status && itemVM.Item.Status != WC.Submitted)
+                    {
+                        itemVM.Item.NotifyUploader = true;
+                    }
+
+                    _itemRepo.Update(itemVM.Item);
+                    _itemRepo.UpdateItemTagsList(itemVM);
                 }
-                itemVM.Item.DateCreated = DateTime.Today;
-                //Creating
-                _itemRepo.Add(itemVM.Item);
+
+                //Reset comment field if status of item is not 'Rejected'
+                if (itemVM.Item.Status != WC.Rejected)
+                {
+                    itemVM.Item.Comment = "";
+                }
+
+                FileHelper.DeleteFiles(null, webRootPath, sourceFileLocation); //Delete temp files folder
+
                 _itemRepo.Save();
 
-                //Update files
-                string targetFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
-                FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, false);
-
-                _itemRepo.UpdateItemTagsList(itemVM);
-            }
-            else
-            {
-
-                //Update files
-                string targetFileLocation = WC.ItemFilePath + itemVM.Item.Id + "\\";
-                FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, true);
-
-                if (_itemRepo.FirstOrDefault(i => i.Id == itemVM.Item.Id, isTracking: false).Status != itemVM.Item.Status && itemVM.Item.Status != WC.Submitted)
-                {
-                    itemVM.Item.NotifyUploader = true;
-                }
-
-                _itemRepo.Update(itemVM.Item);
-                _itemRepo.UpdateItemTagsList(itemVM);
-            }
-
-            if (itemVM.Item.Status == WC.Rejected)
-            {
-                itemVM.Item.Comment = "";
-            }
-            FileHelper.DeleteFiles(null, webRootPath, sourceFileLocation);
-
-            _itemRepo.Save();
-
-            //Update solr
                 //Get item from db to include navigation fields
                 Item dbItem = _itemRepo.FirstOrDefault(u => u.Id == itemVM.Item.Id, isTracking: false, include: source => source
         .Include(a => a.Project)
@@ -193,15 +202,20 @@ namespace Research_Repository.Controllers
         .ThenInclude(a => a.Tag)
         .Include(a => a.Theme)
         .Include(a => a.Uploader));
-        
-            _solr.AddUpdate(new ItemSolr(dbItem));
 
-            return RedirectToAction("Index", "Profile");
+                _solr.AddUpdate(new ItemSolr(dbItem)); //Update solr
+
+                return RedirectToAction(nameof(Index), "Profile");
+            } else
+            {
+                return NotFound();
+            }
         }
 
         //GET - VIEW
         public IActionResult View(int id)
         {
+            //Get item with navigation properties
             Item item = _itemRepo.FirstOrDefault(u => u.Id == id, include: source => source
         .Include(a => a.Project)
         .ThenInclude(a => a.Team)
@@ -210,6 +224,7 @@ namespace Research_Repository.Controllers
         .Include(a => a.Theme)
         .Include(a => a.Uploader));
 
+            //Update notification status to false if the current user is the user who created the item
             if (item.NotifyUploader == true && item.UploaderId == _userManager.GetUserId(User))
             {
                 item.NotifyUploader = false;
@@ -236,12 +251,12 @@ namespace Research_Repository.Controllers
                 string webRootPath = _webHostEnvironment.WebRootPath;
                 string fileLocation = WC.ItemFilePath + id + "\\";
 
-                FileHelper.DeleteFiles(null, webRootPath, fileLocation);
+                FileHelper.DeleteFiles(null, webRootPath, fileLocation); //Delete files associated with this item
             }
+            //Delete from database
             _itemRepo.Remove(obj);
             _itemRepo.Save();
 
-            //Update solr
             //Get item from db to include navigation fields
             Item dbItem = _itemRepo.FirstOrDefault(u => u.Id == id, isTracking: false, include: source => source
     .Include(a => a.Project)
@@ -251,7 +266,7 @@ namespace Research_Repository.Controllers
     .Include(a => a.Theme)
     .Include(a => a.Uploader));
 
-            _solr.Delete(new ItemSolr(dbItem));
+            _solr.Delete(new ItemSolr(dbItem)); //Delete solr index
         }
 
         //POST - POSTFILES (FROM AJAX CALL)

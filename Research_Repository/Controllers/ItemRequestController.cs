@@ -32,7 +32,7 @@ namespace Research_Repository.Controllers
 
         private readonly IItemRequestRepository _itemRequestRepo;
         private readonly IItemRepository _itemRepo;
-        private readonly ISolrCoreAdmin _solrAdmin;
+        private readonly ISolrCoreAdmin _solrAdmin; //For solr admin tasks such as reloading core, currently not implementing any solr core functionalities
         private readonly ISolrIndexService<ItemSolr> _solr;
         public ItemRequestController(IItemRequestRepository itemRequestRepo, IItemRepository itemRepo, ISolrCoreAdmin solrAdmin, ISolrIndexService<ItemSolr> solr)
         {
@@ -64,9 +64,10 @@ namespace Research_Repository.Controllers
                 solrItemsList.Add(new ItemSolr(item));
             }
 
+            //Delete all existing solr indexes and add all items from database
             _solr.Reindex(solrItemsList);
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
 
         }
     }

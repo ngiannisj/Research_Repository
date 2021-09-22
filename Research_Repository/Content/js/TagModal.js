@@ -2,7 +2,6 @@
 
     // When the user clicks the open button, open the modal 
     $("#myTagBtn").click(function () {
-        event.preventDefault();
         $("#tag-name-input").hide();
         $("#open-delete-tag-modal-btn").hide();
         $("#tag-submit-button").hide();
@@ -10,6 +9,8 @@
         $("#tag-submit-button").prop('disabled', true);
         $("#myTagModal").show();
         saveTempThemes(getThemes());
+
+        event.preventDefault();
     });
 
     // When the user clicks on close button, close the modal
@@ -42,18 +43,20 @@
                 updateThemeTags();
             }
         }
-        
-    });
 
+    });
+    //On tag select list dropdown change, set tag name field
     $("#tag-select-dropdown").change(function () {
         populateTagNameField($(this));
     });
 
+    //On tag modal btn click, update tags
     $(".tag-modal-btn").click(function () {
         updateTags($(this));
     });
 });
 
+//Get list of themes from DOM
 function getThemes() {
     let themesList = [];
 
@@ -63,7 +66,7 @@ function getThemes() {
 
         const themeId = $(element).find(".theme-id").first().val();
         const themeName = $(element).find(".theme-name-input").first().val();
-        const theme = {Id: themeId, Name: themeName, Image: ""}
+        const theme = { Id: themeId, Name: themeName, Image: "" }
 
         $(element).find(".tag-checkbox").each(function (i, e) {
             const tagId = $(e).find(".tag-checkbox-id").first().val();
@@ -78,10 +81,10 @@ function getThemes() {
         const themeVM = { Theme: theme, TagCheckboxes: tags, TagSelectList: tagSelectList }
         themesList.push(themeVM);
     });
-    console.log(themesList);
     return themesList;
 }
 
+//Save temp themes to session
 function saveTempThemes(themesList) {
     let tempThemes = JSON.stringify(themesList);
     $.ajax({
@@ -96,20 +99,18 @@ function saveTempThemes(themesList) {
 
 //Update tag name field based on tag selected from dropdown
 function populateTagNameField($this) {
-
     let selectedTagId = parseInt($this.find(":selected").attr("value"));
-
     if (selectedTagId == "newTag") {
         selectedTagId = null;
     }
-
     $.ajax({
         type: "GET",
         url: "/Tag/GetTagName",
         data: { "id": selectedTagId },
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
-            
+
+            //Show/Hide button in modal based on dropdown selection
             if (data == "newTag") {
                 $("#tag-name-input").val("");
                 $("#tag-submit-button").val("Add");
@@ -127,7 +128,6 @@ function populateTagNameField($this) {
         },
         error: function (error) {
             console.log(error);
-            alert("An error occurred!!!")
         }
     });
 }
@@ -147,8 +147,8 @@ function updateTags($this) {
 
     let formAction = $this.val();
 
-        $("#tag-select-dropdown").val(0);
-        $("#tag-name-input").val("");
+    $("#tag-select-dropdown").val(0);
+    $("#tag-name-input").val("");
 
     $.ajax({
         type: "GET",
@@ -156,6 +156,7 @@ function updateTags($this) {
         data: { "id": selectedTagId, "tagName": tagName, "actionName": formAction },
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
+            //Reload tag dropdown list
             var $el = $("#tag-select-dropdown");
             $('#tag-select-dropdown option:gt(1)').remove(); // remove all options, but not the first two
 
@@ -165,11 +166,11 @@ function updateTags($this) {
         },
         error: function (error) {
             console.log(error);
-            alert("An error occurred!!!")
         }
     });
 }
 
+//Reload theme page
 function updateThemeTags() {
-            window.location.replace('../theme?redirect=True');
+    window.location.replace('../theme?redirect=True');
 }

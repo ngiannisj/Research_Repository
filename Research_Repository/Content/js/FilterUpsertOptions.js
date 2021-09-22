@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
 
-
+    //Set checked state after checkbox click
     $(":checkbox").change(function () {
         if ($(this).is(':checked')) {
             $(this).attr('checked', true);
@@ -15,14 +15,16 @@
     //Filter projects on page load
     filterProjects($("#team-selector"));
 
+    //Filter tags on theme change
     $("#theme-selector").change(function () {
         filterTags($(this));
     });
 
+    //Filter projects on team change
     $("#team-selector").change(function () {
         filterProjects($(this));
     });
- 
+
 });
 
 //Filter tags checklist based on theme selected
@@ -48,7 +50,7 @@ function filterTags($this) {
             }
         },
         error: function () {
-            alert("Error occured!!")
+            console.log(error);
         }
     });
 }
@@ -75,13 +77,13 @@ function filterProjects($this) {
                 $("#project-selector option[value=" + data[i] + "]").show();
             }
         },
-        error: function () {
-            alert("Error occured!!")
+        error: function (error) {
+            console.log(error);
         }
     });
 }
 
-//Create checkbox dropdown
+//Create checkbox dropdown list
 var expanded = false;
 function showCheckboxes() {
     if ($("#tag-selector select").prop('disabled') == false) {

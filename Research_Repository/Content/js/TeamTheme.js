@@ -5,13 +5,14 @@
         event.preventDefault();
     });
 
+    //On modal close
     $("#close-add-team-modal-button, .teamModalClose").click(function () {
         $("#addTeamModal").hide();
         $("#add-team-input").val("");
         event.preventDefault();
     });
 
-    ////If user clicks outside the modal
+    //If user clicks outside the modal
     $(document).mouseup(function (e) {
         const modal = $("#addTeamModal");
         if (modal.is(":visible")) {
@@ -23,17 +24,20 @@
         }
     });
 
-        //Add theme modal
-        $("#open-add-theme-modal-button").click(function () {
-            $("#addThemeModal").show();
-            event.preventDefault();
-        });
+    //===================================================================================
 
-        $("#close-add-theme-modal-button, .themeModalClose").click(function () {
-            $("#addThemeModal").hide();
-            $("#add-theme-input").val("");
-            event.preventDefault();
-        });
+    //Add theme modal
+    $("#open-add-theme-modal-button").click(function () {
+        $("#addThemeModal").show();
+        event.preventDefault();
+    });
+
+    //On close theme modal
+    $("#close-add-theme-modal-button, .themeModalClose").click(function () {
+        $("#addThemeModal").hide();
+        $("#add-theme-input").val("");
+        event.preventDefault();
+    });
 
     ////If user clicks outside the modal
     $(document).mouseup(function (e) {
@@ -59,9 +63,9 @@ function editName(thisbtn, type) {
     //Hide
     $(thisbtn).siblings(`.${type}-name-text`).hide();
     $(thisbtn).hide();
-    console.log(`.${type}-name-input`);
 };
 
+//Apply name of new team and theme
 function applyName(thisbtn, type) {
     event.preventDefault();
     //Change text value
@@ -75,5 +79,4 @@ function applyName(thisbtn, type) {
     //Hide
     $(thisbtn).siblings(`.${type}-name-input`).hide();
     $(thisbtn).hide();
-    console.log(`.${type}-name-input`);
 };

@@ -28,7 +28,6 @@ namespace Research_Repository.Controllers
 
             HomeVM homeVM = new HomeVM
             {
-
                 Themes = _themeRepo.GetAll().ToList(),
 
                 Teams = _teamRepo.GetAll(include: source => source
