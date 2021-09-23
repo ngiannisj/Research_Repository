@@ -29,22 +29,27 @@ namespace Research_Repository_DataAccess.Repository
             dbSet.Add(entity);
         }
 
+        //Get single database instance of a generic type
         public T Find(int id)
         {
             return dbSet.Find(id);
         }
 
-        public T FirstOrDefault(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, bool isTracking = true)
+        //Get single database instance of a generic type
+        public T FirstOrDefault(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, bool isTracking = true)
         {
             IQueryable<T> query = dbSet;
+            //Apply filter to query if the 'filter' parameter is not null
             if (filter != null)
             {
                 query = query.Where(filter);
             }
+            //Get navigational properties if the 'include' parameter is not null
             if (include != null)
             {
                     query = include(query);
             }
+            //Set not tracking if 'isTracking' parameter is set to false
             if (!isTracking)
             {
                 query = query.AsNoTracking();
@@ -55,19 +60,23 @@ namespace Research_Repository_DataAccess.Repository
         public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, bool isTracking = true)
         {
             IQueryable<T> query = dbSet;
-            if(filter != null)
+            //Apply filter to query if the 'filter' parameter is not null
+            if (filter != null)
             {
                 query = query.Where(filter);
             }
+            //Get navigational properties if the 'include' parameter is not null
             if (include != null)
             {
                 query = include(query);
             }
+            //Get ordered results if the 'orderBy' parameter is not null
             if (orderBy != null)
             {
                 query = orderBy(query);
             }
-            if(!isTracking)
+            //Set not tracking if 'isTracking' parameter is set to false
+            if (!isTracking)
             {
                 query = query.AsNoTracking();
             }

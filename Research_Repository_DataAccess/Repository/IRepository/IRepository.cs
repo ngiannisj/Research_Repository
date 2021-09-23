@@ -19,7 +19,7 @@ namespace Research_Repository_DataAccess.Repository.IRepository
             bool isTracking = true
             );
 
-        T FirstOrDefault(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, bool isTracking = true);
+        T FirstOrDefault(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null, bool isTracking = true);
 
         void Add(T entity);
 

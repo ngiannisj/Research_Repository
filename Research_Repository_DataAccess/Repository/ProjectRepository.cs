@@ -23,24 +23,6 @@ namespace Research_Repository_DataAccess.Repository
             _db = db;
         }
 
-        public bool HasItems(int id)
-        {
-            if (_db.Items.FirstOrDefault(i => i.ProjectId == id) != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public Team GetTeam(int teamId)
-        {
-            Team team = _db.Teams.FirstOrDefault(u =>u.Id == teamId);
-            return team;
-        }
-
         public void Update(Project obj)
         {
             _db.Projects.Update(obj);

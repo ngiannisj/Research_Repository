@@ -23,16 +23,19 @@ namespace Research_Repository_DataAccess.Repository
         //Get dropdown list of all tags
         public IEnumerable<SelectListItem> GetTagList(IList<Tag> tags, bool useDb)
         {
+            //If useDb parameter is true, use tags from the database to generate the tags selectlist
             if (useDb == true)
             {
                 tags = _db.Tags.AsNoTracking().ToList();
             }
 
+            //If tags parameter is null, instantiate an empty tags list
             if (tags == null)
             {
                 tags = new List<Tag>();
             }
 
+            //Generate a tags selectlist
             IEnumerable<SelectListItem> tagSelectList = tags.Select(i => new SelectListItem
             {
                 Text = i.Name,

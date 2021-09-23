@@ -12,11 +12,6 @@ namespace Research_Repository_DataAccess.Repository.IRepository
 {
     public interface IProjectRepository : IRepository<Project>
     {
-        bool HasItems(int id);
-
-        Team GetTeam(int teamId);
-
         void Update(Project obj);
-
     }
 }

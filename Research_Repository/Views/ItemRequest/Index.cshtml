@@ -30,8 +30,6 @@
         <input asp-action="ReindexItems" type="submit" />
     </form>
 
-    @if (Model.Items != null && Model.Items.Count() > 0)
-    {
         <div id="filters" class="librarian-filters">
             <button id="submitted-filter-btn" onclick="updateFilterParameters(0, '@WC.Submitted')">Submitted</button>
             <button id="published-filter-btn" onclick="updateFilterParameters(0, '@WC.Published')">Published</button>
@@ -52,11 +50,7 @@
                 <!-- Populated with published items on page load using javascript -->
             </tbody>
         </table>
-    }
-    else
-    {
-        <p>No items exist</p>
-    }
+
     <!-- Pagination -->
     <div id="item-list-pagination"></div>
 </div>

@@ -23,13 +23,10 @@ namespace Research_Repository_DataAccess.Repository
             _db = db;
         }
 
+        //Generate item request view model (Currently not needed to provide any data to view, however leaving here for future need)
         public ItemRequestVM GetItemRequestVM()
         {
-
-            ItemRequestVM itemRequestVM = new ItemRequestVM
-            {
-                Items = _db.Items.Where(i => i.Status != WC.Draft).ToList()
-            };
+            ItemRequestVM itemRequestVM = new ItemRequestVM();
 
             return itemRequestVM;
         }

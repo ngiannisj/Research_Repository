@@ -12,7 +12,7 @@ namespace Research_Repository_Models.ViewModels
 {
     public class ItemRequestVM
     {
-        public IEnumerable<Item> Items { get; set; }
+        //Currently not needed to provide any data to view, however leaving here for future need
     }
 
 }

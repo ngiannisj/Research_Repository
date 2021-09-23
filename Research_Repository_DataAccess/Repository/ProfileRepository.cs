@@ -23,14 +23,22 @@ namespace Research_Repository_DataAccess.Repository
             _db = db;
         }
 
+        //Generate a profile view model to pass to view
         public ProfileVM GetProfileVM(UserManager<IdentityUser> userManager, ClaimsPrincipal userInstance)
         {
+            //Get current user id
             string userId = userManager.GetUserId(userInstance);
 
+            //Get current user object
             ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
+
+            //Get current users team details
             user.Team = _db.Teams.FirstOrDefault(u => u.Id == user.TeamId);
+
+            //Get items created by current user
             user.Items = _db.Items.Where(u => u.UploaderId == userId).ToList();
 
+            //Generate profile view model
             ProfileVM profileVM = new ProfileVM
             {
                 User = user,
@@ -43,7 +51,10 @@ namespace Research_Repository_DataAccess.Repository
         //Get dropdown list of all teams
         public IEnumerable<SelectListItem> GetTeamSelectList()
         {
+            //Get all teams from database
             IEnumerable<Team> teams = _db.Teams;
+
+            //Generate select list for teams
             IEnumerable<SelectListItem> teamSelectList = teams.Select(i => new SelectListItem
             {
                 Text = i.Name,
