@@ -110,8 +110,6 @@
         <button id="clear-filters">Clear filters</button>
     </div>
 
-    @if (Model.Items.Count() > 0)
-    {
         <table class="table table-bordered table-striped" style="width: 100%">
             <thead>
                 <tr>
@@ -126,11 +124,6 @@
                 <!-- Populated with published items on page load using javascript -->
             </tbody>
         </table>
-    }
-    else
-    {
-        <p>No item exists.</p>
-    }
     <div id="item-list-pagination"></div>
 </div>
 
