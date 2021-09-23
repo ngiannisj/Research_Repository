@@ -14,9 +14,9 @@ namespace Research_Repository_DataAccess.Repository.IRepository
     {
         IList<CheckboxVM> GetTagCheckboxes(int? id, IList<CheckboxVM> tempTagCheckboxes);
 
-        IEnumerable<SelectListItem> GetTagList();
-
         IEnumerable<Tag> GetTags();
+
+        IEnumerable<SelectListItem> GetTagList(IList<Tag> tags, bool useDb);
 
         ThemeObjectVM CreateThemeVM(int newId, IList<ThemeObjectVM> themeVMs, string newThemeName = "", int? id = null);
 

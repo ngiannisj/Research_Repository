@@ -34,21 +34,28 @@ namespace Research_Repository
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Pass database context using dependency injection
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnection")));
+
+            //Pass identity context using dependency injection
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddDefaultTokenProviders().AddDefaultUI()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             //Used for accessing current user properties
             services.AddHttpContextAccessor();
+
+            //Used for session configuration
             services.AddSession(Options =>
             {
                 Options.IdleTimeout = TimeSpan.FromMinutes(10);
                 Options.Cookie.HttpOnly = true;
                 Options.Cookie.IsEssential = true;
             });
+
+            //Pass repository contexts using dependency injection
             services.AddScoped<IThemeRepository, ThemeRepository>();
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
@@ -59,11 +66,11 @@ namespace Research_Repository
 
             services.AddControllersWithViews();
 
-            //Solr
+            //Pass solr context using dependency injection
             services.AddSolrNet<ItemSolr>($"http://localhost:8983/solr/research_repository_items");
             services.AddScoped<ISolrIndexService<ItemSolr>, SolrIndexService<ItemSolr, ISolrOperations<ItemSolr>>>();
 
-            //Set up solr admin
+            //Set up and pass solr admin context using dependency injection
             const string solrUrl = "http://localhost:8983/solr";
             ISolrCoreAdmin solrCoreAdmin = new SolrCoreAdmin(new SolrConnection(solrUrl), new HeaderResponseParser<string>(), new SolrStatusResponseParser());
             services.AddSingleton(solrCoreAdmin);

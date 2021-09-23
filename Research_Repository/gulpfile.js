@@ -16,6 +16,7 @@ let filePaths = {
     jsOutputPath: "./wwwroot/js"
 };
 
+//CSS action
 gulp.task(sassAction, () => {
     return gulp.src(filePaths.sassInputPath)
         .pipe(concat('styles.css'))
@@ -30,6 +31,7 @@ gulp.task(sassAction, () => {
         .pipe(gulp.dest(filePaths.sassOutputPath));
 });
 
+//JS action
 gulp.task(jsAction, () => {
     return gulp.src(filePaths.jsInputPath )
         .pipe(concat('scripts.js'))
@@ -42,4 +44,5 @@ gulp.task(jsAction, () => {
         .pipe(gulp.dest(filePaths.jsOutputPath))
 });
 
+//Combine actions so only one action needs to be executed
 exports.default = gulp.series([sassAction, jsAction]);

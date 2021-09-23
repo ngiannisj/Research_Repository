@@ -206,9 +206,19 @@ namespace Research_Repository_DataAccess.Repository
         }
 
             //Get dropdown list of all tags
-            public IEnumerable<SelectListItem> GetTagList()
+            public IEnumerable<SelectListItem> GetTagList(IList<Tag> tags, bool useDb)
         {
-            IEnumerable<SelectListItem> tagSelectList = _db.Tags.AsNoTracking().Select(i => new SelectListItem
+            if (useDb == true)
+            {
+                tags = _db.Tags.AsNoTracking().ToList();
+            }
+
+            if (tags == null)
+            {
+                tags = new List<Tag>();
+            }
+
+            IEnumerable<SelectListItem> tagSelectList = tags.Select(i => new SelectListItem
             {
                 Text = i.Name,
                 Value = i.Id.ToString()
@@ -224,9 +234,9 @@ namespace Research_Repository_DataAccess.Repository
 
             IList<CheckboxVM> tempThemeCheckboxes = new List<CheckboxVM>();
             //Get tag checkboxes from themes if they are available
-            if (themeVMs != null && themeVMs.Count() > 0)
+            if (themeVMs != null && themeVMs.Count > 0)
             {
-                if (themeVMs[0].TagCheckboxes.Count() > 0)
+                if (themeVMs[0].TagCheckboxes.Count > 0)
                 {
                     tempThemeCheckboxes = themeVMs[0].TagCheckboxes;
                 }

@@ -148,7 +148,7 @@ namespace Research_Repository_DataAccess.Repository
             _db.SaveChanges();
         }
 
-        //Get dropdown list of all tags
+        //Get dropdown list of all teams
         public IEnumerable<SelectListItem> GetTeamsList(IEnumerable<Team> teams)
         {
             IEnumerable<SelectListItem> teamSelectList = teams.Select(i => new SelectListItem

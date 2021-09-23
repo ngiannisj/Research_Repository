@@ -1,4 +1,6 @@
-﻿using Research_Repository.Data;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Research_Repository.Data;
 using Research_Repository_DataAccess.Repository.IRepository;
 using Research_Repository_Models;
 using System;
@@ -16,6 +18,28 @@ namespace Research_Repository_DataAccess.Repository
         public TagRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
+        }
+
+        //Get dropdown list of all tags
+        public IEnumerable<SelectListItem> GetTagList(IList<Tag> tags, bool useDb)
+        {
+            if (useDb == true)
+            {
+                tags = _db.Tags.AsNoTracking().ToList();
+            }
+
+            if (tags == null)
+            {
+                tags = new List<Tag>();
+            }
+
+            IEnumerable<SelectListItem> tagSelectList = tags.Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.Id.ToString()
+            });
+
+            return tagSelectList;
         }
 
         public void Update(Tag obj)

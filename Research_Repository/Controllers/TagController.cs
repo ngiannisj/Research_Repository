@@ -113,6 +113,10 @@ namespace Research_Repository.Controllers
             //Update 'tempThemes' in session
             HttpContext.Session.Set("themes", tempThemes);
 
+            //Update tempdata with the an updated tag select dropdown list
+            IEnumerable<SelectListItem> tagSelectList = _tagRepo.GetTagList(tempTags, false);
+            TempData.Put("tagSelectList", tagSelectList);
+
             return tempTags;
             }
 

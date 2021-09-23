@@ -27,77 +27,62 @@ namespace Research_Repository.Controllers
             _teamRepo = teamRepo;
         }
 
-        public IActionResult Index(IList<Team> teams, bool redirect)
+        public IActionResult Index(bool redirect)
         {
-            if (teams == null || teams.Count <= 0)
+            //Create a team view model to pass to the view
+            TeamVM teamVM = new TeamVM { Teams = null, NewTeamName = "" };
+
+            //If the teams page is loading for the first time without making any changes
+            if (redirect == false)
             {
-                if (redirect == false)
-                {
-                    IEnumerable<Team> objList = _teamRepo.GetAll();
-                    foreach (Team obj in objList)
-                    {
-                        obj.Projects = _teamRepo.GetTeamProjectsFromDb(obj.Id);
-                    }
-                    IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(objList);
-                    TempData.Put("teamSelectList", teamsSelectList);
-                    TeamVM teamVM = new TeamVM { Teams = objList.ToList(), NewTeamName = "" };
-                    return View(teamVM);
-                }
-                else
-                {
-                    IList<Team> tempTeams = HttpContext.Session.Get<IList<Team>>("teams");
-                    
+                //Get list of all teams from the database, with project navigational property
+                IList<Team> dbTeams = _teamRepo.GetAll(isTracking: false, include: i => i.Include(a => a.Projects)).ToList();
 
-                    foreach (Team team in tempTeams)
-                    {
-                        if(team.Projects == null)
-                        {
-                            team.Projects = new List<Project>();
-                        }
-                    }
-                    IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(tempTeams);
-                    TempData.Put("teamSelectList", teamsSelectList);
-                    ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
+                //Create and save teams dropdown select list to temp data
+                SaveTeamsState(dbTeams);
 
-                    TeamVM teamVM = new TeamVM { Teams = tempTeams, NewTeamName = "" };
-                    return View(teamVM);
-                }
+                //Update the team view model with teams from the database
+                teamVM.Teams = dbTeams;
             }
+
+            //If the teams page is reloading after changes have been made to teams or projects
             else
             {
-                IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(teams);
-                TempData.Put("teamSelectList", teamsSelectList);
-                TeamVM teamVM = new TeamVM { Teams = teams, NewTeamName = "" };
+                //Get list of updated teams from session
+                IList<Team> tempTeams = HttpContext.Session.Get<IList<Team>>("teams");
 
-                return View(teamVM);
-            };
+                //Create an empty list of projects for each team if a list does not already exist
+                foreach (Team team in tempTeams)
+                {
+                    if (team.Projects == null)
+                    {
+                        team.Projects = new List<Project>();
+                    }
+                }
+                //Create and save teams dropdown select list to temp data
+                SaveTeamsState(tempTeams);
+
+                //Solves error where inputs in the view display the incorrect values
+                ModelState.Clear();
+
+                //Update the team view model with teams from 'tempTeams'
+                teamVM.Teams = tempTeams;
+            }
+
+            return View(teamVM);
         }
 
-        public IEnumerable<SelectListItem> SaveTeamsState([FromBody] IList<Team> teams)
-        {
-            IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(teams);
-            TempData.Put("teamSelectList", teamsSelectList);
-            HttpContext.Session.Set("teams", teams);
-            return teamsSelectList;
-        }
-
+        //Save updated teams/projects to database
         public IActionResult SaveTeams(IList<Team> teams)
         {
-            IList<Team> tempTeams = HttpContext.Session.Get<IList<Team>>("teams");
-            foreach(Team team in teams)
-            {
-                if (tempTeams != null && tempTeams.Count() > 0)
-                {
-                    team.Projects = tempTeams.FirstOrDefault(u => u.Id == team.Id).Projects;
-                }
-            }
-            IList<int> tempTeamIdList = _teamRepo.GetTeamIds(teams);
-            IEnumerable<Team> dbTeamList = _teamRepo.GetAll(isTracking: false, include: i => i
-        .Include(a => a.Projects));
+
+            //Get list of teams stored in database
+            IList<Team> dbTeamList = _teamRepo.GetAll(isTracking: false, include: i => i.Include(a => a.Projects)).ToList();
+            //Get list of team ids stored in database
             IList<int> dbTeamIdList = _teamRepo.GetTeamIds(dbTeamList);
 
-            //If there are no teams in the list, delete all remaining projects
-            if(teams == null || teams.Count() == 0)
+            //If there are no teams in the list, delete all remaining projects from database (precautionary clean up)
+            if (teams == null || teams.Count == 0)
             {
                 _teamRepo.DeleteProjects(null, true);
             }
@@ -105,88 +90,150 @@ namespace Research_Repository.Controllers
 
             foreach (Team team in teams)
             {
+                //If database does not contain a team return from the view, add it to the database
                 if (!dbTeamIdList.Contains(team.Id))
                 {
+                    //Set team id to 0 to ensure it will be given a new value when added to the database
                     team.Id = 0;
+                    //Get list of projects before team is added to the database so that they can be attributed to the id of the team after it is added to the database
                     IList<Project> teamProjects = team.Projects;
+                    //Remove all projects from the team
                     team.Projects = null;
+                    //Add team to the database
                     _teamRepo.Add(team);
                     _teamRepo.Save();
+                    //Add back the projects to the team
                     team.Projects = teamProjects;
-                }
-            
-            dbTeamList = _teamRepo.GetAll(isTracking: false, include: i => i
-        .Include(a => a.Projects));
-            dbTeamIdList = _teamRepo.GetTeamIds(dbTeamList);
-                    if (dbTeamIdList.Contains(team.Id))
-                    {
-                        //Update projects db
-                        IList<Project> projects = team.Projects;
-                        _teamRepo.UpsertProjects(team.Id, projects);
-                        IList<int> tempProjectIdList = _teamRepo.GetProjectIds(teams, false);
-                        //Remove projects from db if they do not exist in temp data
-                        _teamRepo.DeleteProjects(tempProjectIdList, false);
-                        _teamRepo.Update(team);
-                        _teamRepo.Save();
-                    
-            }
-        }
 
-            //Reevaluate lists after adding and updating teams/projects
-            dbTeamList = _teamRepo.GetAll(isTracking: false, include: i => i
-        .Include(a => a.Projects));
-            tempTeamIdList = _teamRepo.GetTeamIds(teams);
-            foreach (Team obj in dbTeamList)
-            {
-                if (!tempTeamIdList.Contains(obj.Id))
+                    //Update dbTeamList and dbTeamIdList with updated database values after adding the new item
+                    dbTeamList = _teamRepo.GetAll(isTracking: false, include: i => i.Include(a => a.Projects)).ToList();
+                    dbTeamIdList = _teamRepo.GetTeamIds(dbTeamList);
+                }
+
+                //If database does contain a team returned from the view, update the values in the database
+                if (dbTeamIdList.Contains(team.Id))
                 {
-                    _teamRepo.Remove(obj);
+                    //Get list of projects from the team
+                    IList<Project> projects = team.Projects;
+
+                    //Update the team's projects in the database
+                    _teamRepo.UpsertProjects(team.Id, projects);
+
+                    //Get list of project ids from all teams returned from the view
+                    IList<int> tempProjectIdList = _teamRepo.GetProjectIds(teams, false);
+                    //Remove projects from db if they do not exist in temp data
+                    _teamRepo.DeleteProjects(tempProjectIdList, false);
+
+                    //Update a team in the database
+                    _teamRepo.Update(team);
+                    _teamRepo.Save();
+
+                    //Update dbTeamList and dbTeamIdList with updated database values after adding the new item
+                    dbTeamList = _teamRepo.GetAll(isTracking: false, include: i => i.Include(a => a.Projects)).ToList();
+                    dbTeamIdList = _teamRepo.GetTeamIds(dbTeamList);
                 }
             }
-            
+
+            //Get list of team ids from teams list returned from view
+            IList<int> tempTeamIdList = _teamRepo.GetTeamIds(teams);
+
+            //If dbTeamList is not empty or null
+            if(dbTeamList != null && dbTeamList.Count > 0)
+            {
+                //Delete any teams from the database which do not exist in the teams list returned from the view (This will recursively delete any projects belonging to this team)
+                foreach (Team dbTeam in dbTeamList)
+                {
+                    if (!tempTeamIdList.Contains(dbTeam.Id))
+                    {
+                        _teamRepo.Remove(dbTeam);
+                    }
+                }
+            }
+
+            //Save changes to the database
             _teamRepo.Save();
-            ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
-            return RedirectToAction("Index");
+            //Solves error where inputs in the view display the incorrect values
+            ModelState.Clear();
+            return RedirectToAction(nameof(Index));
         }
 
+        //Add team to temp teams in session
         public IActionResult AddTeam(TeamVM teamVM)
         {
+            //Generate new unique id for the new team
             int newId = 1;
-            IList<Team> teamList = HttpContext.Session.Get<IList<Team>>("teams");
-            if(teamList == null)
+            //If teams exist in the teams list returned from the view, find the largest id number and add 1 to it to find the next unique id number
+            if (teamVM.Teams != null && teamVM.Teams.Count > 0)
             {
-                teamList = teamVM.Teams;
+                newId = teamVM.Teams.Select(u => u.Id).ToList().Max() + 1;
             }
-
-            if (teamList != null && teamList.Count != 0)
-            {
-                newId = teamList[teamList.Count - 1].Id + 1;
-            }
-            if(teamVM.Teams == null)
+            //Instantiate an empty teams list if a list does not exist
+            if (teamVM.Teams == null)
             {
                 teamVM.Teams = new List<Team>();
             }
-            teamVM.Teams.Add(new Team{ Id = newId, Name = teamVM.NewTeamName, Projects = new List<Project>() });
+            //Add the new team to the list of teams returned from the view
+            teamVM.Teams.Add(new Team { Id = newId, Name = teamVM.NewTeamName, Projects = new List<Project>() });
 
-            ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
+            //Solves error where inputs in the view display the incorrect values
+            ModelState.Clear();
+
+            //Save updated teams list to session and update the teams dropdown selectlist
             SaveTeamsState(teamVM.Teams);
-            return RedirectToAction("Index", new { redirect = true });
+
+            //Reload teams page with new teams list
+            return RedirectToAction(nameof(Index), new { redirect = true });
         }
 
+        //Delete team from temp teams in session
         public IActionResult DeleteTeam(TeamVM teamVM, int deleteId)
         {
-            if(teamVM.Teams != null && teamVM.Teams.Count() != 0)
+            if (teamVM.Teams != null && teamVM.Teams.Count > 0)
             {
-                //IList<Project> tempProjects = _teamRepo.GetProjectsFromTeams(teamVM.Teams);
+                //Get item to be removed from items list
                 Team itemToRemove = teamVM.Teams.FirstOrDefault(u => u.Id == deleteId);
+                //Remove the item if it exists
                 if (itemToRemove != null)
                 {
                     teamVM.Teams.Remove(itemToRemove);
                 }
-                ModelState.Clear(); //Solves error where inputs in the view display the incorrect values
+                //Solves error where inputs in the view display the incorrect values
+                ModelState.Clear();
+                //Update teams dropdown selectlist and temp teams stored in session
                 SaveTeamsState(teamVM.Teams);
             }
-            return RedirectToAction("Index", new { redirect = true });
+
+            //Reload teams page with new teams list
+            return RedirectToAction(nameof(Index), new { redirect = true });
+        }
+
+
+        public IEnumerable<SelectListItem> SaveTeamsState([FromBody] IList<Team> teams)
+        {
+            //Remove the 'Team' property from project to avoid infinite nesting, this allows the team to be stringified and uploaded to the session
+            if (teams != null && teams.Count > 0)
+            {
+                foreach (Team team in teams)
+                {
+                    if (team.Projects != null && team.Projects.Count > 0)
+                    {
+                        foreach (Project project in team.Projects)
+                        {
+                            project.Team = null;
+                        }
+                    }
+                }
+            }
+
+            //Create dropdown selectlist from teams
+            IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(teams);
+            //Update teams dropdown selectlist in tempData
+            TempData.Put("teamSelectList", teamsSelectList);
+
+            //Update teams list in session
+            HttpContext.Session.Set("teams", teams);
+
+            return teamsSelectList;
         }
 
     }
