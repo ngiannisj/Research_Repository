@@ -16,7 +16,6 @@ namespace Research_Repository_DataAccess.Repository.IRepository
         IList<Project> GetProjectsFromTeams(IList<Team> teams);
         void UpsertProjects(int teamId, IList<Project> projects);
         void DeleteProjects(IList<int> tempProjectIds, bool deleteAllProjects);
-        bool HasProjects(int id, IList<Project> projects);
         IList<int> GetTeamIds(IEnumerable<Team> teams);
         IList<int> GetProjectIds(IList<Team> teams, bool fromDb);
         IEnumerable<SelectListItem> GetTeamsList(IEnumerable<Team> teams);

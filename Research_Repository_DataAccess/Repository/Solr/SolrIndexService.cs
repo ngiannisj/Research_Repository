@@ -144,7 +144,9 @@ namespace Research_Repository_DataAccess.Repository.Solr
                 Rows = WC.NumOfItemsPerPage //How many items are returned for pagination
             });
 
+            //Get total number of items returned from query (Not just number of items per pagination page)
             ItemQueryResponse<T> itemResponse = new ItemQueryResponse<T> { Items = items, NumOfTotalResults = items.NumFound };
+
             return itemResponse;
         }
     }

@@ -52,19 +52,6 @@ namespace Research_Repository_DataAccess.Repository
             return tempProjectList;
         }
 
-        //Check if a team has linked projects
-        public bool HasProjects(int id, IList<Project> projects)
-        {
-            if (projects.FirstOrDefault(i => i.TeamId == id) != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         public IList<int> GetTeamIds(IEnumerable<Team> teams)
         {
             return teams.Select(u => u.Id).ToList();

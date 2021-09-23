@@ -12,7 +12,6 @@ namespace Research_Repository_Models.ViewModels
 {
     public class ItemListVM
     {
-        public IEnumerable<Item> Items { get; set; }
 
         public string SearchText { get; set; }
 

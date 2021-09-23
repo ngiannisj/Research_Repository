@@ -242,7 +242,6 @@ namespace Research_Repository_DataAccess.Repository
                 }
             }
 
-
             //Assign theme
             if (id == null)
             {
@@ -257,19 +256,6 @@ namespace Research_Repository_DataAccess.Repository
                 themeVM.Theme = _db.Themes.AsNoTracking().FirstOrDefault(u => u.Id == id);
             }
             return themeVM;
-        }
-
-        //Check if any items are assigned under a theme
-        public bool HasItems(int id)
-        {
-            if (_db.Items.FirstOrDefault(i => i.ThemeId == id) != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
         public IList<int> GetThemeIds(IEnumerable<Theme> themes)

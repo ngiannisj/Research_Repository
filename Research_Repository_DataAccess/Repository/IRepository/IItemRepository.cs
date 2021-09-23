@@ -16,9 +16,9 @@ namespace Research_Repository_DataAccess.Repository.IRepository
 
         public ItemListVM GetItemListVM(string filterType, string checkedCheckbox, string searchText);
 
-        public ICollection<int> GetAssignedProjects(IList<int> ids);
+        public IList<int> GetAssignedProjects(IList<int> teamIds);
 
-        public ICollection<int> GetAssignedTags(IList<int> ids);
+        public IList<int> GetAssignedTags(IList<int> themeIds);
 
         void Update(Item obj);
     }
