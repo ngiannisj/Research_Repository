@@ -63,7 +63,7 @@ namespace Research_Repository.Controllers
                 tempProject = team.Projects.FirstOrDefault(u => u.Id == id);
             }
 
-            //Assign an id to newly added or updated project
+            //Generate a unique id for a newly added or updated project
             int newId = 1;
             //Get next available id for the project if projects exist in 'tempTeams'
             if (tempProjects != null && tempProjects.Count > 0)

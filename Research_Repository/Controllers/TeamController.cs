@@ -29,7 +29,7 @@ namespace Research_Repository.Controllers
 
         public IActionResult Index(IList<Team> teams, bool redirect)
         {
-            if (teams.Count == 0)
+            if (teams == null || teams.Count <= 0)
             {
                 if (redirect == false)
                 {
