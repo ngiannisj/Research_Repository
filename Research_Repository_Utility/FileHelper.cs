@@ -23,7 +23,7 @@ namespace Research_Repository_Utility
 
                 string filePath = Path.Combine(directoryPath, fileName);
 
-                //Add file name to list of file names if it is not already uploaded
+                //Add file name to list of file names if the file path does not already exist
                 if(!File.Exists(filePath))
                 {
                     filesListString += fileName + ",";
@@ -38,6 +38,7 @@ namespace Research_Repository_Utility
 
             }
 
+            //Return list of file names
             return filesListString;
         }
 
@@ -142,6 +143,7 @@ namespace Research_Repository_Utility
             if(fileName != null) {
                 string sourceFile = Path.Combine(sourcePath, fileName);
                 string destFile = Path.Combine(targetPath, fileName);
+
                 // To move a file or folder to a new location:
                 File.Move(sourceFile, destFile);
                 return;
@@ -155,6 +157,7 @@ namespace Research_Repository_Utility
 
         public static IActionResult DownloadFile(string filePath)
         {
+            //Get directory name dynamically to keep function generic
             string path = Directory.GetCurrentDirectory() + "\\wwwroot" + filePath;
 
             byte[] bytes = File.ReadAllBytes(path);

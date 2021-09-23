@@ -10,11 +10,13 @@ namespace Research_Repository_Utility
 {
     public static class TempDataExtensions
     {
+        //Allows tempData to store complex objects
         public static void Put<T>(this ITempDataDictionary tempData, string key, T value) where T : class
         {
             tempData[key] = JsonConvert.SerializeObject(value);
         }
 
+        //Allows tempData to retrieve complex objects
         public static T Get<T>(this ITempDataDictionary tempData, string key) where T : class
         {
             object o;

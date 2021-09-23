@@ -10,7 +10,6 @@ namespace Research_Repository_Models.Solr
 {
     public class ItemSolr
     {
-        public ItemSolr() { }
 
         public ItemSolr(Item model)
         {
@@ -40,7 +39,6 @@ namespace Research_Repository_Models.Solr
                     this.Team = model.Project.Team.Name;
                 }
             }
-
             if (model.ItemTags != null && model.ItemTags.Count() > 0)
             {
                 this.Tags = model.ItemTags.Select(i => i.Tag.Name).ToList();
