@@ -1,7 +1,5 @@
-using CommonServiceLocator;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,9 +14,6 @@ using SolrNet;
 using SolrNet.Impl;
 using SolrNet.Impl.ResponseParsers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Research_Repository
 {

@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Research_Repository_Utility;
+﻿using Research_Repository_Utility;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Research_Repository_Models
 {

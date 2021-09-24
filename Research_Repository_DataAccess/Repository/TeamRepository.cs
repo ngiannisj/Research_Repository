@@ -1,17 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Research_Repository.Data;
 using Research_Repository_DataAccess.Repository.IRepository;
 using Research_Repository_Models;
-using Research_Repository_Models.ViewModels;
-using Research_Repository_Utility;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Research_Repository_DataAccess.Repository
 {
@@ -49,7 +42,7 @@ namespace Research_Repository_DataAccess.Repository
                 foreach (Team team in teams)
                 {
                     //If projects in the team is not empty
-                    if (team.Projects != null && team.Projects.Count() > 0)
+                    if (team.Projects != null && team.Projects.Count > 0)
                     {
                         //Add all projects in the team to the 'tempProjectList'
                         foreach (Project project in team.Projects)

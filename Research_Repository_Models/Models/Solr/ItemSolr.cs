@@ -3,8 +3,6 @@ using SolrNet.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Research_Repository_Models.Solr
 {
@@ -39,7 +37,7 @@ namespace Research_Repository_Models.Solr
                     this.Team = model.Project.Team.Name;
                 }
             }
-            if (model.ItemTags != null && model.ItemTags.Count() > 0)
+            if (model.ItemTags != null && model.ItemTags.Count > 0)
             {
                 this.Tags = model.ItemTags.Select(i => i.Tag.Name).ToList();
             }

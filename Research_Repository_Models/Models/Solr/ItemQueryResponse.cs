@@ -1,12 +1,4 @@
-﻿using Newtonsoft.Json;
-using Research_Repository_Models.Solr;
-using SolrNet;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SolrNet;
 
 namespace Research_Repository_Models.Models.Solr
 {

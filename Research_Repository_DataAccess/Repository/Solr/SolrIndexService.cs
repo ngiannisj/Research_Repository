@@ -1,6 +1,4 @@
-﻿using Research_Repository_Models;
-using Research_Repository_Models.Models.Solr;
-using Research_Repository_Models.Solr;
+﻿using Research_Repository_Models.Models.Solr;
 using Research_Repository_Utility;
 using SolrNet;
 using SolrNet.Commands.Parameters;
@@ -8,9 +6,6 @@ using SolrNet.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Research_Repository_DataAccess.Repository.Solr
 {
@@ -128,14 +123,14 @@ namespace Research_Repository_DataAccess.Repository.Solr
             SolrQueryResults<T> items = _solr.Query(query, new QueryOptions
             {
                 FilterQueries = new ISolrQuery[] {
-                    new SolrQueryInList(itemQueryParams.Themes != null && itemQueryParams.Themes.Count() > 0 ? WC.SolrTheme : null, itemQueryParams.Themes),
-                    new SolrQueryInList(itemQueryParams.Teams != null && itemQueryParams.Teams.Count() > 0 ? WC.SolrTeam : null, itemQueryParams.Teams),
-                    new SolrQueryInList(itemQueryParams.Projects != null && itemQueryParams.Projects.Count() > 0 ? WC.SolrProject : null, itemQueryParams.Projects),
-                    new SolrQueryInList(itemQueryParams.Tags != null && itemQueryParams.Tags.Count() > 0 ? WC.SolrTags : null, itemQueryParams.Tags),
-                    new SolrQueryInList(itemQueryParams.Sensitivity != null && itemQueryParams.Sensitivity.Count() > 0 ? WC.SolrSensitivity : null, itemQueryParams.Sensitivity),
-                    new SolrQueryInList(itemQueryParams.Approvals != null && itemQueryParams.Approvals.Count() > 0 ? WC.SolrApprovedUse : null, itemQueryParams.Approvals),
-                    new SolrQueryInList(itemQueryParams.Status != null && itemQueryParams.Status.Count() > 0 ? WC.SolrStatus : null, itemQueryParams.Status),
-                    new SolrQueryInList(itemQueryParams.UploaderId != null && itemQueryParams.UploaderId.Count() > 0 ? WC.SolrUploaderId : null, itemQueryParams.UploaderId),
+                    new SolrQueryInList(itemQueryParams.Themes != null && itemQueryParams.Themes.Count > 0 ? WC.SolrTheme : null, itemQueryParams.Themes),
+                    new SolrQueryInList(itemQueryParams.Teams != null && itemQueryParams.Teams.Count > 0 ? WC.SolrTeam : null, itemQueryParams.Teams),
+                    new SolrQueryInList(itemQueryParams.Projects != null && itemQueryParams.Projects.Count > 0 ? WC.SolrProject : null, itemQueryParams.Projects),
+                    new SolrQueryInList(itemQueryParams.Tags != null && itemQueryParams.Tags.Count > 0 ? WC.SolrTags : null, itemQueryParams.Tags),
+                    new SolrQueryInList(itemQueryParams.Sensitivity != null && itemQueryParams.Sensitivity.Count > 0 ? WC.SolrSensitivity : null, itemQueryParams.Sensitivity),
+                    new SolrQueryInList(itemQueryParams.Approvals != null && itemQueryParams.Approvals.Count > 0 ? WC.SolrApprovedUse : null, itemQueryParams.Approvals),
+                    new SolrQueryInList(itemQueryParams.Status != null && itemQueryParams.Status.Count > 0 ? WC.SolrStatus : null, itemQueryParams.Status),
+                    new SolrQueryInList(itemQueryParams.UploaderId != null && itemQueryParams.UploaderId.Count > 0 ? WC.SolrUploaderId : null, itemQueryParams.UploaderId),
                     new SolrQueryByRange<DateTime>(WC.SolrDateRange, startDate, endDate)
                 },
                 Fields = new[] { WC.SolrId, WC.SolrTitle, WC.SolrTeam, WC.SolrAbstract, WC.SolrTags, WC.SolrNotifyUploader, WC.SolrUploader }, //Fields returned from solr

@@ -1,14 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Research_Repository_DataAccess.Repository.IRepository;
-using Research_Repository_Models;
 using Research_Repository_Models.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Research_Repository.Controllers
 {

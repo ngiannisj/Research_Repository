@@ -1,5 +1,3 @@
-using System;
-
 namespace Research_Repository_Models
 {
     public class ErrorViewModel
