@@ -23,25 +23,35 @@ namespace Research_Repository_DataAccess.Repository
             _db = db;
         }
 
-        public IList<Project> GetTeamProjectsFromDb(int? id)
+       
+        public IList<Project> GetTeamProjectsFromDb(int? teamId)
         {
+            //Instantiate list of projects
             IList<Project> assignedProjects = new List<Project>();
-            if (id != null)
+
+            //Get projects with the foreign key of a team passed to the function
+            if (teamId != null && teamId > 0)
             {
-                assignedProjects = _db.Projects.AsNoTracking().Where(i => i.TeamId == id).ToList();
+                assignedProjects = _db.Projects.AsNoTracking().Where(i => i.TeamId == teamId).ToList();
             }
             return assignedProjects;
         }
 
+        //Get all projects from teams passed to the function
         public IList<Project> GetProjectsFromTeams(IList<Team> teams)
         {
+            //Instantiate list of projets
             IList<Project> tempProjectList = new List<Project>();
-            if (teams != null && teams.Count() > 0)
+
+            //If teams list has some items
+            if (teams != null && teams.Count > 0)
             {
                 foreach (Team team in teams)
                 {
+                    //If projects in the team is not empty
                     if (team.Projects != null && team.Projects.Count() > 0)
                     {
+                        //Add all projects in the team to the 'tempProjectList'
                         foreach (Project project in team.Projects)
                         {
                             tempProjectList.Add(project);
@@ -49,25 +59,35 @@ namespace Research_Repository_DataAccess.Repository
                     }
                 }
             }
+
             return tempProjectList;
         }
 
+        //Get team ids from teams list passed to the function
         public IList<int> GetTeamIds(IEnumerable<Team> teams)
         {
             return teams.Select(u => u.Id).ToList();
         }
 
+        //Get project Ids from teams list passed to function, or from projects in database if 'fromDb' is set to true
         public IList<int> GetProjectIds(IList<Team> teams, bool fromDb)
         {
+            //Instantiate list of projectIds
             IList<int> projectIds = new List<int>();
+
+            //If 'fromDb' is set to true, get project ids from database
             if (fromDb == true)
             {
                 projectIds = _db.Projects.Select(u => u.Id).ToList();
-            } else if(teams != null && teams.Count() > 0)
+            } 
+            
+            //If teams list is not empty
+            else if(teams != null && teams.Count > 0)
             {
+                //Get all project ids from all teams
                 foreach( Team team in teams)
                 {
-                    if (team.Projects != null && team.Projects.Count() > 0)
+                    if (team.Projects != null && team.Projects.Count > 0)
                     {
                         foreach (Project project in team.Projects)
                         {
@@ -76,28 +96,40 @@ namespace Research_Repository_DataAccess.Repository
                     }
                 }
             }
+
             return projectIds;
         }
 
+        //Add/Update projects in database
         public void UpsertProjects(int teamId, IList<Project> projects)
         {
-            if (projects != null && projects.Count() > 0)
+            //If projects list passed from parameter is not empty
+            if (projects != null && projects.Count > 0)
             {
+                //Generate list of project ids
                 IList<int> dbProjectIdList = GetProjectIds(null, true);
+
                 foreach (Project project in projects)
                 {
+                    //Get project from database
                     Project dbProject = _db.Projects.AsNoTracking().FirstOrDefault(u => u.Id == project.Id);
+
+                    //Get project team id
                     int? dbProjectTeamId = 0;
                     if(dbProject != null)
                     {
                         dbProjectTeamId = dbProject.TeamId;
                     }
+
+                    //Add project to database if it does not already exist there
                     if (!dbProjectIdList.Contains(project.Id))
                     {
                         //If project does not exist in db
                         project.Id = 0;
                         _db.Projects.Add(project);
                     } 
+
+                    //Update the project in the database if it already exists in ther
                     else
                     {
                         //If project exists in db but team id is different
@@ -107,22 +139,28 @@ namespace Research_Repository_DataAccess.Repository
 
                 }
             }
-            _db.SaveChanges();
 
+            _db.SaveChanges();
         }
 
         public void DeleteProjects(IList<int> tempProjectIds, bool deleteAllProjects)
         {
+            //Get list of projects from database
             IList<Project> dbProjects = _db.Projects.AsNoTracking().ToList();
-            if(tempProjectIds == null && deleteAllProjects == true)
+
+            //Delete all project in the database if 'deleteAllProjects' parameter is set to true (Called when no teams exist when saving teams)
+            if(deleteAllProjects == true)
             {
                 foreach (Project project in dbProjects)
                 {
                         _db.Remove(project);
                 }
             }
-            else if(deleteAllProjects == false)
+
+            //If tempProjectIds is not empty and 'deleteAllProjects' is set to false
+            else if(deleteAllProjects == false && tempProjectIds != null && tempProjectIds.Count > 0)
             {
+                //Delete selected ids from the database
                 foreach (Project project in dbProjects)
                 {
                     if (!tempProjectIds.Contains(project.Id))
@@ -135,9 +173,10 @@ namespace Research_Repository_DataAccess.Repository
             _db.SaveChanges();
         }
 
-        //Get dropdown list of all teams
+        //Get dropdown selectlist of all teams
         public IEnumerable<SelectListItem> GetTeamsList(IEnumerable<Team> teams)
         {
+            //Use teams passed from parameter to generate a dropdown selectlist
             IEnumerable<SelectListItem> teamSelectList = teams.Select(i => new SelectListItem
             {
                 Text = i.Name,

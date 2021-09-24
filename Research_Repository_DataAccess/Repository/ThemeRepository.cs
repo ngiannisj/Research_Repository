@@ -27,32 +27,41 @@ namespace Research_Repository_DataAccess.Repository
         //Updates tags assigned to themes
         public void UpdateThemeTagsList(ThemeObjectVM themeVM)
         {
+            //Generate list of tags available for the theme returned in the parameter (From database)
             ICollection<ThemeTag> ThemeTagsList = _db.ThemeTags.AsNoTracking().Where(i => i.ThemeId == themeVM.Theme.Id).ToList();
+
+            //Generate list of tag ids from tags in 'ThemeTagsList'
             ICollection<int> ThemeTagsIdList = ThemeTagsList.Select(i => i.TagId).ToList();
 
+            //If checkboxes are returned from 'themeVM'
             if (themeVM.TagCheckboxes != null)
             {
-                foreach (CheckboxVM tag in themeVM.TagCheckboxes)
+                //For each tag checkbox in themeVM
+                foreach (CheckboxVM tagCheckbox in themeVM.TagCheckboxes)
                 {
-                    if (tag.CheckedState)
+                    //If tag checkbox is checked
+                    if (tagCheckbox.CheckedState)
                     {
-                        if (!ThemeTagsIdList.Contains(tag.Value))
+                        //If theme tag relationship does not already exist in themeTags database join table (If the tagCheckbox has been checked and its previous state was unchecked)
+                        if (!ThemeTagsIdList.Contains(tagCheckbox.Value))
                         {
-                            //If the tag checkbox has been checked and its previous state was unchecked
+                            //Add theme tag relationship to database
                             _db.ThemeTags.Add(new ThemeTag
                             {
                                 ThemeId = themeVM.Theme.Id,
-                                TagId = tag.Value
+                                TagId = tagCheckbox.Value
                             });
+
                             _db.SaveChanges();
                         }
                     }
+                    //If the tag checkbox is not checked
                     else
                     {
-                        //If the tag checkbox is not checked
-                        if (ThemeTagsIdList.Contains(tag.Value))
+                        //If theme tag relationship exists in themeTags database join table, remove the relationship
+                        if (ThemeTagsIdList.Contains(tagCheckbox.Value))
                         {
-                            _db.Remove(ThemeTagsList.FirstOrDefault(i => i.TagId == tag.Value));
+                            _db.Remove(ThemeTagsList.FirstOrDefault(i => i.TagId == tagCheckbox.Value));
                         }
                     }
                 }
@@ -61,8 +70,11 @@ namespace Research_Repository_DataAccess.Repository
 
         public void UpdateTagsDb(IList<ThemeObjectVM> tempThemes, IList<Tag> tempTags)
         {
+            //Get list of tags from database
             IList<Tag> dbTagList = _db.Tags.AsNoTracking().ToList();
+            //Get list of tag ids from database
             IList<int> dbTagIdList = dbTagList.Select(u => u.Id).ToList();
+
 
             if (tempThemes != null && tempThemes[0].TagCheckboxes != null && tempThemes.Count > 0)
             {
