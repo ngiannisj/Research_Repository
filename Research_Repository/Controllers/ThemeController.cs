@@ -76,7 +76,7 @@ namespace Research_Repository.Controllers
         public IActionResult SaveThemes(ThemeVM themeVM)
         {
             //Update tags in database
-            _themeRepo.UpdateTagsDb(themeVM.ThemeObjects, HttpContext.Session.Get<IList<Tag>>("tags"));
+            _themeRepo.UpdateTagsDb(HttpContext.Session.Get<IList<Tag>>("tags"));
 
             //Get a list of theme ids from themes returned from view
             IList<int> tempThemeIdList = new List<int>();
