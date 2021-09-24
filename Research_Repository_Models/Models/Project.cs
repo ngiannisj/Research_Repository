@@ -6,10 +6,11 @@ namespace Research_Repository_Models
 {
     public class Project
     {
+        [Key]
         public int Id { get; set; }
+
         public string Name { get; set; }
 
-        [Display(Name = "Team Type")]
         public int? TeamId { get; set; }
 
         [ForeignKey("TeamId")]

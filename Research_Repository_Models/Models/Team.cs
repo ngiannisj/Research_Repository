@@ -8,8 +8,7 @@ namespace Research_Repository_Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        [DisplayName("Name")]
+
         public string Name { get; set; }
 
         public IList<Project> Projects { get; set; }

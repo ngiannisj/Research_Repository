@@ -5,14 +5,18 @@
         //File paths
         public const string ImagePath = @"\files\images\themes\";
         public const string ItemFilePath = @"\files\documents\items\";
+        public const string TempFilePath = @"temp\";
 
         //Roles
         public const string LibrarianRole = "Librarian";
         public const string UploaderRole = "Uploader";
 
-        //Database tables
+        //Models
         public const string ThemeName = "Theme";
         public const string ItemName = "Item";
+        public const string ProfileName = "Profile";
+        public const string LibraryName = "Library";
+        public const string ProjectName = "Project";
 
         //Approved uses
         public const string Internal = "Internal";
@@ -56,5 +60,18 @@
 
         //Pagination
         public const int NumOfItemsPerPage = 1; //Remember to change in solr javascript file as well
+
+        //Actions
+        public const string SubmitAction = "Submit";
+        public const string DeleteAction = "Delete";
+        public const string AddAction = "Add";
+        public const string UpdateAction = "Update";
+
+        //Local storage
+        public const string SessionThemes = "sessionThemes";
+        public const string SessionTeams = "sessionTeams";
+        public const string SessionTags = "sessionTags";
+        public const string TempDataTagSelectList = "tempDataTagSelectList";
+        public const string TempDataTeamSelectList = "tempDataTeamSelectList";
     }
 }

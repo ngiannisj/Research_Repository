@@ -44,7 +44,7 @@ namespace Research_Repository.Controllers
             else
             {
                 //Get list of updated teams from session
-                IList<Team> tempTeams = HttpContext.Session.Get<IList<Team>>("teams");
+                IList<Team> tempTeams = HttpContext.Session.Get<IList<Team>>(WC.SessionTeams);
 
                 //Create an empty list of projects for each team if a list does not already exist
                 foreach (Team team in tempTeams)
@@ -223,10 +223,10 @@ namespace Research_Repository.Controllers
             //Create dropdown selectlist from teams
             IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(teams);
             //Update teams dropdown selectlist in tempData
-            TempData.Put("teamSelectList", teamsSelectList);
+            TempData.Put(WC.TempDataTeamSelectList, teamsSelectList);
 
             //Update teams list in session
-            HttpContext.Session.Set("teams", teams);
+            HttpContext.Session.Set(WC.SessionTeams, teams);
 
             return teamsSelectList;
         }

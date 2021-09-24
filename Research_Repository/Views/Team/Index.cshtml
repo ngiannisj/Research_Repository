@@ -3,7 +3,7 @@
 @model Research_Repository_Models.ViewModels.TeamVM
 
 @{
-    IEnumerable<SelectListItem> teamSelectList = TempData.Get<IEnumerable<SelectListItem>>("teamSelectList");
+    IEnumerable<SelectListItem> teamSelectList = TempData.Get<IEnumerable<SelectListItem>>(WC.TempDataTeamSelectList);
 }
 
 <div class="container p-3">

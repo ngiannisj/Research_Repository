@@ -169,7 +169,7 @@ namespace Research_Repository_DataAccess.Repository
                 {
                     Value = i.Id,
                     Name = i.Name,
-                    CheckedState = filterType == "theme" && checkedCheckbox == i.Name ? true : false
+                    CheckedState = filterType == WC.ThemeName && checkedCheckbox == i.Name ? true : false
                 }).ToList(),
                 TeamCheckboxes = _db.Teams.AsNoTracking().Select(i => new CheckboxVM
                 {
@@ -181,7 +181,7 @@ namespace Research_Repository_DataAccess.Repository
                 {
                     Value = i.Id,
                     Name = i.Name,
-                    CheckedState = filterType == "project" && checkedCheckbox == i.Name ? true : false
+                    CheckedState = filterType == WC.ProjectName && checkedCheckbox == i.Name ? true : false
                 }).ToList(),
                 SensitivityCheckboxes = sensitivityList.Select(i => new CheckboxVM
                 {

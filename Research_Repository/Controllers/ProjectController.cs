@@ -24,7 +24,7 @@ namespace Research_Repository.Controllers
         public void UpdateProject(int id, string projectName, int teamId, int oldTeamId, string actionName)
         {
             //Get list of temp teams from the session
-            IList<Team> tempTeams = HttpContext.Session.Get<IList<Team>>("teams");
+            IList<Team> tempTeams = HttpContext.Session.Get<IList<Team>>(WC.SessionTeams);
 
             //Get team object from session based on teamId provided in action parameter
             Team team = new Team();
@@ -76,14 +76,14 @@ namespace Research_Repository.Controllers
             }
 
             //Add new project to the desired team in 'tempTeams'
-            if (actionName == "Add" && id == 0)
+            if (actionName == WC.AddAction && id == 0)
             {
                 //Add new project item to list of projects in team
                 team.Projects.Add(new Project { Id = newId, Name = projectName, TeamId = teamId });
             }
 
             //Update project in 'tempTeams'
-            else if (actionName == "Update")
+            else if (actionName == WC.UpdateAction)
             {
                 //Get team of project when modal was initially loaded
                 Team oldTeam = tempTeams.FirstOrDefault(u => u.Id == oldTeamId);
@@ -102,7 +102,7 @@ namespace Research_Repository.Controllers
                 tempProject.Name = projectName;
 
             }
-            else if (actionName == "Delete")
+            else if (actionName == WC.DeleteAction)
             {
                 //Remove project from team in 'tempTeams'
                 if(team !=null && team.Projects.Count > 0)
@@ -112,7 +112,7 @@ namespace Research_Repository.Controllers
             }
 
             //Update 'tempTeams' in session
-            HttpContext.Session.Set("teams", tempTeams);
+            HttpContext.Session.Set(WC.SessionTeams, tempTeams);
         }
 
     }

@@ -8,6 +8,7 @@ namespace Research_Repository_Models.Solr
 {
     public class ItemSolr
     {
+        public ItemSolr() { } //Needed for solr queries to work
 
         public ItemSolr(Item model)
         {

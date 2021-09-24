@@ -54,7 +54,7 @@ namespace Research_Repository.Controllers
             else
             {
                 //Get temp themes from session
-                IList<ThemeObjectVM> tempThemes = HttpContext.Session.Get<IList<ThemeObjectVM>>("themes");
+                IList<ThemeObjectVM> tempThemes = HttpContext.Session.Get<IList<ThemeObjectVM>>(WC.SessionThemes);
 
                 //Solves error where inputs in the view display the incorrect values
                 ModelState.Clear();
@@ -70,7 +70,7 @@ namespace Research_Repository.Controllers
         public IActionResult SaveThemes(ThemeVM themeVM)
         {
             //Update tags in database
-            _themeRepo.UpdateTagsDb(HttpContext.Session.Get<IList<Tag>>("tags"));
+            _themeRepo.UpdateTagsDb(HttpContext.Session.Get<IList<Tag>>(WC.SessionTags));
 
             //Get a list of theme ids from themes returned from view
             IList<int> tempThemeIdList = new List<int>();
@@ -192,27 +192,27 @@ namespace Research_Repository.Controllers
         public void SaveThemesState([FromBody] IList<ThemeObjectVM> themes)
         {
             //Set themes in session
-            HttpContext.Session.Set("themes", themes);
+            HttpContext.Session.Set(WC.SessionThemes, themes);
 
             //If no tags exist in session
-            if (HttpContext.Session.Get<IList<Tag>>("tags") == null)
+            if (HttpContext.Session.Get<IList<Tag>>(WC.SessionTags) == null)
             {
                 //Get list of tags from database
                 IList<Tag> tags = _themeRepo.GetTags().ToList();
 
                 //Set tags from database into session
-                HttpContext.Session.Set("tags", tags);
+                HttpContext.Session.Set(WC.SessionTags, tags);
             }
 
             //Set tagSelectList in session if it does not exist (Should only be required on page load before updates have been made to the tags)
-            if (TempData.Get<IList<SelectListItem>>("tagSelectList") == null)
+            if (TempData.Get<IList<SelectListItem>>(WC.TempDataTagSelectList) == null)
             {
                 //Get list of tags from database
                 IList<Tag> tags = _themeRepo.GetTags().ToList();
 
                 //Update tempdata with the an updated tag select dropdown list
                 IEnumerable<SelectListItem> tagSelectList = _themeRepo.GetTagList(tags, false);
-                TempData.Put("tagSelectList", tagSelectList);
+                TempData.Put(WC.TempDataTagSelectList, tagSelectList);
             }
         }
     }

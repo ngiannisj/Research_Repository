@@ -53,7 +53,7 @@ namespace Research_Repository_DataAccess.Repository.Solr
         public bool DeleteAll()
         {
             try
-            {             
+            {
                 _solr.Delete(_solr.Query(SolrQuery.All));
                 _solr.Commit();
                 return true;
@@ -69,7 +69,7 @@ namespace Research_Repository_DataAccess.Repository.Solr
         {
             try
             {
-                foreach(T document in documentList)
+                foreach (T document in documentList)
                 {
                     _solr.Add(document);
                 }

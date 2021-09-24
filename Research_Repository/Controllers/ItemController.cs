@@ -52,7 +52,7 @@ namespace Research_Repository.Controllers
             }
 
             string webRootPath = _webHostEnvironment.WebRootPath;
-            string targetFileLocation = WC.ItemFilePath + "temp\\"; //Get new temp folder for temp files not yet added to item
+            string targetFileLocation = WC.ItemFilePath + WC.TempFilePath; //Get new temp folder for temp files not yet added to item
             string sourceFileLocation = WC.ItemFilePath + id + "\\"; //Get item folder for files in this item
             FileHelper.CopyFiles(null, webRootPath, sourceFileLocation, targetFileLocation, true); //Copy from temp folder to item folder
 
@@ -109,11 +109,11 @@ namespace Research_Repository.Controllers
                 itemVM.Item.LastUpdatedDate = DateTime.Today;
 
                 //Update item status
-                if (User.IsInRole(WC.UploaderRole) && submit != "Submit" || itemVM.Item.Status == null || itemVM.Item.Status == "")
+                if (User.IsInRole(WC.UploaderRole) && submit != WC.SubmitAction || itemVM.Item.Status == null || itemVM.Item.Status == "")
                 {
                     itemVM.Item.Status = WC.Draft;
                 }
-                else if (User.IsInRole(WC.UploaderRole) && submit == "Submit")
+                else if (User.IsInRole(WC.UploaderRole) && submit == WC.SubmitAction)
                 {
                     itemVM.Item.Status = WC.Submitted;
                 }
@@ -130,7 +130,7 @@ namespace Research_Repository.Controllers
                 }
 
                 //File parameters
-                string sourceFileLocation = WC.ItemFilePath + "temp\\"; //Get temp file folder
+                string sourceFileLocation = WC.ItemFilePath + WC.TempFilePath; //Get temp file folder
                 string webRootPath = _webHostEnvironment.WebRootPath;
 
                 //If new item is being created
@@ -161,6 +161,8 @@ namespace Research_Repository.Controllers
                     //Update tags associated with a the item
                     _itemRepo.UpdateItemTagsList(itemVM);
                 }
+
+                //If item already exists in database
                 else
                 {
                     //Update files
@@ -198,7 +200,7 @@ namespace Research_Repository.Controllers
 
                 _solr.AddUpdate(new ItemSolr(dbItem)); //Update solr
 
-                return RedirectToAction(nameof(Index), "Profile");
+                return RedirectToAction(nameof(Index), WC.ProfileName);
             } else
             {
                 return NotFound();
@@ -267,7 +269,7 @@ namespace Research_Repository.Controllers
         {
             var files = Request.Form.Files;
             string webRootPath = _webHostEnvironment.WebRootPath;
-            string fileLocation = WC.ItemFilePath + "temp\\";
+            string fileLocation = WC.ItemFilePath + WC.TempFilePath;
 
             return FileHelper.UploadFiles(files, webRootPath, fileLocation);
         }
@@ -276,7 +278,7 @@ namespace Research_Repository.Controllers
         public void DeleteFiles(string name)
         {
             string webRootPath = _webHostEnvironment.WebRootPath;
-            string fileLocation = WC.ItemFilePath + "temp\\";
+            string fileLocation = WC.ItemFilePath + WC.TempFilePath;
 
             FileHelper.DeleteFiles(name, webRootPath, fileLocation);
         }

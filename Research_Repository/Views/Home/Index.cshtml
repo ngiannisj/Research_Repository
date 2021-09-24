@@ -1,35 +1,38 @@
-﻿@model Research_Repository_Models.ViewModels.HomeVM;
-    <div>
-        <input id="homepage-searchbar" />
-        <button id="homepage-submit-btn">Search!</button>
-    </div>
+﻿@using Research_Repository_Utility;
 
-    <div>
-        @if (Model.Themes != null && Model.Themes.Count() > 0)
+
+@model Research_Repository_Models.ViewModels.HomeVM;
+<div>
+    <input id="homepage-searchbar" />
+    <button id="homepage-submit-btn">Search!</button>
+</div>
+
+<div>
+    @if (Model.Themes != null && Model.Themes.Count() > 0)
+    {
+        foreach (Theme theme in Model.Themes)
         {
-            foreach (Theme theme in Model.Themes)
-            {
-                <button class="homepage-filter" data-type="theme" data-name="@theme.Name">@theme.Name</button>
-            }
+            <button class="homepage-filter" data-type="@WC.ThemeName" data-name="@theme.Name">@theme.Name</button>
         }
-    </div>
+    }
+</div>
 
-    <div>
-        @if (Model.Teams != null && Model.Teams.Count() > 0)
+<div>
+    @if (Model.Teams != null && Model.Teams.Count() > 0)
+    {
+        foreach (Team team in Model.Teams)
         {
-            foreach (Team team in Model.Teams)
-            {
-                <div>
-                    <h1>@team.Name</h1>
-                    @if (team.Projects != null && team.Projects.Count() > 0)
+            <div>
+                <h1>@team.Name</h1>
+                @if (team.Projects != null && team.Projects.Count() > 0)
+                {
+                    foreach (Project project in team.Projects)
                     {
-                        foreach (Project project in team.Projects)
-                        {
-                            <button class="homepage-filter" data-type="project" data-name="@project.Name">@project.Name</button>
-                        }
+                        <button class="homepage-filter" data-type="@WC.ProjectName" data-name="@project.Name">@project.Name</button>
                     }
+                }
 
-                </div>
-            }
+            </div>
         }
-    </div>
+    }
+</div>
