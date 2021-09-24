@@ -12,11 +12,12 @@ namespace Research_Repository_DataAccess.Repository
     {
         private readonly ApplicationDbContext _db;
 
-        public TeamRepository(ApplicationDbContext db) : base(db) {
+        public TeamRepository(ApplicationDbContext db) : base(db)
+        {
             _db = db;
         }
 
-       
+
         public IList<Project> GetTeamProjectsFromDb(int? teamId)
         {
             //Instantiate list of projects
@@ -72,13 +73,13 @@ namespace Research_Repository_DataAccess.Repository
             if (fromDb == true)
             {
                 projectIds = _db.Projects.Select(u => u.Id).ToList();
-            } 
-            
+            }
+
             //If teams list is not empty
-            else if(teams != null && teams.Count > 0)
+            else if (teams != null && teams.Count > 0)
             {
                 //Get all project ids from all teams
-                foreach( Team team in teams)
+                foreach (Team team in teams)
                 {
                     if (team.Projects != null && team.Projects.Count > 0)
                     {
@@ -109,7 +110,7 @@ namespace Research_Repository_DataAccess.Repository
 
                     //Get project team id
                     int? dbProjectTeamId = 0;
-                    if(dbProject != null)
+                    if (dbProject != null)
                     {
                         dbProjectTeamId = dbProject.TeamId;
                     }
@@ -120,7 +121,7 @@ namespace Research_Repository_DataAccess.Repository
                         //If project does not exist in db
                         project.Id = 0;
                         _db.Projects.Add(project);
-                    } 
+                    }
 
                     //Update the project in the database if it already exists in ther
                     else
@@ -142,16 +143,16 @@ namespace Research_Repository_DataAccess.Repository
             IList<Project> dbProjects = _db.Projects.AsNoTracking().ToList();
 
             //Delete all project in the database if 'deleteAllProjects' parameter is set to true (Called when no teams exist when saving teams)
-            if(deleteAllProjects == true)
+            if (deleteAllProjects == true)
             {
                 foreach (Project project in dbProjects)
                 {
-                        _db.Remove(project);
+                    _db.Remove(project);
                 }
             }
 
             //If tempProjectIds is not empty and 'deleteAllProjects' is set to false
-            else if(deleteAllProjects == false && tempProjectIds != null && tempProjectIds.Count > 0)
+            else if (deleteAllProjects == false && tempProjectIds != null && tempProjectIds.Count > 0)
             {
                 //Delete selected ids from the database
                 foreach (Project project in dbProjects)
@@ -162,7 +163,7 @@ namespace Research_Repository_DataAccess.Repository
                     }
                 }
             }
-           
+
             _db.SaveChanges();
         }
 

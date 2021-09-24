@@ -22,6 +22,5 @@ namespace Research_Repository_DataAccess.Repository.IRepository
         IList<int> GetThemeIds(IEnumerable<Theme> themes);
 
         void Update(Theme obj);
-
     }
 }

@@ -161,7 +161,7 @@ namespace Research_Repository_DataAccess.Repository
             //Instantiate list of tags
             IList<Tag> tagsList = new List<Tag>();
             //If session object is not null
-            if(HttpContext != null && HttpContext.Session.Get<IList<Tag>>(WC.SessionTags) != null)
+            if (HttpContext != null && HttpContext.Session.Get<IList<Tag>>(WC.SessionTags) != null)
             {
                 tagsList = HttpContext.Session.Get<IList<Tag>>(WC.SessionTags);
             }

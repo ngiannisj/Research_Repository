@@ -81,42 +81,61 @@ namespace Research_Repository_Models.Solr
 
         [SolrUniqueKey("id")]
         public string Id { get; set; }
+
         [SolrField("title_tti")]
         public string Title { get; set; }
+
         [SolrField("abstract_tti")]
         public string Abstract { get; set; }
+
         [SolrField("collaborator_tti")]
         public string Collaborator { get; set; }
+
         [SolrField("dateRange")]
         public string DateRange { get; set; }
+
         [SolrField("theme_tti")]
         public string Theme { get; set; }
+
         [SolrField("project_tti")]
         public string Project { get; set; }
+
         [SolrField("team_tti")]
         public string Team { get; set; }
+
         [SolrField("tags_tti")]
         public ICollection<string> Tags { get; set; }
+
         [SolrField("keyInsights_tti")]
         public ICollection<string> KeyInsights { get; set; }
+
         [SolrField("methodology_tti")]
         public string Methodology { get; set; }
+
         [SolrField("limitations_tti")]
         public string Limitations { get; set; }
+
         [SolrField("approvedUse")]
         public string ApprovedUse { get; set; }
+
         [SolrField("sensitivity")]
         public string Sensitivity { get; set; }
+
         [SolrField("status")]
         public string Status { get; set; }
+
         [SolrField("notifyUploader")]
         public bool NotifyUploader { get; set; }
+
         [SolrField("uploader_tti")]
         public string Uploader { get; set; }
+
         [SolrField("uploaderId")]
         public string UploaderId { get; set; }
+
         [SolrField("lastUpdatedDate")]
         public DateTime LastUpdatedDate { get; set; }
+
         [SolrField("dateCreated")]
         public DateTime DateCreated { get; set; }
     }

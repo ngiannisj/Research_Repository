@@ -4,7 +4,6 @@ namespace Research_Repository_Models.ViewModels
 {
     public class ItemListVM
     {
-
         public string SearchText { get; set; }
 
         public IList<CheckboxVM> TeamCheckboxes { get; set; }

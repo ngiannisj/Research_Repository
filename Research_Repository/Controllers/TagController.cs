@@ -35,7 +35,7 @@ namespace Research_Repository.Controllers
             {
                 //Generate a unique id for a newly added tag
                 int newId = 1;
-                if(tempTags != null && tempTags.Count > 0)
+                if (tempTags != null && tempTags.Count > 0)
                 {
                     //Get next available id for the tag if tags exist in 'tempTags'
                     newId = HttpContext.Session.Get<IList<Tag>>(WC.SessionTags).Select(u => u.Id).ToList().Max() + 1;
@@ -57,7 +57,7 @@ namespace Research_Repository.Controllers
                 tempTags.Add(tag);
 
                 //If any themes exist in 'tempThemes' add a new tag checkbox to each theme
-                if(tempThemes != null && tempThemes.Count > 0)
+                if (tempThemes != null && tempThemes.Count > 0)
                 {
                     //Create tag Checkbox
                     CheckboxVM tagCheckbox = new CheckboxVM
@@ -112,7 +112,7 @@ namespace Research_Repository.Controllers
             TempData.Put(WC.TempDataTagSelectList, tagSelectList);
 
             return tempTags;
-            }
+        }
 
         //GET - GETTAGNAME (FROM AJAX CALL)
         public string GetTagName(int? id)

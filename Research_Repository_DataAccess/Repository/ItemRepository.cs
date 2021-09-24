@@ -27,13 +27,13 @@ namespace Research_Repository_DataAccess.Repository
             //Instantiate new suggested tag list
             IList<string> suggestedTagsList = new List<string>();
             //Instantiate new key insights list
-            IList<string> keyInsightsList = new List<string>{""};
+            IList<string> keyInsightsList = new List<string> { "" };
 
             //If specific item is requested, populate item object, suggested tag list and key insights list
             if (id != null && id != 0)
             {
                 //Split suggested tag string from database and populate suggested tag list with it
-                if(_db.Items.FirstOrDefault(u => u.Id == id).SuggestedTags != null)
+                if (_db.Items.FirstOrDefault(u => u.Id == id).SuggestedTags != null)
                 {
                     suggestedTagsList = _db.Items.FirstOrDefault(u => u.Id == id).SuggestedTags.ToString().Split("~~");
                 }
@@ -49,7 +49,7 @@ namespace Research_Repository_DataAccess.Repository
             }
 
             //Instantiate status option list with all available options
-            string[] statusInputs = {WC.Draft, WC.Submitted, WC.Published, WC.Rejected };
+            string[] statusInputs = { WC.Draft, WC.Submitted, WC.Published, WC.Rejected };
             IList<string> statusSelectList = new List<string>(statusInputs);
 
             //Get selected tag ids for the item from the itemTags join database table
@@ -207,15 +207,15 @@ namespace Research_Repository_DataAccess.Repository
             IList<int> AssignedProjectIds = new List<int>();
 
             //Populate 'AssignedProjectIds' list
-            foreach(int id in teamIds)
+            foreach (int id in teamIds)
             {
                 //Get ids of projects which have a foreign key of the selected teams
                 IList<int> newProjectIds = _db.Projects.AsNoTracking().Where(i => i.TeamId == id).Select(i => i.Id).ToList();
 
                 //Add project ids to 'AssignedProjectIds' list if they do not already exist in there
-                foreach(int newProjectId in newProjectIds)
+                foreach (int newProjectId in newProjectIds)
                 {
-                    if(!AssignedProjectIds.Contains(newProjectId))
+                    if (!AssignedProjectIds.Contains(newProjectId))
                     {
                         AssignedProjectIds.Add(newProjectId);
                     }

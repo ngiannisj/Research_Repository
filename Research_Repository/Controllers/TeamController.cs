@@ -133,7 +133,7 @@ namespace Research_Repository.Controllers
             IList<int> tempTeamIdList = _teamRepo.GetTeamIds(teams);
 
             //If dbTeamList is not empty or null
-            if(dbTeamList != null && dbTeamList.Count > 0)
+            if (dbTeamList != null && dbTeamList.Count > 0)
             {
                 //Delete any teams from the database which do not exist in the teams list returned from the view (This will recursively delete any projects belonging to this team)
                 foreach (Team dbTeam in dbTeamList)

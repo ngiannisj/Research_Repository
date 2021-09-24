@@ -28,18 +28,18 @@ namespace Research_Repository.Controllers
 
             //Get team object from session based on teamId provided in action parameter
             Team team = new Team();
-            if(tempTeams != null && tempTeams.Count > 0)
+            if (tempTeams != null && tempTeams.Count > 0)
             {
                 team = tempTeams.FirstOrDefault(u => u.Id == teamId);
             }
 
             //Get a list of all projects for all teams stored in the session
             IList<Project> tempProjects = new List<Project>();
-            if(tempTeams != null && tempTeams.Count > 0)
+            if (tempTeams != null && tempTeams.Count > 0)
             {
                 foreach (Team tempTeam in tempTeams)
                 {
-                    if(tempTeam.Projects != null && tempTeam.Projects.Count > 0)
+                    if (tempTeam.Projects != null && tempTeam.Projects.Count > 0)
                     {
                         foreach (Project project in tempTeam.Projects)
                         {
@@ -105,7 +105,7 @@ namespace Research_Repository.Controllers
             else if (actionName == WC.DeleteAction)
             {
                 //Remove project from team in 'tempTeams'
-                if(team !=null && team.Projects.Count > 0)
+                if (team != null && team.Projects.Count > 0)
                 {
                     team.Projects.Remove(tempProject);
                 }

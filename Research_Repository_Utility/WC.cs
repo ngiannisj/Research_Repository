@@ -59,7 +59,7 @@
         public const string YearMonthDayTagHelper = "{0:yyyy-MM-dd}";
 
         //Pagination
-        public const int NumOfItemsPerPage = 1; //Remember to change in solr javascript file as well
+        public const int NumOfItemsPerPage = 1; //Change value in solr javascript file as well
 
         //Actions
         public const string SubmitAction = "Submit";

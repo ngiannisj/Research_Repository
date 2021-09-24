@@ -7,6 +7,7 @@ namespace Research_Repository_DataAccess.Repository.IRepository
     public interface ITagRepository : IRepository<Tag>
     {
         IEnumerable<SelectListItem> GetTagList(IList<Tag> tags, bool useDb);
+
         void Update(Tag obj);
     }
 }

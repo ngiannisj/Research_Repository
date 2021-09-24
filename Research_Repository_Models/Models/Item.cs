@@ -13,23 +13,30 @@ namespace Research_Repository_Models
 
         //Project information
         public string Collaborator { get; set; }
+
         public string SuggestedTeam { get; set; }
+
         public string SuggestedProject { get; set; }
+
         public string SuggestedTags { get; set; }
+
         public string SuggestedTheme { get; set; }
 
         [Display(Name = "Start date")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = WC.YearMonthDayTagHelper, ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
+
         [Display(Name = "End date")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = WC.YearMonthDayTagHelper, ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
+
         [Display(Name = "Last updated")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = WC.YearMonthDayTagHelper, ApplyFormatInEditMode = true)]
         public DateTime LastUpdatedDate { get; set; }
+
         [Display(Name = "Date created")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = WC.YearMonthDayTagHelper, ApplyFormatInEditMode = true)]
@@ -52,13 +59,18 @@ namespace Research_Repository_Models
 
         //Research information
         public string Title { get; set; }
+
         public string Abstract { get; set; }
+
         public string KeyInsights { get; set; }
+
         public string Methodology { get; set; }
+
         public string Limitations { get; set; }
 
         //Security
         public string ApprovedUse { get; set; }
+
         public string Sensitivity { get; set; }
 
         //Files
@@ -67,7 +79,7 @@ namespace Research_Repository_Models
         //Status
         public string Status { get; set; }
 
-        [Display (Name = "Reason")]
+        [Display(Name = "Reason")]
         public string Comment { get; set; }
 
         //User

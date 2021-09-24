@@ -100,37 +100,37 @@ namespace Research_Repository.Controllers
                 }
 
                 //Add/Update themes in database
-                    foreach (ThemeObjectVM theme in themeVM.ThemeObjects)
-                    {
+                foreach (ThemeObjectVM theme in themeVM.ThemeObjects)
+                {
                     //If theme exists in database
-                        if (dbThemeIdList.Contains(theme.Theme.Id))
-                        {
+                    if (dbThemeIdList.Contains(theme.Theme.Id))
+                    {
                         //Update tag checkbox state for this theme
-                            _themeRepo.UpdateThemeTagsList(theme);
+                        _themeRepo.UpdateThemeTagsList(theme);
 
                         //Update this theme in the database
-                            _themeRepo.Update(theme.Theme);
-                            _themeRepo.Save();
-                        }
+                        _themeRepo.Update(theme.Theme);
+                        _themeRepo.Save();
+                    }
 
-                        //If theme does not exist in the database
-                        else
-                        {
+                    //If theme does not exist in the database
+                    else
+                    {
                         //Set theme id to '0' so a unique value is assigned in the database
-                            theme.Theme.Id = 0;
+                        theme.Theme.Id = 0;
                         //Add theme to database
                         _themeRepo.Add(theme.Theme);
-                            _themeRepo.Save();
+                        _themeRepo.Save();
                         //Update tag checkbox state for this theme. This task is completed after adding the theme to the database so the theme id is updated beforehand.
-                            _themeRepo.UpdateThemeTagsList(theme);
-                        }
+                        _themeRepo.UpdateThemeTagsList(theme);
                     }
+                }
             }
 
             _themeRepo.Save();
 
             //Solves error where inputs in the view display the incorrect values
-            ModelState.Clear(); 
+            ModelState.Clear();
             return RedirectToAction(nameof(Index));
         }
 
@@ -170,7 +170,7 @@ namespace Research_Repository.Controllers
             }
 
             //Instantiate an empty themes list if a list does not exist
-            if(themeVM.ThemeObjects == null)
+            if (themeVM.ThemeObjects == null)
             {
                 themeVM.ThemeObjects = new List<ThemeObjectVM>();
             }

@@ -20,7 +20,7 @@ namespace Research_Repository_Utility
                 string filePath = Path.Combine(directoryPath, fileName);
 
                 //Add file name to list of file names if the file path does not already exist
-                if(!File.Exists(filePath))
+                if (!File.Exists(filePath))
                 {
                     filesListString += fileName + ",";
                 }
@@ -38,7 +38,7 @@ namespace Research_Repository_Utility
             return filesListString;
         }
 
-        public static void DeleteFiles(string filePath, string webRootPath,  string fileLocation)
+        public static void DeleteFiles(string filePath, string webRootPath, string fileLocation)
         {
             string path = webRootPath + fileLocation;
             if (filePath != null)
@@ -60,7 +60,8 @@ namespace Research_Repository_Utility
                         return;
                     }
                 }
-            } else
+            }
+            else
             {
                 // Delete a directory and all subdirectories with Directory static method...
                 if (Directory.Exists(path))
@@ -77,7 +78,7 @@ namespace Research_Repository_Utility
                 }
             }
 
-           
+
         }
 
         public static void CopyFiles(string fileName, string webRootPath, string sourceFileLocation, string targetFileLocation, bool deleteTargetFiles)
@@ -92,7 +93,7 @@ namespace Research_Repository_Utility
             string targetPath = webRootPath + targetFileLocation;
 
             // Use Path class to manipulate file and directory paths.
-            if(fileName != null)
+            if (fileName != null)
             {
                 string sourceFile = Path.Combine(sourcePath, fileName);
                 string destFile = Path.Combine(targetPath, fileName);
@@ -126,7 +127,7 @@ namespace Research_Repository_Utility
                     // Use static Path methods to extract only the file name from the path.
                     string file = Path.GetFileName(s);
                     string destFile = Path.Combine(targetPath, file);
-                   File.Copy(s, destFile, true);
+                    File.Copy(s, destFile, true);
                 }
             }
         }
@@ -136,7 +137,8 @@ namespace Research_Repository_Utility
             string sourcePath = webRootPath + sourceFileLocation;
             string targetPath = webRootPath + targetFileLocation;
 
-            if(fileName != null) {
+            if (fileName != null)
+            {
                 string sourceFile = Path.Combine(sourcePath, fileName);
                 string destFile = Path.Combine(targetPath, fileName);
 
@@ -149,7 +151,7 @@ namespace Research_Repository_Utility
             // path strings, use the System.IO.Path class.
             Directory.Move(sourcePath, targetPath);
         }
-    
+
 
         public static IActionResult DownloadFile(string filePath)
         {

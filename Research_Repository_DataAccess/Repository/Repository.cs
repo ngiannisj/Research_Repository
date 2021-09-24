@@ -45,7 +45,7 @@ namespace Research_Repository_DataAccess.Repository
             //Get navigational properties if the 'include' parameter is not null
             if (include != null)
             {
-                    query = include(query);
+                query = include(query);
             }
             //Set not tracking if 'isTracking' parameter is set to false
             if (!isTracking)

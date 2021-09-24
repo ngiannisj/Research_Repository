@@ -201,7 +201,8 @@ namespace Research_Repository.Controllers
                 _solr.AddUpdate(new ItemSolr(dbItem)); //Update solr
 
                 return RedirectToAction(nameof(Index), WC.ProfileName);
-            } else
+            }
+            else
             {
                 return NotFound();
             }
@@ -324,11 +325,12 @@ namespace Research_Repository.Controllers
                 int itemRequestCount = _itemRepo.GetAll(filter: u => u.Status == WC.Submitted, isTracking: false).Count();
                 return itemRequestCount;
 
-            }else
+            }
+            else
             {
                 return 0;
             }
-            
+
         }
     }
 }

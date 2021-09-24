@@ -8,7 +8,8 @@ namespace Research_Repository_DataAccess.Repository
     {
         private readonly ApplicationDbContext _db;
 
-        public ProjectRepository(ApplicationDbContext db) : base(db) {
+        public ProjectRepository(ApplicationDbContext db) : base(db)
+        {
             _db = db;
         }
 

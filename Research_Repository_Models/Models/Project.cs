@@ -16,6 +16,6 @@ namespace Research_Repository_Models
         [ForeignKey("TeamId")]
         public virtual Team Team { get; set; }
 
-        public ICollection<Item> Items  { get; set; }
+        public ICollection<Item> Items { get; set; }
     }
 }

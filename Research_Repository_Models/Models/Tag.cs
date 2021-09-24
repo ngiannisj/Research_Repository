@@ -10,7 +10,7 @@ namespace Research_Repository_Models
 
         public string Name { get; set; }
 
-        public ICollection<ItemTag> ItemTags  { get; set; }
+        public ICollection<ItemTag> ItemTags { get; set; }
 
         public ICollection<ThemeTag> ThemeTags { get; set; }
     }
