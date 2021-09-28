@@ -23,7 +23,7 @@ namespace Research_Repository.Controllers
 
         //POST - UPDATE
         //Update 'tempTags' object in session with added/updated/deleted tag
-        public IEnumerable<Tag> UpdateTag(int id, string tagName, string actionName)
+        public IEnumerable<Tag> UpdateTag(int id, string tagName, bool checkAll, string actionName)
         {
             //Get list of temp tags from the session
             IList<Tag> tempTags = HttpContext.Session.Get<IList<Tag>>(WC.SessionTags);
@@ -64,7 +64,7 @@ namespace Research_Repository.Controllers
                     {
                         Value = newId,
                         Name = tagName,
-                        CheckedState = false
+                        CheckedState = checkAll
                     };
                     //Add tag checkbox to every theme in 'tempThemes'
                     foreach (ThemeObjectVM tempThemeVM in tempThemes)
@@ -85,6 +85,11 @@ namespace Research_Repository.Controllers
                 {
                     CheckboxVM tagCheckbox = tempThemeVM.TagCheckboxes.FirstOrDefault(u => u.Value == id);
                     tagCheckbox.Name = tagName;
+                    //If 'checkAll' checkbox is checked, set the status of all relevant checkboxes to true
+                    if(checkAll)
+                    {
+                        tagCheckbox.CheckedState = true;
+                    }
                 }
             }
 

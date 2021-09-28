@@ -7,11 +7,46 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Content\sass\site.scss" />
+    <None Remove="Content\sass\abstracts\_functions.scss" />
+    <None Remove="Content\sass\abstracts\_mixins.scss" />
+    <None Remove="Content\sass\abstracts\_variables.scss" />
+    <None Remove="Content\sass\base\_animations.scss" />
+    <None Remove="Content\sass\base\_base.scss" />
+    <None Remove="Content\sass\base\_typography.scss" />
+    <None Remove="Content\sass\base\_utilities.scss" />
+    <None Remove="Content\sass\pages\_home.scss" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Content\sass\site.scss">
+    <Content Include="Content\sass\abstracts\_functions.scss">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Content\sass\abstracts\_mixins.scss">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Content\sass\abstracts\_variables.scss">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Content\sass\base\_animations.scss">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Content\sass\base\_utilities.scss">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Content\sass\base\_typography.scss">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Content\sass\base\_base.scss">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Content\sass\pages\_home.scss">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -39,6 +74,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Content\sass\vendors\" />
+    <Folder Include="Content\sass\themes\" />
+    <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\files\documents\items\" />
   </ItemGroup>
 

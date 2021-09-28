@@ -48,6 +48,9 @@
     //On tag select list dropdown change, set tag name field
     $("#tag-select-dropdown").change(function () {
         populateTagNameField($(this));
+        $("#check-all-status").prop("checked", false);
+        $("#check-all-status-container").show();
+        $("#tag-name-input-container").show();
     });
 
     //On tag modal btn click, update tags
@@ -145,6 +148,8 @@ function updateTags($this) {
 
     let tagName = $("#tag-name-input").first().val();
 
+    let checkAllStatus = $("#check-all-status").prop("checked");
+
     let formAction = $this.val();
 
     $("#tag-select-dropdown").val(0);
@@ -153,7 +158,7 @@ function updateTags($this) {
     $.ajax({
         type: "GET",
         url: "/Tag/UpdateTag",
-        data: { "id": selectedTagId, "tagName": tagName, "actionName": formAction },
+        data: { "id": selectedTagId, "tagName": tagName, "checkAll": checkAllStatus, "actionName": formAction },
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
             //Reload tag dropdown list
@@ -163,6 +168,11 @@ function updateTags($this) {
             for (let i = 0; i < data.length; i++) {
                 $el.append($("<option></option>").attr("value", data[i].id).text(data[i].name));
             }
+
+            //Hide and uncheck 'checkAll' checkbox
+            $("#check-all-status").prop("checked", false);
+            $("#check-all-status-container").hide();
+            $("#tag-name-input-container").hide();
         },
         error: function (error) {
             console.log(error);

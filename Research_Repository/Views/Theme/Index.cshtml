@@ -6,7 +6,7 @@
 @model Research_Repository_Models.ViewModels.ThemeVM
 
 @{
-    IEnumerable<SelectListItem> tagSelectList = TempData.Get<IEnumerable<SelectListItem>>("tagSelectList");
+    IEnumerable<SelectListItem> tagSelectList = TempData.Get<IEnumerable<SelectListItem>>(WC.TempDataTagSelectList);
 }
 
 <div class="container p-3">
@@ -160,12 +160,21 @@
         </div>
 
         <!-- Tag name input field -->
-        <div class="form-group row">
+        <div class="form-group row" id="tag-name-input-container" style="display:none;">
             <div class="col-8 row">
                 <input id="tag-name-input" class="form-control" />
                 <span class="text-danger"></span>
             </div>
         </div>
+
+        <!-- Check-all checkbox -->
+        <div class="form-group row" id="check-all-status-container" style="display: none;">
+            <div class="col-8 row">
+                <label>Check for all tags:</label>
+                <input type="checkbox" id="check-all-status"/>
+            </div>
+        </div>
+
         <!-- Buttons -->
         <div class="form-group row">
             <div class="col-8 row">
