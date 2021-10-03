@@ -11,6 +11,8 @@ namespace Research_Repository_Models
 
         public string Name { get; set; }
 
+        public string Contact { get; set; }
+
         public IList<Project> Projects { get; set; }
 
         public IList<ApplicationUser> Users { get; set; }

@@ -3,6 +3,8 @@ let gulp = require('gulp');
 let gulp_sass = require('gulp-sass')(require('sass'));
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
+const cleanCSS = require('gulp-clean-css');
+const autoprefixer = require('gulp-autoprefixer');
 let rename = require('gulp-rename');
 
 //Constants
@@ -23,6 +25,11 @@ gulp.task(sassAction, () => {
         .pipe(gulp_sass({
             style: 'compressed'
         }).on('error', gulp_sass.logError))
+        .pipe(autoprefixer({
+            cascade: false,
+            grid: 'no-autoplace'
+        }))
+        .pipe(cleanCSS({ compatibility: 'ie8' }))
         .pipe(rename({
             basename: "styles",
             suffix: ".min",

@@ -53,6 +53,8 @@
                                 <td width="50%">
                                     <div class="team-name-text">@Model.Teams[y].Name</div>
                                     <input class="form-control team-name-input" asp-for="@Model.Teams[y].Name" style="display:none;" />
+                                    <div class="team-contact-text">@Model.Teams[y].Contact</div>
+                                    <input class="form-control team-contact-input" asp-for="@Model.Teams[y].Contact" style="display:none;" />
                                     <button class="edit-team-name-btn" onclick="editName(this, 'team')">Edit</button>
                                     <button class="apply-team-name-btn" style="display:none;" onclick="applyName(this, 'team')">Save</button>
                                     <input asp-for="@Model.Teams[y].Id" class="team-id" hidden />

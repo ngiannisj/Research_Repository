@@ -59,9 +59,16 @@ function editName(thisbtn, type) {
     //Show
     $(thisbtn).siblings(`.${type}-name-input`).show();
     $(thisbtn).siblings(`.apply-${type}-name-btn`).show();
+    if (type == "team") {
+        $(thisbtn).siblings(`.${type}-contact-input`).show();
+        $(thisbtn).siblings(`.apply-${type}-contact-btn`).show();
+    }
 
     //Hide
     $(thisbtn).siblings(`.${type}-name-text`).hide();
+    if (type == "team") {
+        $(thisbtn).siblings(`.${type}-contact-text`).hide();
+    }
     $(thisbtn).hide();
 };
 
@@ -69,14 +76,25 @@ function editName(thisbtn, type) {
 function applyName(thisbtn, type) {
     event.preventDefault();
     //Change text value
-    let newTeamName = $(thisbtn).siblings(`.${type}-name-input`).val();
-    $(thisbtn).siblings(`.${type}-name-text`).html(newTeamName);
+    let newName = $(thisbtn).siblings(`.${type}-name-input`).val();
+    $(thisbtn).siblings(`.${type}-name-text`).html(newName);
+    if (type == "team") {
+        let newTeamContact = $(thisbtn).siblings(`.${type}-contact-input`).val();
+        $(thisbtn).siblings(`.${type}-contact-text`).html(newTeamContact);
+    }
 
     //Show
     $(thisbtn).siblings(`.${type}-name-text`).show();
     $(thisbtn).siblings(`.edit-${type}-name-btn`).show();
+    if (type == "team") {
+        $(thisbtn).siblings(`.${type}-contact-text`).show();
+        $(thisbtn).siblings(`.edit-${type}-contact-btn`).show();
+    }
 
     //Hide
     $(thisbtn).siblings(`.${type}-name-input`).hide();
+    if (type == "team") {
+        $(thisbtn).siblings(`.${type}-contact-input`).hide();
+    }
     $(thisbtn).hide();
 };

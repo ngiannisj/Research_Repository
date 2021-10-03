@@ -5,6 +5,8 @@
     "gulp-sass": "*",
     "gulp-uglify": "*",
     "gulp-concat": "*",
+    "gulp-clean-css": "*",
+    "gulp-autoprefixer": "*",
     "gulp-rename": "*"
   }
 }
