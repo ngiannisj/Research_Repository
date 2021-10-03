@@ -131,10 +131,36 @@ function removeField(buttonRef, field) {
 //Update custom files list
 function handleFiles(fileUploadBox) {
     //Create custom form data object for file list
-    const fileList = fileUploadBox.files;
+    let rawFileList = [];
+    rawFileList = fileUploadBox.files;
+
+    let filteredFileList = [];
+    if (rawFileList.length > 0) {
+        const allowedExtensions = ["pdf", "doc", "docx", "jpg", "png", "ppt"];
+        for (let i = 0; i <= rawFileList.length - 1; i++) {
+            let fileType = rawFileList[i].name.split('.').pop().toLowerCase();
+            console.log(fileType);
+            if (!allowedExtensions.filter(e => e.includes(fileType)).length) {
+                alert(`File ${rawFileList[i].name} is not the correct type, files must have an extension of .pdf/.doc/.jpg/.png/.ppt only.` );
+                return
+            }
+
+            //Check file size
+            const fileSize = Math.round((rawFileList[i].size / 1024));
+            if (fileSize >= 4096) {
+                alert(
+                    `File ${rawFileList[i].name} is too Big, please select a file less than 4mb`);
+                return
+            } else {
+                filteredFileList.push(rawFileList[i]);
+            }
+        }
+    }
+
     var form_data = new FormData();
-    for (var i = 0; i < fileList.length; i++) {
-        form_data.append(fileList[i].name, fileList[i]);
+
+    for (let i = 0; i < filteredFileList.length; i++) {
+        form_data.append(filteredFileList[i].name, filteredFileList[i]);
     }
 
     //Post files to server
