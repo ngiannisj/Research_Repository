@@ -15,7 +15,7 @@ let queryParameters = {
 };
 
 //Number of items per pagination page (also need to update in WC constants)
-const numOfItemsPerPage = 1;
+const numOfItemsPerPage = 10;
 
 $(document).ready(function () {
     if ($("#filters").length) {
@@ -241,16 +241,25 @@ function filterItemList(itemStatus, pageId) {
             //Previous and last pagination buttons
             //If selected pageId is not the first pageId
             if (pageNum >= 2) {
-                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${pageId - 1}, '${itemStatus}')">&#60;Prev</button>`;
+                itemListPaginationHtml +=
+                    `<li class="pagination__item">
+                     <button class="pagination__button" onclick="updateFilterParameters(${pageId - 1}, '${itemStatus}')">Previous</button>
+                     </li>`;
             } else {
-                itemListPaginationHtml += `<button class="pagination-item" disabled>&#60;Prev</button>`;
+                itemListPaginationHtml +=
+                    `<li class="pagination__item">
+                    <button class="pagination__button" disabled>Previous</button>
+                    </li>`;
             }
             //First pageId
-            itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${0}, '${itemStatus}')">1</button>`;
+            itemListPaginationHtml +=
+                `<li class="pagination__item">
+                <button class="pagination__button ${pageNum == 1 ? "pagination__button--active" : ""}" onclick="updateFilterParameters(${0}, '${itemStatus}')">1</button>
+                </li>`;
 
             //...
             if (pageNum >= 4) {
-                itemListPaginationHtml += `<button class="pagination-item">...</button>`;
+                itemListPaginationHtml += `<li class="pagination__item">...</li>`;
             }
 
             //If number of pageIds is 3 or more
@@ -259,35 +268,61 @@ function filterItemList(itemStatus, pageId) {
                 if (pageNum <= 2) {
                     for (let i = pageId; i <= 3; i++) {
                         if (i > 0) {
-                            itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
+                            itemListPaginationHtml +=
+                            `<li class="pagination__item">
+                            <button class="pagination__button ${pageNum == i + 1 ? "pagination__button--active" : ""}"  onclick="updateFilterParameters(${i}, '${itemStatus}')">
+                            ${i + 1}
+                            </button>
+                            </li>`;
                         }
                     };
                     //If selected button is not the final 2 pageIds
                 } else if (pageNum >= numOfTotalPages - 1) {
                     for (let i = numOfMiddlePages - 2; i <= numOfMiddlePages; i++) {
-                        itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
+                        itemListPaginationHtml +=
+                           `<li class="pagination__item">
+                            <button class="pagination__button ${pageNum == i + 1 ? "pagination__button--active" : ""}" onclick="updateFilterParameters(${i}, '${itemStatus}')">
+                            ${i + 1}
+                            </button>
+                            </li>`;
                     }
                 } else {
                     for (let i = pageId - 1; i <= pageId + 1; i++) {
-                        itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${i}, '${itemStatus}')">${i + 1}</button>`;
+                        itemListPaginationHtml +=
+                            `<li class="pagination__item">
+                            <button class="pagination__button ${pageNum == i + 1 ? "pagination__button--active" : ""}" onclick="updateFilterParameters(${i}, '${itemStatus}')">
+                            ${i + 1}
+                            </button>
+                            </li>`;
                     };
                 }
             }
 
             //...
             if (pageNum <= numOfTotalPages - 3) {
-                itemListPaginationHtml += `<button class="pagination-item">...</button>`;
+                itemListPaginationHtml += `<li class="pagination__item">...</li>`;
             }
 
             if (numOfTotalPages >= 1) {
                 //Last page
-                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${numOfTotalPages - 1}, '${itemStatus}')">${numOfTotalPages}</button>`;
+                itemListPaginationHtml +=
+                    `<li class="pagination__item">
+                    <button class="pagination__button ${pageNum == numOfTotalPages ? "pagination__button--active" : ""}" onclick="updateFilterParameters(${numOfTotalPages - 1}, '${itemStatus}')">
+                    ${numOfTotalPages}
+                    </button>
+                    </li >`;
             }
             //Next page
             if (pageNum < numOfTotalPages) {
-                itemListPaginationHtml += `<button class="pagination-item" onclick="updateFilterParameters(${pageId + 1}, '${itemStatus}')">Next&#62;</button>`;
+                itemListPaginationHtml +=
+                    `<li class="pagination__item">
+                    <button class="pagination__button" onclick="updateFilterParameters(${pageId + 1}, '${itemStatus}')">Next</button>
+                     </li>`;
             } else {
-                itemListPaginationHtml += `<button class="pagination-item" disabled>Next&#62;</button>`;
+                itemListPaginationHtml +=
+              `<li class="pagination__item">
+              <button class="pagination__button" disabled>Next</button>
+              </li>`;
             }
 
             $("#item-list-pagination").html(itemListPaginationHtml);
@@ -373,7 +408,7 @@ function filterProjectsForItemsList() {
             if (teamIds !== undefined && teamIds.length > 0) {
                 $("#project-checkbox-filter label").hide();
                 for (var i = 0; i < data.length; i++) {
-                    $("#project-input-id-" + data[i]).parent().parent().show();
+                    $("#project-input-id-" + data[i]).parent().show();
                 }
             } else {
                 $("#project-checkbox-filter label").show();

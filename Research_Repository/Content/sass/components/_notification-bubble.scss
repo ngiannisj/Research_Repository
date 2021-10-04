@@ -1,19 +1,19 @@
 .notification-bubble {
-  background-color: $base-yellow;
-  border-radius: 50%;
-  height: 1.9rem;
-  padding: 0 0.5rem;
-  align-self: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
+    background-color: $base-yellow;
+    border-radius: 50%;
+    height: 1.9rem;
+    padding: 0 0.5rem;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
 
-  &__header-notification {
-    margin-left: 0.6rem;
-  }
+    &__header-notification {
+        margin-left: -3rem;
+    }
 
-  &__side-nav-notification {
-    margin-left: 2rem;
-  }
+    &__side-nav-notification {
+        margin-left: 2rem;
+    }
 }

@@ -116,3 +116,29 @@ function selectListOptionClick($this) {
 }
 
 //==================================================================
+//Navigation item selected
+$(document).ready(function () {
+    highlightSelectedNavLink();
+});
+
+function highlightSelectedNavLink() {
+    if (window.location.href.toLowerCase().includes("item/upsert")) {
+        $("#contribute-nav-link").addClass("header__nav-link--active");
+        return
+    } else if (window.location.href.toLowerCase().includes("item") && !window.location.href.toLowerCase().includes("itemrequest") && !window.location.href.toLowerCase().includes("account") || window.location.href.toLowerCase().includes("item?filterType")) {
+        $("#library-nav-link").addClass("header__nav-link--active");
+        return
+    }
+    else if (window.location.href.toLowerCase().includes("itemrequest") || window.location.href.toLowerCase().includes("theme") || window.location.href.toLowerCase().includes("team") || window.location.href.toLowerCase().includes("account")) {
+        $("#librarian-nav-link").addClass("header__nav-link--active");
+        $("#login-nav-link").addClass("header__nav-link--active");
+        return
+    }
+    else if (window.location.href.toLowerCase().includes("profile")) {
+        $("#profile-nav-link").addClass("header__nav-link--active");
+        return
+    }
+    else {
+        $("#home-nav-link").addClass("header__nav-link--active");
+    }
+}

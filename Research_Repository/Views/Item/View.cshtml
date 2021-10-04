@@ -10,7 +10,7 @@
         fileNames = Model.Files.Split(",").ToList();
 
         //Remove empty space from list
-        if (fileNames != null && fileNames.Count() > 1)
+        if (fileNames != null && fileNames.Count > 1)
         {
             fileNames.RemoveAt(fileNames.Count - 1);
         }
@@ -26,10 +26,10 @@
         keyInsights = Model.KeyInsights.Split("~~").ToList();
 
         //Remove empty space from list
-        if (keyInsights != null && keyInsights.Count() > 1)
-        {
-            keyInsights.RemoveAt(fileNames.Count - 1);
-        }
+        //if (keyInsights != null && keyInsights.Count() > 1)
+        //{
+        //    keyInsights.RemoveAt(fileNames.Count - 1);
+        //}
     }
 }
 

@@ -42,7 +42,7 @@ function setNotificationValue() {
                     $("#profile-rejected-notification").html("!");
                 }
                 if (data.length) {
-                    $("#item-notification-count").html("!");
+                    $("#item-notification-count").html(data.length);
                 }
             }
         },
