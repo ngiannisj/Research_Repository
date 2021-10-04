@@ -139,9 +139,8 @@ function handleFiles(fileUploadBox) {
         const allowedExtensions = ["pdf", "doc", "docx", "jpg", "png", "ppt"];
         for (let i = 0; i <= rawFileList.length - 1; i++) {
             let fileType = rawFileList[i].name.split('.').pop().toLowerCase();
-            console.log(fileType);
             if (!allowedExtensions.filter(e => e.includes(fileType)).length) {
-                alert(`File ${rawFileList[i].name} is not the correct type, files must have an extension of .pdf/.doc/.jpg/.png/.ppt only.` );
+                alert(`File ${rawFileList[i].name} is not the correct type, files must have an extension of .pdf/.doc/.jpg/.png/.ppt only.`);
                 return
             }
 

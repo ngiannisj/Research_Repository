@@ -1,1 +1,81 @@
-﻿
+.header {
+    width: 100%;
+    height: fit-content;
+    background-color: $base-blue;
+    border-bottom: 0.8rem solid $base-yellow;
+    margin-bottom: 6rem;
+    display: grid;
+    grid-template-columns: [full-start] minmax(2rem,1fr) [center-extended-start] minmax(min-content,11.52rem) [center-start] repeat(10,[col-start] minmax(min-content,11.52rem) [col-end]) [center-end] minmax(min-content,11.52rem) [center-extended-end] minmax(2rem,1fr) [full-end];
+
+  &__content {
+    margin-bottom: -.8rem;
+      grid-column: center-start / center-end;
+  }
+
+  &__header-top {
+    padding: 4.8rem 0;
+  }
+
+  &__logo-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: fit-content;
+  }
+
+  &__logo-image-container {
+    width: 25.645rem;
+    height: 6.2rem;
+  }
+
+  &__logo-image {
+    width: 100%;
+    height: 100%;
+    padding-right: 1.6rem;
+  }
+
+  &__logo-text-container {
+    padding-left: 1.6rem;
+    border-left: 1px solid $white;
+  }
+
+  &__header-bottom {
+    width: 100%;
+  }
+
+  &__navbar {
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    border-bottom: 0.8rem solid $base-yellow;
+  }
+
+  &__nav-link {
+    padding: 1.6rem;
+    margin-bottom: -8px; //Ensures bottom borders overlap
+    text-align: center;
+    border: none;
+    background: none;
+    border-bottom: 0.8rem solid $base-yellow;
+
+        &:hover {
+        cursor: pointer;
+    }
+
+    &--align-right {
+      margin-left: auto;
+      display: flex;
+
+      .header__nav-link {
+        &:last-of-type {
+          padding-right: 0;
+        }
+      }
+    }
+
+    &--active {
+      border-color: $base-blue;
+    }
+  }
+}

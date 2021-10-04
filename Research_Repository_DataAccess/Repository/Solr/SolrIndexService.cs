@@ -117,8 +117,17 @@ namespace Research_Repository_DataAccess.Repository.Solr
             }
 
             //Convert string date to dateTime format
-            DateTime startDate = DateTime.ParseExact(itemQueryParams.StartDate, WC.YearMonthDay, CultureInfo.InvariantCulture);
-            DateTime endDate = DateTime.ParseExact(itemQueryParams.EndDate, WC.YearMonthDay, CultureInfo.InvariantCulture);
+            DateTime startDate = DateTime.ParseExact("0001-01-01", WC.YearMonthDay, CultureInfo.InvariantCulture);
+            DateTime endDate = DateTime.ParseExact(DateTime.Now.ToString("yyyy-MM-dd"), WC.YearMonthDay, CultureInfo.InvariantCulture);
+            if (!string.IsNullOrEmpty(itemQueryParams.StartDate) && DateHelper.CheckDate(itemQueryParams.StartDate))
+            {
+              startDate = DateTime.ParseExact(itemQueryParams.StartDate, WC.YearMonthDay, CultureInfo.InvariantCulture);
+            }
+            if(!string.IsNullOrEmpty(itemQueryParams.EndDate) && DateHelper.CheckDate(itemQueryParams.EndDate))
+            {
+               endDate = DateTime.ParseExact(itemQueryParams.EndDate, WC.YearMonthDay, CultureInfo.InvariantCulture);
+            }
+
 
             SolrQueryResults<T> items = _solr.Query(query, new QueryOptions
             {

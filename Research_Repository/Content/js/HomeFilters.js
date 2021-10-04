@@ -11,5 +11,12 @@
     $("#homepage-submit-btn").click(function () {
         const searchText = $("#homepage-searchbar").val();
         window.location.href = `../item?searchText=${searchText}`;
+        event.preventDefault();
+    });
+
+    $("#homepage-search-form").submit(function () {
+        const searchText = $("#homepage-searchbar").val();
+        window.location.href = `../item?searchText=${searchText}`;
+        event.preventDefault();
     });
 });

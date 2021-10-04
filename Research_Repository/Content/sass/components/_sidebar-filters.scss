@@ -1,0 +1,22 @@
+.sidebar-filters {
+  padding: 4.5rem 0;
+  width: 100%;
+  border: 0.2rem solid $base-blue;
+  border-radius: 2rem;
+
+  &__content-container {
+    padding: 0 2.6rem;
+
+    &:first-of-type {
+      margin-bottom: 3.2rem;
+    }
+  }
+
+  &__title {
+    padding-bottom: 3rem;
+  }
+
+  .button-group {
+    margin-top: 4rem;
+  }
+}

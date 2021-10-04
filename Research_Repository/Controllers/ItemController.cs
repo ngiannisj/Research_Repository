@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace Research_Repository.Controllers
 {
-    [Authorize(Roles = WC.LibrarianRole)]
+
     public class ItemController : Controller
     {
         private readonly IItemRepository _itemRepo;
@@ -40,6 +40,7 @@ namespace Research_Repository.Controllers
 
 
         //GET - UPSERT
+        [Authorize(Roles = WC.AllRoles)]
         public IActionResult Upsert(int? id)
         {
 
@@ -100,7 +101,7 @@ namespace Research_Repository.Controllers
 
         //POST - UPSERT
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Authorize(Roles = WC.AllRoles)]
         public IActionResult Upsert(ItemVM itemVM, string submit)
         {
             if (itemVM != null)
@@ -239,6 +240,7 @@ namespace Research_Repository.Controllers
 
 
         //DELETE - DELETE
+        [Authorize(Roles = WC.AllRoles)]
         public void Delete(int? id)
         {
             var obj = _itemRepo.Find(id.GetValueOrDefault());
@@ -266,6 +268,7 @@ namespace Research_Repository.Controllers
         }
 
         //POST - POSTFILES (FROM AJAX CALL)
+        [Authorize(Roles = WC.AllRoles)]
         public string PostFiles()
         {
             var files = Request.Form.Files;
@@ -276,6 +279,7 @@ namespace Research_Repository.Controllers
         }
 
         //DELETE - DELETEFILES (FROM AJAX CALL)
+        [Authorize(Roles = WC.AllRoles)]
         public void DeleteFiles(string name)
         {
             string webRootPath = _webHostEnvironment.WebRootPath;
@@ -310,14 +314,24 @@ namespace Research_Repository.Controllers
         }
 
         //SET - SESSION NOTIFICATION VALUE (FROM AJAX CALL)
+        [Authorize(Roles = WC.AllRoles)]
         public IList<string> AddNotificationsToSession()
         {
-            IList<string> notificationStatusList = _itemRepo.GetAll(filter: u => u.UploaderId == _userManager.GetUserId(User), isTracking: false).Where(u => u.NotifyUploader == true).Select(u => u.Status).ToList();
+            if (User.Identity.IsAuthenticated)
+            {
+                IList<string> notificationStatusList = _itemRepo.GetAll(filter: u => u.UploaderId == _userManager.GetUserId(User), isTracking: false).Where(u => u.NotifyUploader == true).Select(u => u.Status).ToList();
 
-            return notificationStatusList;
+                return notificationStatusList;
+            }
+            else
+            {
+                return null;
+            }
+
         }
 
         //SET - SESSION ITEM REQUEST COUNT VALUES (FROM AJAX CALL)
+        [Authorize(Roles = WC.LibrarianRole)]
         public int AddItemRequestCountToSession()
         {
             if (User.IsInRole(WC.LibrarianRole))

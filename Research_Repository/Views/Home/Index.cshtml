@@ -1,38 +1,141 @@
 ﻿@using Research_Repository_Utility;
 
-
 @model Research_Repository_Models.ViewModels.HomeVM;
-<div>
-    <input id="homepage-searchbar" />
-    <button id="homepage-submit-btn">Search!</button>
-</div>
 
-<div>
-    @if (Model.Themes != null && Model.Themes.Count() > 0)
-    {
-        foreach (Theme theme in Model.Themes)
-        {
-            <button class="homepage-filter" data-type="@WC.ThemeName" data-name="@theme.Name">@theme.Name</button>
-        }
-    }
-</div>
+<div class="grid">
+    <div class="grid-column-main--full-width grid-column-home__hero">
+        <div class="home__hero">
+            <div class="home__hero-container">
+                <div class="home__hero-container-right">
+                    <div class="home__hero-title margin-bottom--small">
+                        <div class="
+                    home__hero-title-word--background-offset
+                    home__hero-title-word--background-offset-red
+                  ">
+                            Discover
+                        </div>
+                        ,
+                        <div class="
+                    home__hero-title-word
+                    home__hero-title-word--background-offset
+                    home__hero-title-word--background-offset-yellow
+                  ">
+                            re-use
+                        </div>
+                        and
+                        <div class="
+                    home__hero-title-word--background-offset
+                    home__hero-title-word--background-offset-green
+                  ">
+                            share
+                        </div>
+                        research.
+                    </div>
+                    <p class="margin-bottom--medium">
+                        Get visibility on all the research done by the teams at DTA and
+                        use past research to help improve on current projects.
+                        Contribute to the repository with your team’s research so people
+                        can see and use the amazing work you have done.
+                    </p>
+                    <button class="button button--small button--yellow">
+                        Contribute to the library
+                    </button>
+                </div>
+            </div>
+        </div>
 
-<div>
-    @if (Model.Teams != null && Model.Teams.Count() > 0)
-    {
-        foreach (Team team in Model.Teams)
-        {
-            <div>
-                <h1>@team.Name</h1>
-                @if (team.Projects != null && team.Projects.Count() > 0)
+        <div class="home__hero-curve">
+            <img class="home__hero-image" src="images/pngs/person-working-idea.png" alt="person_thinking" />
+        </div>
+    </div>
+
+
+    <div class="background--pale-blue section__full-width-background grid-column-main--full-width home__main-content">
+        <div class="grid-column-main margin-bottom--extra-large">
+
+            <!-- Text input -->
+            <form id="homepage-search-form" class="field__group">
+                <div class="field full-width">
+                    <input type="text"
+                           id="homepage-searchbar"
+                           class="field__input field__input-search"
+                           name="homepageSearch"
+                           value=""
+                           placeholder="Search the Library..." />
+                </div>
+                <button class="button button--small button--yellow" id="homepage-submit-btn">Search</button>
+            </form>
+        </div>
+
+        <div class="grid-column-main--extended">
+            <h1 class="margin-bottom--large">Themes</h1>
+            <div class="card-list margin-bottom--extra-large">
+                @if (Model.Themes != null && Model.Themes.Count() > 0)
                 {
-                    foreach (Project project in team.Projects)
+                    foreach (Theme theme in Model.Themes)
                     {
-                        <button class="homepage-filter" data-type="@WC.ProjectName" data-name="@project.Name">@project.Name</button>
+                        <!-- Hero pathway card -->
+                        <div data-type="@WC.ThemeName" data-name="@theme.Name" class="card card--pathway card--hero homepage-filter" role="button" tabindex="0">
+                            <div class="card__content">
+                                <div class="card__heading-container">
+                                    <h4 class="card__heading">Experiencing a natural disaster</h4>
+                                    <h4 class="card__subheading text--transparent-70-base-blue">
+                                        @theme.Name
+                                    </h4>
+                                </div>
+
+                                <div class="card__description-container">
+                                    <p class="paragraph--black">
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
+                                        sem lectus, faucibus eget lectus non, ultrices pellentesque velit.
+                                        Praesent accumsan urna at pretium pulvinar.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="card__arrow-icon-container">
+                                <svg class="card__arrow-icon"
+                                     width="31"
+                                     height="31"
+                                     viewBox="0 0 31 31"
+                                     fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13.21 2.57324L14.7275 1.05566C15.3701 0.413086 16.4092 0.413086 17.0449 1.05566L30.334 14.3379C30.9766 14.9805 30.9766 16.0195 30.334 16.6553L17.0449 29.9443C16.4023 30.5869 15.3633 30.5869 14.7275 29.9443L13.21 28.4268C12.5605 27.7773 12.5742 26.7178 13.2373 26.082L21.4746 18.2344H1.82812C0.918945 18.2344 0.1875 17.5029 0.1875 16.5938V14.4062C0.1875 13.4971 0.918945 12.7656 1.82812 12.7656H21.4746L13.2373 4.91797C12.5674 4.28223 12.5537 3.22266 13.21 2.57324Z"
+                                          fill="#253c78" />
+                                </svg>
+                            </div>
+                        </div>
                     }
                 }
-
             </div>
-        }
-    }
+
+            <!-- Minimal accordion -->
+            <h1 class="margin-bottom--large">Teams</h1>
+            <div class="accordion-list margin-bottom--large">
+                @if (Model.Teams != null && Model.Teams.Count() > 0)
+                {
+                    foreach (Team team in Model.Teams)
+                    {
+                        <div class="accordion__container accordion__container--minimal">
+                            <button class="accordion accordion__button accordion__button--minimal">
+                                <h4 class="accordion__title">@team.Name</h4>
+                            </button>
+                            <div class="accordion__content--minimal accordion__content">
+                                @if (team.Projects != null && team.Projects.Count() > 0)
+                                {
+                                    <ul>
+                                        @foreach (Project project in team.Projects)
+                                        {
+
+                                            <li><button class="homepage-filter" data-type="@WC.ProjectName" data-name="@project.Name">@project.Name</button></li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
 </div>

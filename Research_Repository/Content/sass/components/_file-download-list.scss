@@ -1,0 +1,24 @@
+.file-download-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.file-download {
+  &-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem 4rem 2rem 0;
+    width: 100%;
+    border-bottom: 0.2rem solid $transparent-50-base-blue;
+
+    &:first-of-type {
+      padding-top: 0;
+    }
+  }
+  &__button {
+    margin-left: auto;
+  }
+}

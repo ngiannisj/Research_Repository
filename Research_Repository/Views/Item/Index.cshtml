@@ -2,128 +2,261 @@
 
 @model Research_Repository_Models.ViewModels.ItemListVM
 
-<div class="container p-3">
-    <div class="row pt-4">
-        <div class="col-6">
-            <h2 class="text-primary">Item List</h2>
-        </div>
-        <div class="col-6 text-right">
-            <a asp-action="Upsert" class="btn btn-primary">
-                Create New Item
-            </a>
+<div class="grid grid--sidebar grid--sidebar-paginated">
+    <!-- Sidebar -->
+    <div class="grid-column-sidebar">
+        <div class="sidebar-filters published-filters" id="filters">
+            <div class="sidebar-filters__content-container">
+                <h4 class="sidebar-filters__title">Filter items</h4>
+
+                <div class="field">
+                    <input type="text"
+                           id="text-search"
+                           class="
+                  field__input
+                  field__input-search
+                  field__input
+                  field__input-search--small
+                "
+                           value=""
+                           placeholder="Search the Library..." />
+                </div>
+            </div>
+
+            <div class="accordion-list">
+                <!-- Dates -->
+                <div id="date-filter" class="accordion__container accordion__container--filter">
+                    <button class="accordion accordion__button accordion__button--filter">
+                        <h5 class="accordion__title">Date</h5>
+                    </button>
+                    <div class="accordion__content--filter accordion__content">
+                        <div class="form">
+                            <input class="form-control" id="start-date-search" type="date" data-val="true" data-val-required="The Start date field is required." value="0001-01-01">
+                            <input class="form-control" id="end-date-search" type="date" data-val="true" data-val-required="The End date field is required." value="@DateTime.Now.ToString(WC.YearMonthDay)">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Checkboxes -->
+                <div id="team-checkbox-filter" class="accordion__container accordion__container--filter">
+                    <button class="accordion accordion__button accordion__button--filter">
+                        <h5 class="accordion__title">Teams</h5>
+                    </button>
+                    <div class="accordion__content--filter accordion__content">
+                        <div class="field__list-container field__list-container">
+                            @if (Model.TeamCheckboxes != null && Model.TeamCheckboxes.Count > 0)
+                            {
+                                for (int i = 0; i < Model.TeamCheckboxes.Count; i++)
+                                {
+                            <div class="field__list-item">
+                                
+                                <label
+                                       class="
+                        field__label
+                        field__label--extra-small
+                        field__label--toggle
+                        field__label--checkbox
+                      "
+                                       tabindex="0"
+                                       role="button">
+                                    <input asp-for="@Model.TeamCheckboxes[i].CheckedState" id="team-input-id-@Model.TeamCheckboxes[i].Value" data-name="@Model.TeamCheckboxes[i].Name"
+                                           class="field__input-toggle field__input-checkbox" />
+                                    @Model.TeamCheckboxes[i].Name
+                                </label>
+                                <input asp-for="@Model.TeamCheckboxes[i].Value" id="team-id-@Model.TeamCheckboxes[i].Value" hidden />
+                            </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Checkboxes -->
+                <div id="project-checkbox-filter" class="accordion__container accordion__container--filter">
+                    <button class="accordion accordion__button accordion__button--filter">
+                        <h5 class="accordion__title">Projects</h5>
+                    </button>
+                    <div class="accordion__content--filter accordion__content">
+                        <div class="field__list-container field__list-container">
+                            @if (Model.ProjectCheckboxes != null && Model.TeamCheckboxes.Count > 0)
+                            {
+                                for (int i = 0; i < Model.ProjectCheckboxes.Count; i++)
+                                {
+                                    <div class="field__list-item">
+
+                                        <label class="
+                        field__label
+                        field__label--extra-small
+                        field__label--toggle
+                        field__label--checkbox
+                      "
+                                               tabindex="0"
+                                               role="button">
+                                            <input asp-for="@Model.ProjectCheckboxes[i].CheckedState" id="project-input-id-@Model.ProjectCheckboxes[i].Value" data-name="@Model.ProjectCheckboxes[i].Name"
+                                                   class="field__input-toggle field__input-checkbox" />
+                                            @Model.ProjectCheckboxes[i].Name
+                                        </label>
+                                        <input asp-for="@Model.ProjectCheckboxes[i].Value" id="project-id-@Model.ProjectCheckboxes[i].Value" hidden />
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Theme Checkboxes -->
+                <div id="theme-checkbox-filter" class="accordion__container accordion__container--filter">
+                    <button class="accordion accordion__button accordion__button--filter">
+                        <h5 class="accordion__title">Themes</h5>
+                    </button>
+                    <div class="accordion__content--filter accordion__content">
+                        <div class="field__list-container field__list-container">
+                            @if (Model.ThemeCheckboxes != null && Model.ThemeCheckboxes.Count > 0)
+                            {
+                                for (int i = 0; i < Model.ThemeCheckboxes.Count; i++)
+                                {
+                                    <div class="field__list-item">
+
+                                        <label class="
+                        field__label
+                        field__label--extra-small
+                        field__label--toggle
+                        field__label--checkbox
+                      "
+                                               tabindex="0"
+                                               role="button">
+                                            <input asp-for="@Model.ThemeCheckboxes[i].CheckedState" id="theme-input-id-@Model.ThemeCheckboxes[i].Value" data-name="@Model.ThemeCheckboxes[i].Name"
+                                                   class="field__input-toggle field__input-checkbox" />
+                                            @Model.ThemeCheckboxes[i].Name
+                                        </label>
+                                        <input asp-for="@Model.ThemeCheckboxes[i].Value" id="theme-id-@Model.ThemeCheckboxes[i].Value" hidden />
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tag Checkboxes -->
+                <div id="tag-checkbox-filter" class="accordion__container accordion__container--filter">
+                    <button class="accordion accordion__button accordion__button--filter">
+                        <h5 class="accordion__title">Tags</h5>
+                    </button>
+                    <div class="accordion__content--filter accordion__content">
+                        <div class="field__list-container field__list-container">
+                            @if (Model.TagCheckboxes != null && Model.TagCheckboxes.Count > 0)
+                            {
+                                for (int i = 0; i < Model.TagCheckboxes.Count; i++)
+                                {
+                                    <div class="field__list-item">
+
+                                        <label class="
+                        field__label
+                        field__label--extra-small
+                        field__label--toggle
+                        field__label--checkbox
+                      "
+                                               tabindex="0"
+                                               role="button">
+                                            <input asp-for="@Model.TagCheckboxes[i].CheckedState" id="tag-input-id-@Model.TagCheckboxes[i].Value" data-name="@Model.TagCheckboxes[i].Name"
+                                                   class="field__input-toggle field__input-checkbox" />
+                                            @Model.TagCheckboxes[i].Name
+                                        </label>
+                                        <input asp-for="@Model.TagCheckboxes[i].Value" id="tag-id-@Model.TagCheckboxes[i].Value" hidden />
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sensitivity Checkboxes -->
+                <div id="sensitivity-checkbox-filter" class="accordion__container accordion__container--filter">
+                    <button class="accordion accordion__button accordion__button--filter">
+                        <h5 class="accordion__title">Sensitivity</h5>
+                    </button>
+                    <div class="accordion__content--filter accordion__content">
+                        <div class="field__list-container field__list-container">
+                            @if (Model.SensitivityCheckboxes != null && Model.SensitivityCheckboxes.Count > 0)
+                            {
+                                for (int i = 0; i < Model.SensitivityCheckboxes.Count; i++)
+                                {
+                                    <div class="field__list-item">
+
+                                        <label class="
+                        field__label
+                        field__label--extra-small
+                        field__label--toggle
+                        field__label--checkbox
+                      "
+                                               tabindex="0"
+                                               role="button">
+                                            <input asp-for="@Model.SensitivityCheckboxes[i].CheckedState" id="sensitivity-input-id-@Model.SensitivityCheckboxes[i].Value" data-name="@Model.SensitivityCheckboxes[i].Name"
+                                                   class="field__input-toggle field__input-checkbox" />
+                                            @Model.SensitivityCheckboxes[i].Name
+                                        </label>
+                                        <input asp-for="@Model.SensitivityCheckboxes[i].Value" id="sensitivity-id-@Model.SensitivityCheckboxes[i].Value" hidden />
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Approval Checkboxes -->
+                <div id="approval-checkbox-filter" class="accordion__container accordion__container--filter">
+                    <button class="accordion accordion__button accordion__button--filter">
+                        <h5 class="accordion__title">Approval</h5>
+                    </button>
+                    <div class="accordion__content--filter accordion__content">
+                        <div class="field__list-container field__list-container">
+                            @if (Model.ApprovalCheckboxes != null && Model.ApprovalCheckboxes.Count > 0)
+                            {
+                                for (int i = 0; i < Model.ApprovalCheckboxes.Count; i++)
+                                {
+                                    <div class="field__list-item">
+
+                                        <label class="
+                        field__label
+                        field__label--extra-small
+                        field__label--toggle
+                        field__label--checkbox
+                      "
+                                               tabindex="0"
+                                               role="button">
+                                            <input asp-for="@Model.ApprovalCheckboxes[i].CheckedState" id="approval-input-id-@Model.ApprovalCheckboxes[i].Value" data-name="@Model.ApprovalCheckboxes[i].Name"
+                                                   class="field__input-toggle field__input-checkbox" />
+                                            @Model.ApprovalCheckboxes[i].Name
+                                        </label>
+                                        <input asp-for="@Model.ApprovalCheckboxes[i].Value" id="approval-id-@Model.ApprovalCheckboxes[i].Value" hidden />
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Clear filters -->
+            <div class="sidebar-filters__content-container button-group align-center">
+                <button id="clear-filters" class="link">Clear filters</button>
+            </div>
         </div>
     </div>
 
-    <br /><br />
-
-    <div id="filters" class="published-filters">
-        <!-- Text Search Box -->
-        <input type="text" id="text-search" value="@Model.SearchText"/>
-        <br />
-        <!-- Date Range -->
-        <input class="form-control" id="start-date-search" type="date" data-val="true" data-val-required="The Start date field is required." value="0001-01-01">
-        <input class="form-control" id="end-date-search" type="date" data-val="true" data-val-required="The End date field is required." value="@DateTime.Now.ToString(WC.YearMonthDay)">
-
-        <!-- Tag Checkboxes -->
-        <div id="tag-checkbox-filter">
-            @if (Model.TagCheckboxes != null && Model.TagCheckboxes.Count > 0)
-            {
-                for (int i = 0; i < Model.TagCheckboxes.Count; i++)
-                {
-                    <label>
-                        <input asp-for="@Model.TagCheckboxes[i].CheckedState" id="tag-input-id-@Model.TagCheckboxes[i].Value" data-name="@Model.TagCheckboxes[i].Name" />@Model.TagCheckboxes[i].Name
-                    </label>
-                    <input asp-for="@Model.TagCheckboxes[i].Value" id="tag-id-@Model.TagCheckboxes[i].Value" hidden />
-                }
-            }
+    <!-- Items -->
+    <div class="grid-column-main--with-sidebar">
+        <div id="item-list" class="card-list card-list--vertical">
+            <!-- Populated with published items on page load using javascript -->
         </div>
-
-        <!-- Theme Checkboxes -->
-        <div id="theme-checkbox-filter">
-            @if (Model.ThemeCheckboxes != null && Model.ThemeCheckboxes.Count > 0)
-            {
-                for (int i = 0; i < Model.ThemeCheckboxes.Count; i++)
-                {
-                    <label>
-                        <input asp-for="@Model.ThemeCheckboxes[i].CheckedState" id="theme-input-id-@Model.ThemeCheckboxes[i].Value" data-name="@Model.ThemeCheckboxes[i].Name" />@Model.ThemeCheckboxes[i].Name
-                    </label>
-                    <input asp-for="@Model.ThemeCheckboxes[i].Value" id="theme-id-@Model.ThemeCheckboxes[i].Value" hidden />
-                }
-            }
-        </div>
-
-        <!-- Team Checkboxes -->
-        <div id="team-checkbox-filter">
-            @if (Model.TeamCheckboxes != null && Model.TeamCheckboxes.Count > 0)
-            {
-                for (int i = 0; i < Model.TeamCheckboxes.Count; i++)
-                {
-                    <label>
-                        <input asp-for="@Model.TeamCheckboxes[i].CheckedState" id="team-input-id-@Model.TeamCheckboxes[i].Value" data-name="@Model.TeamCheckboxes[i].Name" />@Model.TeamCheckboxes[i].Name
-                    </label>
-                    <input asp-for="@Model.TeamCheckboxes[i].Value" id="team-id-@Model.TeamCheckboxes[i].Value" hidden />
-                }
-            }
-        </div>
-
-        <!-- Project Checkboxes -->
-        <div id="project-checkbox-filter">
-            @if (Model.ProjectCheckboxes != null && Model.ProjectCheckboxes.Count > 0)
-            {
-                for (int i = 0; i < Model.ProjectCheckboxes.Count; i++)
-                {
-                    <label>
-                        <input asp-for="@Model.ProjectCheckboxes[i].CheckedState" id="project-input-id-@Model.ProjectCheckboxes[i].Value" data-name="@Model.ProjectCheckboxes[i].Name" />@Model.ProjectCheckboxes[i].Name
-                    </label>
-                    <input asp-for="@Model.ProjectCheckboxes[i].Value" id="project-id-@Model.ProjectCheckboxes[i].Value" hidden />
-                }
-            }
-        </div>
-
-        <!-- Sensitivity Checkboxes -->
-        <div id="sensitivity-checkbox-filter">
-            @if (Model.SensitivityCheckboxes != null && Model.SensitivityCheckboxes.Count > 0)
-            {
-                for (int i = 0; i < Model.SensitivityCheckboxes.Count; i++)
-                {
-                    <label>
-                        <input asp-for="@Model.SensitivityCheckboxes[i].CheckedState" id="sensitivity-input-id-@Model.SensitivityCheckboxes[i].Value" data-name="@Model.SensitivityCheckboxes[i].Name" />@Model.SensitivityCheckboxes[i].Name
-                    </label>
-                    <input asp-for="@Model.SensitivityCheckboxes[i].Value" id="sensitivity-id-@Model.SensitivityCheckboxes[i].Value" hidden />
-                }
-            }
-        </div>
-
-        <!-- Approval Checkboxes -->
-        <div id="approval-checkbox-filter">
-            @if (Model.ApprovalCheckboxes != null && Model.ApprovalCheckboxes.Count > 0)
-            {
-                for (int i = 0; i < Model.ApprovalCheckboxes.Count; i++)
-                {
-                    <label>
-                        <input asp-for="@Model.ApprovalCheckboxes[i].CheckedState" id="approval-input-id-@Model.ApprovalCheckboxes[i].Value" data-name="@Model.ApprovalCheckboxes[i].Name" />@Model.ApprovalCheckboxes[i].Name
-                    </label>
-                    <input asp-for="@Model.ApprovalCheckboxes[i].Value" id="approval-id-@Model.ApprovalCheckboxes[i].Value" hidden />
-                }
-            }
-        </div>
-        <button id="clear-filters">Clear filters</button>
     </div>
 
-        <table class="table table-bordered table-striped" style="width: 100%">
-            <thead>
-                <tr>
-                    <th>Item Name</th>
-                    <th>Item Team</th>
-                    <th>Item Abstract</th>
-                    <th></th>
+    <!-- Pagination -->
+    <div class="grid-column-main">
+        <div class="pagination__container">
+            <ul id="item-list-pagination">
 
-                </tr>
-            </thead>
-            <tbody id="item-list">
-                <!-- Populated with published items on page load using javascript -->
-            </tbody>
-        </table>
-    <div id="item-list-pagination"></div>
-</div>
+            </ul>
+        </div>
+    </div>
 

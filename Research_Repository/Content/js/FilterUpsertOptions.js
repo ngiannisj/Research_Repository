@@ -4,16 +4,22 @@
     $(":checkbox").change(function () {
         if ($(this).is(':checked')) {
             $(this).attr('checked', true);
+            $(this).parent().addClass("field__label--checkbox-checked");
         } else {
             $(this).attr('checked', false);
+            $(this).parent().removeClass("field__label--checkbox-checked");
         }
     });
 
     //Filter tags on page load
-    filterTags($("#theme-selector"));
+    if ($("#filters").length) {
+        filterTags($("#theme-selector"));
+    }
 
     //Filter projects on page load
-    filterProjects($("#team-selector"));
+    if ($("#filters").length) {
+        filterProjects($("#team-selector"));
+    }
 
     //Filter tags on theme change
     $("#theme-selector").change(function () {
@@ -44,9 +50,11 @@ function filterTags($this) {
         cache: false,
         traditional: true,
         success: function (data) {
-            $("#checkboxes label").hide();
-            for (var i = 0; i < data.length; i++) {
-                $("#tag-input-id-" + data[i]).parent().show();
+            if (data) {
+                $("#checkboxes label").hide();
+                for (var i = 0; i < data.length; i++) {
+                    $("#tag-input-id-" + data[i]).parent().show();
+                }
             }
         },
         error: function () {
@@ -72,10 +80,13 @@ function filterProjects($this) {
         cache: false,
         traditional: true,
         success: function (data) {
-            $("#project-selector option:not(:first)").hide();
-            for (var i = 0; i < data.length; i++) {
-                $("#project-selector option[value=" + data[i] + "]").show();
+            if (data) {
+                $("#project-selector option:not(:first)").hide();
+                for (var i = 0; i < data.length; i++) {
+                    $("#project-selector option[value=" + data[i] + "]").show();
+                }
             }
+
         },
         error: function (error) {
             console.log(error);

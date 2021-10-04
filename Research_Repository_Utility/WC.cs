@@ -10,6 +10,7 @@
         //Roles
         public const string LibrarianRole = "Librarian";
         public const string UploaderRole = "Uploader";
+        public const string AllRoles = "Librarian,Uploader";
 
         //Models
         public const string ThemeName = "Theme";

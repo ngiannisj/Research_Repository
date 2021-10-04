@@ -1,1 +1,79 @@
-﻿
+.home {
+
+    &__hero {
+        width: 100%;
+        display: grid;
+        grid-template-columns: [full-start] minmax(2rem,1fr) [center-extended-start] minmax(min-content,11.52rem) [center-start] repeat(10,[col-start] minmax(min-content,11.52rem) [col-end]) [center-end] minmax(min-content,11.52rem) [center-extended-end] minmax(2rem,1fr) [full-end];
+  justify-items: end;
+
+  &-container {
+    grid-column: center-start / center-end;
+    width: 100%;
+  }
+
+  &-curve {
+      margin-top: -19rem;
+      z-index: -1;
+    position: relative;
+    &::before {
+      position: absolute;
+      content: "";
+      width: 100%;
+      height: 100%;
+      background: $pale-blue;
+      z-index: -1;
+      clip-path: ellipse(200rem 38rem at 126rem 61.2rem);
+    }
+  }
+
+  &-image {
+    width: 57.9rem;
+    height: 40.9rem;
+  }
+
+  &-title {
+    font-size: 5.2rem;
+    font-weight: 600;
+    line-height: 7.8rem;
+
+    &-word {
+      &--background-offset {
+        position: relative;
+        height: fit-content;
+        display: inline-block;
+        z-index: 1;
+        &::before {
+          content: "";
+          width: 94%;
+          height: 40%;
+          bottom: 1rem;
+          z-index: -1;
+          transform: translateX(7%);
+          position: absolute;
+        }
+        &-yellow {
+          &::before {
+            background-color: $transparent-50-base-yellow;
+          }
+        }
+
+        &-green {
+          &::before {
+            background-color: $transparent-50-base-green;
+          }
+        }
+
+        &-red {
+          &::before {
+            background-color: $transparent-50-base-red;
+          }
+        }
+      }
+    }
+  }
+    }
+
+    &__main-content {
+        padding-top: 8rem;
+    }
+}

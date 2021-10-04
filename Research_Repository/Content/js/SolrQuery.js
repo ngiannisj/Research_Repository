@@ -18,6 +18,10 @@ let queryParameters = {
 const numOfItemsPerPage = 1;
 
 $(document).ready(function () {
+    if ($("#filters").length) {
+        filterProjectsForItemsList()
+    }
+
     //On text change in text box
     $("#filters input:not(#text-search), #filters select").change(function () {
         queryParameters.paginationStartItem = 0;
@@ -78,27 +82,27 @@ function updateFilterParameters(pageId, itemStatus) {
 
     //Set search parameter
     queryParameters.searchText = $("#text-search").val();
-    $("#approval-checkbox-filter input:visible:checked").each(function (index, element) {
+    $("#approval-checkbox-filter label:visible input:checked").each(function (index, element) {
         queryParameters.approvals.push($(this).data("name"));
     });
     //Set sensitivity parameter
-    $("#sensitivity-checkbox-filter input:visible:checked").each(function (index, element) {
+    $("#sensitivity-checkbox-filter label:visible input:checked").each(function (index, element) {
         queryParameters.sensitivity.push($(this).data("name"));
     });
     //Set tag parameter
-    $("#tag-checkbox-filter input:visible:checked").each(function (index, element) {
+    $("#tag-checkbox-filter label:visible input:checked").each(function (index, element) {
         queryParameters.tags.push($(this).data("name"));
     });
     //Set team parameter
-    $("#team-checkbox-filter input:visible:checked").each(function (index, element) {
+    $("#team-checkbox-filter label:visible input:checked").each(function (index, element) {
         queryParameters.teams.push($(this).data("name"));
     });
     //Set theme parameter
-    $("#theme-checkbox-filter input:visible:checked").each(function (index, element) {
+    $("#theme-checkbox-filter label:visible input:checked").each(function (index, element) {
         queryParameters.themes.push($(this).data("name"));
     });
     //Set project parameter
-    $("#project-checkbox-filter input:visible:checked").each(function (index, element) {
+    $("#project-checkbox-filter label:visible input:checked").each(function (index, element) {
         queryParameters.projects.push($(this).data("name"));
     });
 
@@ -182,18 +186,40 @@ function filterItemList(itemStatus, pageId) {
 
                 //Library items
                 if ($('#filters.published-filters').length) {
-                    itemListHtml += `<tr>
-                    <td width="33%">${data.items[i].title}</td>
-                    <td width="33%">${data.items[i].team}</td>
-                    <td width="33%">${data.items[i].abstract}</td>
-                    <td class="text-center">
-                        <div class="w-75 btn-group" role="group">
-                            <a class="btn btn-primary mx-2" href="/Item/View/${data.items[i].id}">
-                                View
-                            </a>
-                        </div>
-                    </td>
-                </tr>`;
+                    //Get html for tags
+                    let tagPillsHtml = "";
+                    if (data.items[i].tags) {
+                        for (let t = 0; t < data.items[i].tags.length; t++) {
+                            tagPillsHtml += `
+                <div class="pill">
+                  <img
+                    class="pill__image"
+                    src="images/svgs/tag.svg"
+                    alt="tag_image"
+                  />${data.items[i].tags[t]}
+                </div>`
+                        }
+                    }
+
+                    itemListHtml +=
+                        `<a href="/Item/View/${data.items[i].id}" class="card card--pathway">
+            <div class="card__content">
+              <div class="card__heading-container">
+                <h4 class="card__heading">${data.items[i].title}</h4>
+                <h4 class="card__subheading text--transparent-70-base-blue">
+                  ${data.items[i].team}
+                </h4>
+              </div>
+
+              <div class="card__description-container">
+                <p class="text--black">
+                  ${data.items[i].abstract}
+                </p>
+              </div>
+                ${tagPillsHtml}
+              </div>
+            </div>
+          </a>`;
                 }
             };
             //Add items to HTML
@@ -275,7 +301,19 @@ function filterItemList(itemStatus, pageId) {
 //Filter tags checklist based on theme selected
 function filterTagsForItemsList() {
     let themeIds = [];
-    $("#theme-checkbox-filter input:checked:visible").each(function (index, element) {
+    //Get theme ids of all checked theme checkboxes
+    $("#theme-checkbox-filter input:checked").each(function (index, element) {
+        //Check all relevant label checkboxes
+        if (!$(this).parent().hasClass("field__label--checkbox-checked")) {
+            $(this).parent().addClass("field__label--checkbox-checked");
+        }
+
+        //Expand relevant accordion if it's not open
+        if (!$(this).closest(".accordion__container").find(".accordion").first().hasClass("accordion--active")) {
+            $(this).closest(".accordion__container").find(".accordion").first().addClass("accordion--active");
+            $(this).closest(".accordion__container").find(".accordion").first().next(".accordion__content").slideDown();
+        }
+
         themeIds.push($(this).parent().next("input").val());
     });
 
@@ -306,8 +344,22 @@ function filterTagsForItemsList() {
 //Filter projects select list based on team selected
 function filterProjectsForItemsList() {
     let teamIds = [];
-    $("#team-checkbox-filter input:checked:visible").each(function (index, element) {
+    //Get team ids of all checked team checkboxes
+    $("#team-checkbox-filter input:checked").each(function (index, element) {
         teamIds.push($(this).parent().next("input").val());
+    });
+
+    $("#project-checkbox-filter input:checked").each(function (index, element) {
+        //Check all relevant label checkboxes
+        if (!$(this).parent().hasClass("field__label--checkbox-checked")) {
+            $(this).parent().addClass("field__label--checkbox-checked");
+        }
+
+        //Expand relevant accordion if it's not open
+        if (!$(this).closest(".accordion__container").find(".accordion").first().hasClass("accordion--active")) {
+            $(this).closest(".accordion__container").find(".accordion").first().addClass("accordion--active");
+            $(this).closest(".accordion__container").find(".accordion").first().next(".accordion__content").slideDown();
+        }
     });
 
     $.ajax({
@@ -321,7 +373,7 @@ function filterProjectsForItemsList() {
             if (teamIds !== undefined && teamIds.length > 0) {
                 $("#project-checkbox-filter label").hide();
                 for (var i = 0; i < data.length; i++) {
-                    $("#project-input-id-" + data[i]).parent().show();
+                    $("#project-input-id-" + data[i]).parent().parent().show();
                 }
             } else {
                 $("#project-checkbox-filter label").show();
@@ -338,12 +390,8 @@ function filterProjectsForItemsList() {
 //Clear filter list
 function clearFilters() {
     queryParameters.searchText = $("#text-search").val("");
-    $("#approval-checkbox-filter input:checked").prop('checked', false);
-    $("#sensitivity-checkbox-filter input:checked").prop('checked', false);
-    $("#tag-checkbox-filter input:checked").prop('checked', false);
-    $("#team-checkbox-filter input:checked").prop('checked', false);
-    $("#theme-checkbox-filter input:checked").prop('checked', false);
-    $("#project-checkbox-filter input:checked").prop('checked', false);
+    $("#filters input:checked").prop('checked', false);
+    $(".field__label--checkbox").removeClass("field__label--checkbox-checked");
 
     $("#filters label").show();
 

@@ -1,0 +1,252 @@
+.form {
+    max-width: 48.7rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin-bottom: 3rem;
+    width: 100%;
+
+    &__group {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        :last-child {
+            margin-right: 0 !important;
+        }
+
+        .field, input, .button, .link {
+            margin-right: 1.6rem;
+        }
+    }
+
+    &:last-of-type {
+        margin-bottom: 0;
+    }
+
+    &__list-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 13rem);
+        align-items: center;
+        justify-items: start;
+        grid-column-gap: 1rem;
+        grid-row-gap: 0.6rem;
+
+        &--vertical {
+            display: block;
+
+            .field__list-item {
+                margin-bottom: 2rem;
+
+                &:last-of-type {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    &__list-item {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        max-width: 16rem;
+
+        &--large {
+            max-width: 19rem;
+        }
+    }
+
+    &__file-list {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: column;
+        width: 100%;
+
+        .field {
+            margin-bottom: 1.6rem;
+        }
+
+        :last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    &__description {
+        padding-bottom: 1.5rem;
+        margin-top: -.8rem;
+    }
+
+    &__label {
+        padding-bottom: 1.8rem;
+
+        &--secondary {
+            padding-bottom: 1.3rem;
+        }
+        //Input toggles are checkboxes and radio buttons
+        &--toggle {
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &::before {
+                position: absolute;
+                left: 0;
+                line-height: 0;
+            }
+        }
+        //Custom checkbox square
+        &--checkbox {
+            padding: 0 0 0 2.86rem;
+
+            &::before {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                content: url(/images/svgs/checkbox-unchecked.svg);
+                width: 1.66rem;
+                height: 1.66rem;
+            }
+
+            &-checked {
+                &::before {
+                    content: url(/images/svgs/checkbox-checked.svg);
+                }
+            }
+        }
+        //Custom radio circle
+        &--radio {
+            padding: 0 0 0 4.06rem;
+
+            &::before {
+                display: inline-block;
+                content: url(/images/svgs/radio-unchecked.svg);
+                width: 3.2rem;
+                height: 3.2rem;
+            }
+        }
+    }
+    //Text input
+    &__input {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        background-color: $white;
+        border: 0.3rem solid $base-blue;
+        height: 5.6rem;
+        width: 100%;
+        border-radius: 2rem;
+        padding: 1rem;
+
+        &--secondary {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            background-color: $white;
+            border: 0.3rem solid $base-blue;
+            border-radius: .5rem;
+            padding: .6rem;
+            height: 3.8rem;
+        }
+
+        & + .field__input-select-list-options {
+            margin-top: -2.6rem;
+        }
+
+        &-search {
+            background-image: url("/images/svgs/magnifying-glass.svg");
+            background-repeat: no-repeat;
+            background-size: 2.7rem;
+            background-position-y: center;
+            background-position-x: 4.5rem;
+            padding-left: 9rem;
+
+            &--small {
+                background-position: 3.1rem;
+                background-size: 1.8rem;
+                padding-left: 6.5rem;
+            }
+
+            &::placeholder {
+                color: $base-blue;
+            }
+        }
+        //Text area
+        &-text-area {
+            height: 16rem;
+        }
+        //Select-list input CSS can be found in accordion stylesheet
+        //Input toggles are checkboxes and radio buttons
+        &-toggle {
+            //Hide origional checkbox/radio button
+            display: none;
+            //Disabled state
+            &:disabled ~ .field__label--toggle {
+                opacity: 0.5;
+
+                &:hover {
+                    cursor: default;
+                }
+            }
+        }
+        //Radio
+        &-radio {
+            //Show checked icon when checked
+            &:checked ~ .field__label--radio {
+                &::before {
+                    content: url(/images/svgs/radio-checked.svg);
+                }
+            }
+        }
+        //File
+        &-file {
+            background-color: $pale-blue;
+            border-color: $pale-blue;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1.5rem 1.9rem 1.5rem 3.5rem;
+        }
+    }
+}
+
+.multiselect {
+
+}
+
+.selectBox {
+    position: relative;
+}
+
+.selectBox select {
+    width: 100%;
+    font-weight: bold;
+}
+
+.overSelect {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+#checkboxes {
+    display: none;
+    border: 1px #dadada solid;
+}
+
+#checkboxes label {
+    display: block;
+}
+
+#checkboxes label:hover {
+    background-color: #1e90ff;
+}

@@ -1,0 +1,33 @@
+.pagination {
+
+    &__container {
+        width: 100%;
+        margin-top: 7rem;
+    }
+
+    &__list {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 3rem;
+
+        &:last-of-type {
+            margin-right: 0;
+        }
+    }
+
+    &__button {
+        padding: 0 .4rem;
+        background-color: transparent;
+        border: none;
+    }
+}

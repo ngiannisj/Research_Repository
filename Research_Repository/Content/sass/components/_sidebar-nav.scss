@@ -1,0 +1,19 @@
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+
+  &__nav-link {
+    padding: 1rem 0 1rem 2.1rem; //Add .5rem to padding left to account for left border of selected item
+    width: 100%;
+    display: flex;
+
+    &--active {
+      border-left: 0.5rem solid $base-blue;
+      padding-left: 1.6rem;
+      background: $pale-blue;
+    }
+  }
+}

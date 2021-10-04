@@ -1,1 +1,46 @@
-﻿
+.footer {
+    align-self: end;
+    width: 100%;
+    height: fit-content;
+    background-color: $base-blue;
+    border-top: 0.4rem solid $base-yellow;
+    padding: 4.8rem 0;
+    align-self: end;
+    display: grid;
+    grid-template-columns: [full-start] minmax(2rem,1fr) [center-extended-start] minmax(min-content,11.52rem) [center-start] repeat(10,[col-start] minmax(min-content,11.52rem) [col-end]) [center-end] minmax(min-content,11.52rem) [center-extended-end] minmax(2rem,1fr) [full-end];
+
+  &__content {
+      grid-column: center-start / center-end;
+  }
+
+  &__footer-top {
+    padding: 4.8rem 0;
+  }
+
+  &__logo-text-container {
+    padding-left: 1.6rem;
+    border-left: 1px solid $white;
+  }
+
+  &__footer-bottom {
+    width: 100%;
+    padding-top: 2.4rem;
+    border-top: 1px solid $base-yellow;
+  }
+
+  &__nav-links {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  &__nav-link {
+    margin: 0 0 2.4rem 1.6rem;
+    text-align: center;
+
+    &:first-of-type {
+      margin-left: 0;
+    }
+  }
+}

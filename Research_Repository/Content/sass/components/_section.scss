@@ -1,0 +1,22 @@
+.section {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 6rem 0;
+    border-top: 0.2rem solid $transparent-50-base-blue;
+
+    &__half {
+        width: 50%;
+    }
+
+    &__full-width {
+        width: 100%;
+
+        &-background {
+            width: 100%;
+            display: grid;
+            grid-template-columns: [full-start] minmax(2rem,1fr) [center-extended-start] minmax(min-content,11.52rem) [center-start] repeat(10,[col-start] minmax(min-content,11.52rem) [col-end]) [center-end] minmax(min-content,11.52rem) [center-extended-end] minmax(2rem,1fr) [full-end];
+        }
+    }
+}

@@ -1,0 +1,95 @@
+* {
+  &:focus {
+    outline: 0.3rem solid $purple !important;
+    position: relative !important;
+    z-index: 99 !important;
+  }
+
+  &:disabled,
+  &.disabled {
+    opacity: 0.5 !important;
+    cursor: default !important;
+    pointer-events: none !important;
+  }
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+//To simulate focus
+.focus {
+  outline: 0.3rem solid $purple !important;
+  position: relative !important;
+  z-index: 99 !important;
+}
+
+.align {
+  &-right {
+    margin-left: auto !important;
+    justify-content: flex-end !important;
+  }
+
+  &-center {
+    margin: 0 auto;
+    justify-content: center !important;
+  }
+}
+
+//Margin
+.margin {
+    &-bottom {
+
+        &--extra-large {
+            margin-bottom: 12rem !important;
+        }
+
+        &--large {
+            margin-bottom: 6rem !important;
+        }
+
+        &--medium {
+            margin-bottom: 3rem !important;
+        }
+
+        &--small {
+            margin-bottom: 1.6rem !important;
+        }
+
+        &--extra-small {
+            margin-bottom: 0.8rem !important;
+        }
+    }
+}
+
+//Border
+.border {
+  &--none {
+    border: none !important;
+  }
+
+  &-top {
+    &--none {
+      border-top: none !important;
+    }
+  }
+
+  &-bottom {
+    &--none {
+      border-bottom: none !important;
+    }
+  }
+}
+
+//Background colour
+.background {
+  &--pale-blue {
+    background-color: $pale-blue !important;
+  }
+}
+
+//Width
+.full-width {
+    max-width: 100% !important;
+    width: 100% !important;
+}

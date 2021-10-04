@@ -1,0 +1,7 @@
+.key-value-grid {
+    display: grid;
+    grid-template-columns: minmax(auto, 10rem) minmax(auto, 48rem);
+    column-gap: 4.4rem;
+    row-gap: 2rem;
+    align-items: center;
+}

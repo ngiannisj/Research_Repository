@@ -1,0 +1,203 @@
+//General accordion class to be place on all basic accordions
+.accordion {
+  &__container {
+    width: 100%;
+
+    &--filter {
+      border-top: 0.2rem solid $base-blue;
+
+      &:last-of-type {
+        border-bottom: 0.2rem solid $base-blue;
+      }
+    }
+
+    &--minimal {
+      border-top: 0.2rem solid $transparent-50-base-blue;
+
+      &:last-of-type {
+        border-bottom: 0.2rem solid $transparent-50-base-blue;
+      }
+    }
+
+    &--complex {
+      background: transparent;
+      box-shadow: 0 0.4rem 0.4rem 0 #253c7840;
+      border-radius: 1rem;
+      margin-bottom: 2.4rem;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__button {
+    width: 100%;
+    z-index: 2;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: $white;
+    transition: background-color 0.4s ease-in 0s;
+
+    &--minimal {
+      border: none;
+      padding: 3rem 2.4rem;
+      background: transparent;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:focus {
+      outline: none !important;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 2.3rem;
+      height: 1.5rem;
+      right: 2rem;
+      background: url("/images/svgs/chevron.svg") center no-repeat;
+      transition-duration: 0.3s;
+    }
+
+    &--filter {
+      border: none;
+      padding: 1.4rem 2.6rem;
+
+      &::before {
+        content: "";
+        position: absolute;
+        width: 2.3rem;
+        height: 1.5rem;
+        right: 2rem;
+        background: url("/images/svgs/line.svg") center no-repeat;
+        transition-duration: 0.3s;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        width: 2.3rem;
+        height: 1.5rem;
+        right: 2rem;
+        background: url("/images/svgs/line.svg") center no-repeat;
+        transform: rotate(90deg);
+        transition-duration: 0.3s;
+        backface-visibility: hidden; //Stops little flicker at the end of the animation
+      }
+
+      &.accordion--active {
+        background-color: $pale-blue;
+        &::after {
+          transform: rotate(0deg);
+        }
+      }
+    }
+
+    &--complex {
+      padding: 2.6rem 3.3rem 1.6rem 2.8rem;
+      border-top: 1rem solid $base-blue;
+      border-bottom: 1rem solid $white;
+      border-radius: 1rem;
+
+      &::after {
+        right: 2.6rem;
+      }
+
+      &.accordion--active {
+        &::after {
+          transform: rotate(0deg);
+        }
+      }
+
+      .button--icon {
+        &-delete {
+          margin-right: 3.6rem;
+        }
+
+        &-edit, &-confirm {
+          margin-left: 2rem;
+        }
+
+        &-confirm {
+          display: none;
+        }
+      }
+
+    }
+
+    &.accordion--active {
+      &::after {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  &__content {
+    display: none;
+    width: 100%;
+    z-index: 1;
+
+    li {
+      padding-bottom: 1.2rem;
+      &:last-of-type {
+        padding-bottom: 0;
+      }
+    }
+
+    &--minimal {
+      padding: 0 2.4rem 3rem 2.4rem;
+      background: transparent;
+    }
+
+    &--complex {
+      padding: 0 8rem 2.6rem 8rem;
+
+      ul {
+        padding:  0 0 3.4rem 0;
+      }
+
+      li {
+        list-style-type: none;
+      }
+    }
+
+    &--filter {
+      padding: 0 2.4rem 2.4rem 2.4rem;
+      background-color: $pale-blue;
+    }
+
+    &--select-list {
+      background-color: $pale-blue;
+      overflow: auto;
+      margin-top: -2.6rem;
+    }
+
+    &-option {
+      width: 100%;
+      height: 5.6rem;
+      background-color: $pale-blue;
+      border: none;
+      text-align: left;
+      padding-left: 3rem;
+      z-index: 0;
+
+      &:first-of-type {
+        padding-top: 2rem;
+        height: 8.6rem;
+      }
+
+      &:hover,
+      &:focus {
+        background-color: $transparent-20-base-blue;
+        cursor: pointer;
+        outline: none;
+      }
+    }
+  }
+}

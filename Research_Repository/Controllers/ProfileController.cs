@@ -8,7 +8,7 @@ using Research_Repository_Utility;
 
 namespace Research_Repository.Controllers
 {
-    [Authorize(Roles = WC.LibrarianRole)]
+    [Authorize(Roles = WC.AllRoles)]
     public class ProfileController : Controller
     {
 

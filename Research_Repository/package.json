@@ -1,8 +1,10 @@
 {
+  "scripts": {
+    "sass": "node-sass content/sass/main.scss wwwroot/css/styles.min.css -w"
+  },
   "dependencies": {
+    "node-sass": "*",
     "gulp": "*",
-    "sass": "*",
-    "gulp-sass": "*",
     "gulp-uglify": "*",
     "gulp-concat": "*",
     "gulp-clean-css": "*",
