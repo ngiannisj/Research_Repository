@@ -5,7 +5,7 @@
     }
 
     //If 'Item request' page nav link is showing on screen, update number of item request value
-    if ($(".item-request-link").length) {
+    if ($("#item-request-count").length) {
         setItemRequestValue();
     }
 });
@@ -34,15 +34,20 @@ function setNotificationValue() {
 
                 if (newDraftCount.length) {
                     $("#profile-draft-notification").html("!");
+                    $("#profile-draft-notification").removeClass("notification-bubble--hidden");
                 }
                 if (newPublishedCount.length) {
                     $("#profile-published-notification").html("!");
+                    $("#profile-published-notification").removeClass("notification-bubble--hidden");
                 }
                 if (newRejectedCount.length) {
                     $("#profile-rejected-notification").html("!");
+                    $("#profile-rejected-notification").removeClass("notification-bubble--hidden");
                 }
                 if (data.length) {
                     $("#item-notification-count").html(data.length);
+                    $("#profile-nav-link").addClass("header__nav-link--has-notification");
+                    $("#item-notification-count").removeClass("notification-bubble--hidden");
                 }
             }
         },
@@ -59,8 +64,10 @@ function setItemRequestValue() {
         type: "GET",
         dataType: 'json',
         success: function (data) {
+            console.log(data);
             if (data) {
                 $("#item-request-count").html(data);
+                $("#item-request-count").removeClass("notification-bubble--hidden");
             }
         },
         error: function (request, error) {

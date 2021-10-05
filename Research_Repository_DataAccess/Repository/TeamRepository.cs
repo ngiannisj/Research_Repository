@@ -170,6 +170,11 @@ namespace Research_Repository_DataAccess.Repository
         //Get dropdown selectlist of all teams
         public IEnumerable<SelectListItem> GetTeamsList(IEnumerable<Team> teams)
         {
+            if(teams == null)
+            {
+                teams = _db.Teams;
+            }
+
             //Use teams passed from parameter to generate a dropdown selectlist
             IEnumerable<SelectListItem> teamSelectList = teams.Select(i => new SelectListItem
             {

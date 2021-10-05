@@ -11,8 +11,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Research_Repository_DataAccess.Repository.IRepository;
 using Research_Repository_Models;
 using Research_Repository_Utility;
 
@@ -26,25 +28,29 @@ namespace Research_Repository.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ITeamRepository _teamRepo;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager, ITeamRepository teamRepo)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _teamRepo = teamRepo;
         }
 
         [BindProperty]
         public InputModel Input { get; set; }
 
         public string ReturnUrl { get; set; }
+
+        public IEnumerable<SelectListItem> teamSelectList { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
@@ -66,9 +72,16 @@ namespace Research_Repository.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
+            [Required]
+            [Display(Name = "First Name")]
             public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last Name")]
             public string LastName { get; set; }
-            public string PhoneNumber { get; set; }
+
+            [Display(Name = "Team")]
+            public int? TeamId { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -80,6 +93,11 @@ namespace Research_Repository.Areas.Identity.Pages.Account
 
             }
 
+            //Create dropdown selectlist from teams
+            IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(null);
+            //Update teams dropdown selectlist in tempData
+            TempData.Put(WC.TempDataTeamSelectList, teamsSelectList);
+
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -90,7 +108,7 @@ namespace Research_Repository.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, PhoneNumber = Input.PhoneNumber, FirstName = Input.FirstName, LastName = Input.LastName };
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, TeamId = Input.TeamId };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

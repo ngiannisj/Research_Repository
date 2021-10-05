@@ -142,7 +142,7 @@ namespace Research_Repository_DataAccess.Repository.Solr
                     new SolrQueryInList(itemQueryParams.UploaderId != null && itemQueryParams.UploaderId.Count > 0 ? WC.SolrUploaderId : null, itemQueryParams.UploaderId),
                     new SolrQueryByRange<DateTime>(WC.SolrDateRange, startDate, endDate)
                 },
-                Fields = new[] { WC.SolrId, WC.SolrTitle, WC.SolrTeam, WC.SolrAbstract, WC.SolrTags, WC.SolrNotifyUploader, WC.SolrUploader }, //Fields returned from solr
+                Fields = new[] { WC.SolrId, WC.SolrTitle, WC.SolrTeam, WC.SolrAbstract, WC.SolrTags, WC.SolrNotifyUploader, WC.SolrUploader, WC.SolrStatus, WC.SolrLastUpdatedDate }, //Fields returned from solr
                 OrderBy = new[] { new SortOrder(itemQueryParams.SearchText == null || itemQueryParams.SearchText == "" ? WC.SolrDateCreated : "score", Order.DESC), SortOrder.Parse(itemQueryParams.SearchText == null || itemQueryParams.SearchText == "" ? WC.SolrDateCreated : "score" + " desc") }, //If no search text filter is provided as a parameter, sort by score, else sort by the date the item was created
                 StartOrCursor = new StartOrCursor.Start(Int32.Parse(itemQueryParams.PaginationStartItem)), //What item pagination starts from
                 Rows = WC.NumOfItemsPerPage //How many items are returned for pagination

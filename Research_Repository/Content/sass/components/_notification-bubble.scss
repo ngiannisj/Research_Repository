@@ -2,18 +2,41 @@
     background-color: $base-yellow;
     border-radius: 50%;
     height: 1.9rem;
+    min-width: 2rem;
     padding: 0 0.5rem;
     align-self: center;
     display: flex;
     align-items: center;
     justify-content: center;
     width: fit-content;
+    z-index: 10;
 
     &__header-notification {
         margin-left: -3rem;
     }
 
+    &__item-notification {
+        position: absolute;
+        right: 98%;
+        bottom: 97.8%;
+        width: 3rem;
+        height: 3rem;
+        transition: transform 1s ease 0s;
+        backface-visibility: hidden;
+    }
+
+    &__filter-notification {
+        margin-left: 1rem;
+        position: absolute;
+        left: -1rem;
+        top: -.5rem;
+    }
+
     &__side-nav-notification {
         margin-left: 2rem;
+    }
+
+    &--hidden {
+        display: none;
     }
 }

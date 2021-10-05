@@ -1,64 +1,64 @@
 //Default
 body {
-  font-family: "Poppins", sans-serif;
-  font-weight: 400;
-  letter-spacing: 0rem;
-  line-height: 2.1rem;
-  color: $base-blue;
-  font-size: 1.6rem;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    letter-spacing: 0rem;
+    line-height: 2.1rem;
+    color: $base-blue;
+    font-size: 1.6rem;
 }
 
 //Page titles
 h1 {
-  font-size: 5.2rem;
-  font-weight: 600;
-  line-height: 7.8rem;
+    font-size: 5.2rem;
+    font-weight: 600;
+    line-height: 7.8rem;
 }
 
 //Section titles
 h2 {
-  font-size: 4.5rem;
-  font-weight: 600;
-  line-height: 6.7rem;
+    font-size: 4.5rem;
+    font-weight: 600;
+    line-height: 6.7rem;
 }
 
 //Sub-section titles
 h3 {
-  font-size: 3rem;
-  font-weight: 600;
-  line-height: 4.5rem;
+    font-size: 3rem;
+    font-weight: 600;
+    line-height: 4.5rem;
 }
 
 //Component titles
 h4 {
-  font-size: 2rem;
-  line-height: 3rem;
-  font-weight: 600;
-  color: $base-blue;
+    font-size: 2rem;
+    line-height: 3rem;
+    font-weight: 600;
+    color: $base-blue;
 }
 
 //Component sub-titles
 h5 {
-  font-size: 1.8rem;
-  line-height: 2.4rem;
-  font-weight: 400;
-  color: $base-blue;
+    font-size: 1.8rem;
+    line-height: 2.4rem;
+    font-weight: 400;
+    color: $base-blue;
 }
 
 p {
-  font-size: 1.6rem;
-  font-weight: 400;
-  line-height: 2.1rem;
-  color: $base-blue;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.1rem;
+    color: $base-blue;
 }
 
 ul {
-  padding-left: 4rem;
+    padding-left: 4rem;
 }
 
 //General modifiers
 .faded {
-  opacity: 0.7;
+    opacity: 0.7;
 }
 
 //Header
@@ -101,189 +101,187 @@ ul {
 
 //Footer
 .footer {
-  &__nav-link {
-    color: $white;
-    text-decoration: underline;
+    &__nav-link {
+        color: $white;
+        text-decoration: underline;
 
-    &:hover {
-      font-weight: 600;
+        &:hover {
+            font-weight: 600;
+        }
+
+        &:visited {
+            color: $white;
+        }
     }
 
-    &:visited {
-      color: $white;
+    &__copyright-disclaimer {
+        color: $white;
+        font-size: 1.4rem;
     }
-  }
-
-  &__copyright-disclaimer {
-    color: $white;
-    font-size: 1.4rem;
-  }
 }
 
 //Notification bubble
 .notification-bubble {
-  color: $base-blue;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 1.4rem;
-  line-height: 0;
+    color: $base-blue;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.4rem;
+    line-height: 0;
 }
 
 //Sidebar
 .sidebar-nav__nav-link {
-  color: $grey;
-  text-decoration: none;
+    color: $grey;
+    text-decoration: none;
 
-  &:hover {
-    color: $base-blue;
-    font-weight: 600;
-  }
+    &:hover {
+        color: $base-blue;
+        font-weight: 600;
+    }
 
-  &--active {
-    color: $base-blue;
-    font-weight: 600;
-  }
+    &--active {
+        color: $base-blue;
+        font-weight: 600;
+    }
 }
 
 //Form
 .field {
-  &__label {
-    font-size: 2rem;
-    font-weight: 600;
-    line-height: 3rem;
-    color: $base-blue;
-
-    &--secondary {
-      font-weight: 400;
-    }
-
-    &--small {
-      font-size: 1.8rem;
-      font-weight: 400;
-      line-height: 2.7rem;
-    }
-    &--extra-small {
-      font-size: 1.6rem;
-      font-weight: 400;
-      line-height: 2.4rem;
-    }
-  }
-
-  &__input {
-    font-weight: 500;
-    font-size: 1.8rem;
-    line-height: 2.7rem;
-    color: $base-blue;
-
-    &-search {
-      &::placeholder {
+    &__label {
+        font-size: 2rem;
+        font-weight: 600;
+        line-height: 3rem;
         color: $base-blue;
-      }
 
-      &--small {
-        font-size: 1.4rem;
-
-        &::placeholder {
-          font-size: 1.4rem;
+        &--secondary {
+            font-weight: 400;
         }
-      }
+
+        &--small {
+            font-size: 1.8rem;
+            font-weight: 400;
+            line-height: 2.7rem;
+        }
+
+        &--extra-small {
+            font-size: 1.6rem;
+            font-weight: 400;
+            line-height: 2.4rem;
+        }
     }
-  }
+
+    &__input {
+        font-weight: 500;
+        font-size: 1.8rem;
+        line-height: 2.7rem;
+        color: $base-blue;
+        font-family: "Poppins", sans-serif;
+
+        &-search {
+            &::placeholder {
+                color: $base-blue;
+            }
+
+            &--small {
+                font-size: 1.4rem;
+
+                &::placeholder {
+                    font-size: 1.4rem;
+                }
+            }
+        }
+    }
 }
 
 //Button
 .button {
-  font-size: 2rem;
-  font-weight: 600;
-  line-height: 3rem;
-  color: $white;
-  text-align: center;
-  text-decoration: none;
-
-  //Sizes
-  &--small {
-    font-size: 1.8rem;
-    line-height: 2.7rem;
-  }
-
-  //Colours
-  &--yellow {
-    color: $base-blue;
-  }
-
-  //Secondary
-  &--secondary {
-    color: $base-blue;
-
-    &:hover {
-      color: $white;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 3rem;
+    color: $white;
+    text-align: center;
+    text-decoration: none;
+    //Sizes
+    &--small {
+        font-size: 1.8rem;
+        line-height: 2.7rem;
     }
-
     //Colours
-    &.button {
-      &--yellow {
-        &:hover, &.button--active {
-          color: $base-blue;
-        }
-      }
-
-      &--green {
-        color: $base-green;
-
-        &:hover, &.button--active {
-          color: $white;
-        }
-      }
-
-      &--red {
-        color: $base-red;
-
-        &:hover, &.button--active {
-          color: $white;
-        }
-      }
+    &--yellow {
+        color: $base-blue;
     }
-  }
+    //Secondary
+    &--secondary {
+        color: $base-blue;
+
+        &:hover {
+            color: $white;
+        }
+        //Colours
+        &.button {
+            &--secondary {
+                &.button {
+                    &:hover, &.button--active {
+                        color: $white;
+                    }
+
+                    &--yellow {
+                        &:hover, &.button--active {
+                            color: $base-blue;
+                        }
+                    }
+
+                    &--green {
+                        color: $base-green;
+                    }
+
+                    &--red {
+                        color: $base-red;
+                    }
+                }
+            }
+        }
+    }
 }
 
 //Link
 .link {
-  font-size: 2rem;
-  font-weight: 600;
-  line-height: 3rem;
-  color: $base-blue;
-  text-decoration: none;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 3rem;
+    color: $base-blue;
+    text-decoration: none;
 
-  &--normal {
-    font-weight: 400;
-    font-size: 1.8rem;
-  }
+    &--normal {
+        font-weight: 400;
+        font-size: 1.8rem;
+    }
 
-  &:hover {
-    cursor: pointer;
-    text-decoration: underline;
-  }
+    &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
 
-  &--green {
-    color: $base-green;
-  }
+    &--green {
+        color: $base-green;
+    }
 
-  &--red {
-    color: $base-red;
-  }
+    &--red {
+        color: $base-red;
+    }
 }
 
 //Pathway card
 .card {
-  text-decoration: none;
+    text-decoration: none;
 
-  &:visited {
-    color: initial;
-  }
+    &:visited {
+        color: initial;
+    }
 }
 
 .pill {
-  color: $base-blue;
+    color: $base-blue;
 }
 
 .accordion {
@@ -328,77 +326,78 @@ ul {
 
 //Pagination
 .pagination {
-  &__container {
-    ul {
-      list-style-type: none;
-    }
-  }
-
-  &__button {
-    font-size: 1.8rem;
-    line-height: 2.7rem;
-    font-weight: 400;
-    color: $base-blue;
-
-    &:hover {
-      text-decoration: underline;
-      cursor: pointer;
+    &__container {
+        ul {
+            list-style-type: none;
+        }
     }
 
-    &--active {
-      font-weight: 600;
-      text-decoration: underline;
+    &__button {
+        font-size: 1.8rem;
+        line-height: 2.7rem;
+        font-weight: 400;
+        color: $base-blue;
+
+        &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        &--active {
+            font-weight: 600;
+            text-decoration: underline;
+        }
     }
-  }
 }
 
 //User details
 .user-details {
-  &__title {
-    font-size: 4rem;
-    font-weight: 600;
-    line-height: 6rem;
-  }
+    &__title {
+        font-size: 4rem;
+        font-weight: 600;
+        line-height: 6rem;
+    }
 }
 
 //Text modifiers
 .text {
-  //Colours
-  &--black {
-    color: $black;
-  }
+    //Colours
+    &--black {
+        color: $black;
+    }
 
-  &--pale-grey {
-    color: $pale-grey;
-  }
+    &--pale-grey {
+        color: $pale-grey;
+    }
 
-  &--transparent-50-base-blue {
-    color: $transparent-50-base-blue;
-  }
+    &--transparent-50-base-blue {
+        color: $transparent-50-base-blue;
+    }
 
-  &--transparent-70-base-blue {
-    color: $transparent-70-base-blue;
-  }
+    &--transparent-70-base-blue {
+        color: $transparent-70-base-blue;
+    }
+    //Sizes
+    &--small {
+        font-size: 1.4rem;
+        line-height: 1.9rem;
+    }
 
-  //Sizes
-  &--small {
-    font-size: 1.4rem;
-  }
+    &--medium {
+        font-size: 1.6rem;
+        line-height: 2.1rem;
+    }
 
-  &--medium {
-    font-size: 1.6rem;
-  }
+    &--large {
+        font-size: 1.8rem;
+        line-height: 2.4rem;
+    }
+    //Weights
+    &--normal {
+        font-weight: 400;
+    }
 
-  &--large {
-    font-size: 1.8rem;
-  }
-
-  //Weights
-  &--normal {
-    font-weight: 400;
-  }
-
-  &--semibold {
-    font-weight: 600;
-  }
+    &--semibold {
+        font-weight: 600;
+    }
 }

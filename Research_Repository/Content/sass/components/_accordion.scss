@@ -33,7 +33,7 @@
 
   &__button {
     width: 100%;
-    z-index: 2;
+    z-index: 20;
     position: relative;
     display: flex;
     align-items: center;
@@ -185,7 +185,7 @@
       border: none;
       text-align: left;
       padding-left: 3rem;
-      z-index: 0;
+      z-index: 0 !important;
 
       &:first-of-type {
         padding-top: 2rem;

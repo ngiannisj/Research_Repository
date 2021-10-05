@@ -2,56 +2,50 @@
 
 @model Research_Repository_Models.ViewModels.ItemRequestVM;
 
-<div class="container p-3">
-    <div class="row pt-4">
-        <div class="col-6">
-            <h2 class="text-primary">Requests</h2>
-        </div>
+<!-- User details -->
+<div class="grid grid--sidebar grid--sidebar-paginated">
+    <!-- Sidebar -->
+    <div class="grid-column-sidebar sidebar-nav">
+        <a id="item-request-nav-link" asp-controller="ItemRequest" class="sidebar-nav__nav-link">
+            Requests<span id="item-request-count" class="notification-bubble notification-bubble--hidden notification-bubble__side-nav-notification"></span>
+        </a>
+        <a id="team-nav-link" asp-controller="Team" class="sidebar-nav__nav-link">Teams and projects</a>
+        <a id="theme-nav-link" asp-controller="Theme" class="sidebar-nav__nav-link">Themes and tags</a>
+        <a id="create-librarian-nav-link" asp-area="Identity" asp-page="/Account/Login" class="sidebar-nav__nav-link">Create a new librarian</a>
+        <form>
+            <button class="button button--red button--small align--center" asp-action="ReindexItems" type="submit">Reindex Solr</button>
+        </form>
     </div>
 
-    <br /><br />
-    <ul>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Theme" asp-action="Index">Themes</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Team" asp-action="Index">Teams</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark item-request-link" asp-area="" asp-controller="ItemRequest" asp-action="Index">Requests</a>
-            <span id="item-request-count"></span>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Create admin user</a>
-        </li>
-    </ul>
 
-    <form>
-        <input asp-action="ReindexItems" type="submit" />
-    </form>
+        <!-- Items -->
+        <div class="grid-column-main--with-sidebar">
+            <h4 class="margin-bottom--small">Your research items</h4>
+                <div class="button-group button-group--small margin-bottom--medium librarian-filters" id="filters">
+                    <div class="button-group__item">
+                        <button id="submitted-filter-btn" class="button button--small button--secondary filter__button button--active" onclick="updateFilterParameters(0, '@WC.Submitted')">Pending</button>
+                    </div>
+                    <div class="button-group__item">
+                        <button id="published-filter-btn" class="button button--small button--secondary button--green filter__button" onclick="updateFilterParameters(0, '@WC.Published')">Published</button>
+                    </div>
+                    <div class="button-group__item">
+                        <button id="rejected-filter-btn" class="button button--small button--secondary button--red filter__button" onclick="updateFilterParameters(0, '@WC.Rejected')">Rejected</button>
+                    </div>
+                </div>
 
-        <div id="filters" class="librarian-filters">
-            <button id="submitted-filter-btn" onclick="updateFilterParameters(0, '@WC.Submitted')">Submitted</button>
-            <button id="published-filter-btn" onclick="updateFilterParameters(0, '@WC.Published')">Published</button>
-            <button id="rejected-filter-btn" onclick="updateFilterParameters(0, '@WC.Rejected')">Rejected</button>
+                <div id="item-list" class="card-list card-list--vertical">
+                    <!-- Populated with published items on page load using javascript -->
+                </div>
         </div>
 
-        <table class="table table-bordered table-striped" style="width: 100%">
-            <thead>
-                <tr>
-                    <th>Item Name</th>
-                    <th>Item Team</th>
-                    <th>Item Abstract</th>
-                    <th></th>
+            <!-- Pagination -->
+            <div class="grid-column-main">
+                <div class="pagination__container margin-bottom--large">
+                    <ul id="item-list-pagination" class="pagination__list">
+                        <!-- Populated with number of pages using javascript -->
+                    </ul>
+                </div>
+            </div>
 
-                </tr>
-            </thead>
-            <tbody id="item-list">
-                <!-- Populated with published items on page load using javascript -->
-            </tbody>
-        </table>
-
-    <!-- Pagination -->
-    <div id="item-list-pagination"></div>
-</div>
+    </div>
 

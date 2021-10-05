@@ -101,6 +101,8 @@
     })
 });
 
+//==================================================================
+
 //Selectlist accordion functionality
 function selectListOptionClick($this) {
     $($this)
@@ -113,15 +115,25 @@ function selectListOptionClick($this) {
         .find(".accordion__button--select-list")
         .first()
         .html($($this).text());
+
+    $("#selected-team-id").val($($this).data("value"));
+    console.log($("#selected-team-id").val());
+    event.preventDefault();
 }
+
+function selectListButtonClick() {
+    event.preventDefault();
+}
+
 
 //==================================================================
 //Navigation item selected
 $(document).ready(function () {
-    highlightSelectedNavLink();
+    highlightSelectedHeaderNavLink();
+    highlightSelectedSidebarNavLink();
 });
 
-function highlightSelectedNavLink() {
+function highlightSelectedHeaderNavLink() {
     if (window.location.href.toLowerCase().includes("item/upsert")) {
         $("#contribute-nav-link").addClass("header__nav-link--active");
         return
@@ -141,4 +153,22 @@ function highlightSelectedNavLink() {
     else {
         $("#home-nav-link").addClass("header__nav-link--active");
     }
-}
+};
+
+function highlightSelectedSidebarNavLink() {
+    if (window.location.href.toLowerCase().includes("itemrequest")) {
+        $("#item-request-nav-link").addClass("sidebar-nav__nav-link--active");
+        return
+    } else if (window.location.href.toLowerCase().includes("theme")) {
+        $("#theme-nav-link").addClass("sidebar-nav__nav-link--active");
+        return
+    }
+    else if (window.location.href.toLowerCase().includes("team")) {
+        $("#team-nav-link").addClass("sidebar-nav__nav-link--active");
+        return
+    }
+    else if (window.location.href.toLowerCase().includes("account")) {
+        $("#create-librarian-nav-link").addClass("sidebar-nav__nav-link--active");
+        return
+    }
+};

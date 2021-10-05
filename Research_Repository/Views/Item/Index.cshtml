@@ -30,12 +30,18 @@
                         <h5 class="accordion__title">Date</h5>
                     </button>
                     <div class="accordion__content--filter accordion__content">
-                        <div class="form">
-                            <input class="form-control" id="start-date-search" type="date" data-val="true" data-val-required="The Start date field is required." value="0001-01-01">
-                            <input class="form-control" id="end-date-search" type="date" data-val="true" data-val-required="The End date field is required." value="@DateTime.Now.ToString(WC.YearMonthDay)">
+                        <div class="field__group field__group--vertical">
+                            <div class="field">
+                                <label class="field__label field__label--secondary text--medium" for="start-date">Start date</label>
+                                <input class="field__input field__input--secondary" name="start-date" id="start-date-search" type="date" data-val="true" data-val-required="The Start date field is required." value="">
+                            </div>
+                            <div class="field">
+                                <label class="field__label field__label--secondary text--medium" for="end-date">End date</label>
+                                <input class="field__input field__input--secondary" name="end-date" id="end-date-search" type="date" data-val="true" data-val-required="The End date field is required." value="">
+                            </div>
                         </div>
                     </div>
-                </div>
+                    </div>
 
                 <!-- Team Checkboxes -->
                 <div id="team-checkbox-filter" class="accordion__container accordion__container--filter">
@@ -258,5 +264,6 @@
 
             </ul>
         </div>
+    </div>
     </div>
 

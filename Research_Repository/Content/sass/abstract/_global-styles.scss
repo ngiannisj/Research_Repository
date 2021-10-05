@@ -1,6 +1,6 @@
 * {
   &:focus {
-    outline: 0.3rem solid $purple !important;
+    outline: 0.3rem solid $purple;
     position: relative !important;
     z-index: 99 !important;
   }
@@ -21,7 +21,7 @@ a:hover {
 .focus {
   outline: 0.3rem solid $purple !important;
   position: relative !important;
-  z-index: 99 !important;
+  z-index: 99;
 }
 
 .align {

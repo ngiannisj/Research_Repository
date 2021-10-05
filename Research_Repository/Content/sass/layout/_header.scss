@@ -63,15 +63,13 @@
         cursor: pointer;
     }
 
+      &--has-notification {
+    padding-right: 3.7rem;
+    }
+
     &--align-right {
       margin-left: auto;
       display: flex;
-
-      .header__nav-link {
-        &:last-of-type {
-              padding-right: 3.7rem;
-        }
-      }
     }
 
     &--active {

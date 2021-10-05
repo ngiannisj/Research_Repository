@@ -9,8 +9,8 @@ let queryParameters = {
     approvals =[],
     status=["Published"],
     userIds=[],
-    startDate = "0001-01-01",
-    endDate = "0001-01-01",
+    startDate = "yyyy-mm-dd",
+    endDate = "yyyy-mm-dd",
     paginationStartItem = 0
 };
 
@@ -18,9 +18,11 @@ let queryParameters = {
 const numOfItemsPerPage = 10;
 
 $(document).ready(function () {
-    if ($("#filters").length) {
-        filterProjectsForItemsList()
-    }
+
+    $("#filters .filter__button").click(function () {
+        $(".filter__button").removeClass("button--active");
+        $(this).addClass("button--active");
+    })
 
     //On text change in text box
     $("#filters input:not(#text-search), #filters select").change(function () {
@@ -36,7 +38,7 @@ $(document).ready(function () {
 
     //If items library page is displayed, query solr for items with a 'Published' state
     if ($('#filters.published-filters').length) {
-        updateFilterParameters(queryParameters.paginationStartItem, "Published");
+        filterProjectsForItemsList();
     }
 
     //If item requests page is displayed, query solr for items with a 'Submitted' state
@@ -46,6 +48,7 @@ $(document).ready(function () {
 
     //If profile page is displayed, query solr for items with a 'Draft' state and created by the user
     if ($('#filters.profile-filters').length) {
+        $("#drafts-filter-btn").addClass("button--active");
         //Get userId from session
         $.ajax({
             type: "GET",
@@ -113,12 +116,6 @@ function updateFilterParameters(pageId, itemStatus) {
     //Set end date parameter
     if ($("#end-date-search").length) {
         queryParameters.endDate = $("#end-date-search").val();
-    } else {
-        //Get todays date
-        let date = new Date();
-        const offset = date.getTimezoneOffset();
-        date = new Date(date.getTime() - (offset * 60 * 1000));
-        queryParameters.endDate = date.toISOString().split('T')[0];
     }
 
     //Get pagination start item
@@ -145,52 +142,33 @@ function filterItemList(itemStatus, pageId) {
         url: "/Item/GetFilteredItems",
         data: { "itemQueryJson": stringifiedParameters },
         success: function (data) {
+            console.log(data);
             let itemListHtml = "";
-            for (let i = 0; i < data.items.length; i++) {
 
-                //Profile items
-                if ($('#filters.profile-filters').length) {
-                    itemListHtml += `<tr>
-                    <td width="33%">${data.items[i].title}</td>
-                    <td width="33%">${data.items[i].team}</td>
-                    <td width="33%">${data.items[i].abstract}</td>
-                    <td class="text-center">
-                        <div class="w-75 btn-group" role="group">
-                            <a class="btn btn-primary mx-2" href="/Item/Upsert/${data.items[i].id}">
-                                View${(itemStatus != "Submitted" && data.items[i].notifyUploader) ? "!" : ""}
-                            </a>
-                            ${itemStatus == "Draft" ?
-                            `<button class="btn btn-danger" id="open-delete-item-modal-btn" value="${data.items[i].id}" onclick="showItemDeleteModal(this)">
-                            Delete
-                         </button>` : ""}
-                        </div>
-                    </td>
-                </tr>`;
-                }
+            if (!data || data.items.length == 0) {
+                itemListHtml = `<div class="no-items"><p>No items to display<p></div>`;
+            } else {
 
-                //Librarian portal items
-                if ($('#filters.librarian-filters').length) {
-                    itemListHtml += `<tr>
-                    <td width="33%">${data.items[i].title}</td>
-                    <td width="33%">${data.items[i].team}</td>
-                    <td width="33%">${data.items[i].abstract}</td>
-                    <td class="text-center">
-                        <div class="w-75 btn-group" role="group">
-                            <a class="btn btn-primary mx-2" href="/Item/Upsert/${data.items[i].id}">
-                                View
-                            </a>
-                        </div>
-                    </td>
-                </tr>`;
-                }
+                for (let i = 0; i < data.items.length; i++) {
 
-                //Library items
-                if ($('#filters.published-filters').length) {
-                    //Get html for tags
-                    let tagPillsHtml = "";
-                    if (data.items[i].tags) {
-                        for (let t = 0; t < data.items[i].tags.length; t++) {
-                            tagPillsHtml += `
+                    //Profile items
+                    if ($('#filters.profile-filters').length) {
+                        //Get card colour
+                        let cardColour = "";
+                        if (data.items[i].status == "Submitted") {
+                            cardColour = "yellow";
+                        } else if (data.items[i].status == "Published") {
+                            cardColour = "green";
+                        } else if (data.items[i].status == "Rejected") {
+                            cardColour = "red";
+                        } else {
+                            cardColour = "blue";
+                        }
+                        //Get html for tags
+                        let tagPillsHtml = "";
+                        if (data.items[i].tags) {
+                            for (let t = 0; t < data.items[i].tags.length; t++) {
+                                tagPillsHtml += `
                 <div class="pill">
                   <img
                     class="pill__image"
@@ -198,16 +176,17 @@ function filterItemList(itemStatus, pageId) {
                     alt="tag_image"
                   />${data.items[i].tags[t]}
                 </div>`
+                            }
                         }
-                    }
 
-                    itemListHtml +=
-                        `<a href="/Item/View/${data.items[i].id}" class="card card--pathway">
+                        itemListHtml +=
+                            `<a href="/Item/View/${data.items[i].id}" class="card card--pathway ${cardColour !== "blue" ? `card--${cardColour}` : ""}">
+${data.items[i].notifyUploader ? `<span class="notification-bubble notification-bubble__item-notification">!</span>` : ""}
             <div class="card__content">
               <div class="card__heading-container">
-                <h4 class="card__heading">${data.items[i].title}</h4>
+                <h4 class="card__heading">${data.items[i].title ? `${data.items[i].title}` : "No title"}</h4>
                 <h4 class="card__subheading text--transparent-70-base-blue">
-                  ${data.items[i].team}
+                  ${data.items[i].team ? `${data.items[i].team}` : ""}
                 </h4>
               </div>
 
@@ -220,8 +199,63 @@ function filterItemList(itemStatus, pageId) {
               </div>
             </div>
           </a>`;
-                }
-            };
+                    }
+
+                    //Librarian portal items
+                    if ($('#filters.librarian-filters').length) {
+                        itemListHtml +=
+          `<a href="/Item/View/${data.items[i].id}" class="card card--pathway">
+            <div class="card__content">
+              <div class="card__heading-container">
+                <h4 class="card__heading">${data.items[i].title ? `${data.items[i].title}` : "No title"}</h4>
+              </div>
+
+ <div class="margin-bottom--extra-small"><span class="text--black">Title: </span> <span class="faded">${data.items[i].title}</span></div>
+ <div class="margin-bottom--extra-small"><span class="text--black">Contributer: </span> <span class="faded">${data.items[i].uploader}</span></div>
+ <div class="margin-bottom--extra-small"><span class="text--black">Last updated: </span> <span class="faded">${data.items[i].lastUpdatedDate.split("T")[0]}</span></div>
+            </div>
+          </a>`;
+                    }
+
+                    //Library items
+                    if ($('#filters.published-filters').length) {
+                        //Get html for tags
+                        let tagPillsHtml = "";
+                        if (data.items[i].tags) {
+                            for (let t = 0; t < data.items[i].tags.length; t++) {
+                                tagPillsHtml += `
+                <div class="pill">
+                  <img
+                    class="pill__image"
+                    src="images/svgs/tag.svg"
+                    alt="tag_image"
+                  />${data.items[i].tags[t]}
+                </div>`
+                            }
+                        }
+
+                        itemListHtml +=
+                            `<a href="/Item/View/${data.items[i].id}" class="card card--pathway">
+            <div class="card__content">
+              <div class="card__heading-container">
+                 <h4 class="card__heading">${data.items[i].title ? `${data.items[i].title}` : "No title"}</h4>
+                <h4 class="card__subheading text--transparent-70-base-blue">
+                  ${data.items[i].team ? `${data.items[i].team}` : ""}
+                </h4>
+              </div>
+
+              <div class="card__description-container">
+                <p class="text--black">
+                  ${data.items[i].abstract}
+                </p>
+              </div>
+                ${tagPillsHtml}
+              </div>
+            </div>
+          </a>`;
+                    }
+                };
+            }
             //Add items to HTML
             $("#item-list").html(itemListHtml);
 
@@ -235,6 +269,9 @@ function filterItemList(itemStatus, pageId) {
             } else {
                 numOfTotalPages = Math.ceil(data.numOfTotalResults / numOfItemsPerPage);
                 numOfMiddlePages = numOfTotalPages - 2;
+            }
+            if (numOfTotalPages < 2) {
+                return
             }
             pageNum = pageId + 1;
 

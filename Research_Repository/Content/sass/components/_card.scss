@@ -1,29 +1,34 @@
 .card-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(37.5rem, 1fr));
-  align-items: center;
-  justify-items: start;
-  grid-column-gap: 4rem;
-  grid-row-gap: 4rem;
-  width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(37.5rem, 1fr));
+    align-items: center;
+    justify-items: start;
+    grid-column-gap: 4rem;
+    grid-row-gap: 4rem;
+    width: 100%;
+    height: auto;
+    position: relative;
 
-  &--vertical {
-    grid-template-columns: repeat(auto-fill, 100%);
-  }
+    &--vertical {
+        grid-template-columns: repeat(auto-fill, 100%);
+        height: 100%;
+    }
 }
 
 .card {
+    align-self: flex-start;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
-    height: 100%;
+    height: auto;
     padding: 3.4rem 4.5rem;
     background: $white;
     border-top: 1rem solid $base-blue;
     border-radius: 1rem;
     box-shadow: 0 0.4rem 0.4rem 0 $shadow;
     transition: transform 0.3s ease 0s, background-color 0.3s ease 0s, box-shadow 0.3s ease 0s, outline 0s;
+    backface-visibility: hidden;
     //Colours
     &--yellow {
         border-color: $base-yellow;
@@ -31,12 +36,10 @@
 
     &--green {
         border-color: $base-green;
-
     }
 
     &--red {
         border-color: $base-red;
-
     }
 
     &--pathway:hover {
@@ -68,6 +71,7 @@
     }
 
     &--hero {
+        height: 100%;
         padding-bottom: 2.5rem;
         padding-right: 3.1rem;
         align-items: flex-start;
@@ -120,4 +124,13 @@
     .pill {
         margin-top: 1rem;
     }
+}
+
+.no-items {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

@@ -22,6 +22,20 @@
         .field, input, .button, .link {
             margin-right: 1.6rem;
         }
+
+        &--vertical {
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+
+            :last-child{
+                margin-bottom: 0;
+            }
+
+            .field, input, .button, .link {
+                margin: 0 0 1rem 0;
+            }
+        }
     }
 
     &:last-of-type {

@@ -9,11 +9,21 @@
         margin-bottom: 0;
     }
 
+    &__item {
+        position: relative;
+        right: 0;
+        margin-right: 6.8rem;
+
+        &:last-of-type {
+            margin-right: 0;
+        }
+    }
+
     .button,
     .link {
         margin-right: 6.8rem;
 
-        &:last-child {
+        &:last-of-type {
             margin-right: 0;
         }
     }
@@ -22,6 +32,14 @@
         .button,
         .link {
             margin-right: 1.6rem;
+        }
+
+        .button-group__item {
+            margin-right: 1.6rem;
+
+            &:last-of-type {
+                margin-right: 0;
+            }
         }
     }
 
@@ -47,144 +65,148 @@
         }
     }
 }
-
-//Button
+    //Button
 .button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  padding: 1.3rem 4.5rem;
-  background-color: $base-blue;
-  border: 0.3rem solid $base-blue;
-  border-radius: 5rem;
-  box-shadow: 0 0.4rem 0.4rem 0 $shadow;
-  transition: transform 0.3s ease 0s, background-color 0.3s ease 0s,
-    box-shadow 0.3s ease 0s, outline 0s;
-
-  &:hover {
-    cursor: pointer;
-    box-shadow: 0 0.6rem 1rem 0 $shadow;
-    transform: translateY(-0.4rem);
-  }
-
-  //Sizes
-  &--small {
-    padding: 0.8rem 2.2rem;
-  }
-
-  //Colours
-  &--yellow {
-    background-color: $base-yellow;
-    border-color: $base-yellow;
-  }
-
-  &--green {
-    background-color: $base-green;
-    border-color: $base-green;
-  }
-
-  &--red {
-    background-color: $base-red;
-    border-color: $base-red;
-  }
-
-  //Secondary
-  &--secondary {
-    background-color: $white;
-    box-shadow: none;
-
-    &:hover {
-      background-color: $base-blue;
-      box-shadow: none;
-      transform: none;
-    }
-
-    //Colours
-    &.button {
-      &--yellow {
-        &:hover,
-        &.button--active {
-          background-color: $base-yellow;
-        }
-      }
-
-      &--green {
-        &:hover,
-        &.button--active {
-          background-color: $base-green;
-        }
-      }
-
-      &--red {
-        &:hover,
-        &.button--active {
-          background-color: $base-red;
-        }
-      }
-    }
-  }
-
-  &__icon {
-    width: 2.2rem;
-    height: 2.5rem;
-    margin-right: 1.2rem;
-  }
-
-  //Icon buttons
-  &--icon {
-    &:hover {
-      cursor: pointer;
-    }
-    &-delete {
-      width: 1.9rem;
-      height: 1.9rem;
-      background: none;
-      border: none;
-    }
-
-    &-edit {
-      width: 1.9rem;
-      height: 1.9rem;
-      background: none;
-      border: none;
-    }
-
-    &-confirm {
-      width: 1.9rem;
-      height: 1.9rem;
-      background: none;
-      border: none;
-    }
-  }
-}
-
-//Link
-.link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  width: fit-content;
-
-  &--back {
-    &:hover {
-      .link__icon {
-        transform: rotate(180deg) translateX(1rem);
-      }
-    }
-  }
-
-  &__icon {
-    padding-left: 1.2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform .3s ease 0s;
+    width: fit-content;
+    padding: 1.3rem 4.5rem;
+    background-color: $base-blue;
+    border: 0.3rem solid $base-blue;
+    border-radius: 5rem;
+    box-shadow: 0 0.4rem 0.4rem 0 $shadow;
+    transition: transform 0.3s ease 0s, background-color 0.3s ease 0s, box-shadow 0.3s ease 0s, outline 0s;
 
-    &--flip {
-      transform: rotate(180deg);
+    &:hover {
+        cursor: pointer;
+        box-shadow: 0 0.6rem 1rem 0 $shadow;
+        transform: translateY(-0.4rem);
     }
-  }
+
+    &:focus {
+        & + .notification-bubble {
+            z-index: 99;
+        }
+    }
+    //Sizes
+    &--small {
+        padding: 0.8rem 2.2rem;
+    }
+    //Colours
+    &--yellow {
+        background-color: $base-yellow;
+        border-color: $base-yellow;
+    }
+
+    &--green {
+        background-color: $base-green;
+        border-color: $base-green;
+    }
+
+    &--red {
+        background-color: $base-red;
+        border-color: $base-red;
+    }
+    //Secondary
+    &--secondary {
+        background-color: $white;
+        box-shadow: none;
+
+        &:hover {
+            background-color: $base-blue;
+            box-shadow: none;
+            transform: none;
+        }
+        //Colours
+        &.button {
+            &:hover,
+            &.button--active {
+                background-color: $base-blue;
+            }
+
+            &--yellow {
+                &:hover,
+                &.button--active {
+                    background-color: $base-yellow;
+                }
+            }
+
+            &--green {
+                &:hover,
+                &.button--active {
+                    background-color: $base-green;
+                }
+            }
+
+            &--red {
+                &:hover,
+                &.button--active {
+                    background-color: $base-red;
+                }
+            }
+        }
+    }
+
+    &__icon {
+        width: 2.2rem;
+        height: 2.5rem;
+        margin-right: 1.2rem;
+    }
+    //Icon buttons
+    &--icon {
+        &:hover {
+            cursor: pointer;
+        }
+
+        &-delete {
+            width: 1.9rem;
+            height: 1.9rem;
+            background: none;
+            border: none;
+        }
+
+        &-edit {
+            width: 1.9rem;
+            height: 1.9rem;
+            background: none;
+            border: none;
+        }
+
+        &-confirm {
+            width: 1.9rem;
+            height: 1.9rem;
+            background: none;
+            border: none;
+        }
+    }
 }
+    //Link
+    .link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        width: fit-content;
+
+        &--back {
+            &:hover {
+                .link__icon {
+                    transform: rotate(180deg) translateX(1rem);
+                }
+            }
+        }
+
+        &__icon {
+            padding-left: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform .3s ease 0s;
+
+            &--flip {
+                transform: rotate(180deg);
+            }
+        }
+    }
