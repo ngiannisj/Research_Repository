@@ -45,7 +45,7 @@ namespace Research_Repository.Controllers
                 SaveThemesState(themeVMList);
 
                 //Populate a theme view model object to pass to the view
-                ThemeVM themeVMObject = new ThemeVM { ThemeObjects = themeVMList, NewThemeName = "" };
+                ThemeVM themeVMObject = new ThemeVM { ThemeObjects = themeVMList, SelectedThemeName = "", SelectedThemeDescription = "" };
 
                 return View(themeVMObject);
             }
@@ -60,7 +60,7 @@ namespace Research_Repository.Controllers
                 ModelState.Clear();
 
                 //Populate a theme view model object to pass to the view
-                ThemeVM themeVMObject = new ThemeVM { ThemeObjects = tempThemes, NewThemeName = "" };
+                ThemeVM themeVMObject = new ThemeVM { ThemeObjects = tempThemes, SelectedThemeName = "", SelectedThemeDescription = "" };
 
                 return View(themeVMObject);
             }
@@ -176,7 +176,7 @@ namespace Research_Repository.Controllers
             }
 
             //Add new theme to temp themes object
-            themeVM.ThemeObjects.Add(_themeRepo.CreateThemeVM(newId, themeVM.ThemeObjects, themeVM.NewThemeName, null));
+            themeVM.ThemeObjects.Add(_themeRepo.CreateThemeVM(newId, themeVM.SelectedThemeName, themeVM.SelectedThemeDescription, null));
 
             //Solves error where inputs in the view display the incorrect values
             ModelState.Clear();

@@ -129,7 +129,7 @@ namespace Research_Repository_DataAccess.Repository
         }
 
 
-        public ThemeObjectVM CreateThemeVM(int newId, IList<ThemeObjectVM> themeVMs, string newThemeName, int? id = null)
+        public ThemeObjectVM CreateThemeVM(int newId, string selectedThemeName, string selectedThemeDescription, int? id = null)
         {
             //Instantiate themeVM
             ThemeObjectVM themeVM = new ThemeObjectVM();
@@ -139,7 +139,8 @@ namespace Research_Repository_DataAccess.Repository
             {
                 themeVM.Theme = new Theme();
                 themeVM.Theme.Id = newId;
-                themeVM.Theme.Name = newThemeName;
+                themeVM.Theme.Name = selectedThemeName;
+                themeVM.Theme.Description = selectedThemeDescription;
                 //Generate checkboxes for tags
                 themeVM.TagCheckboxes = GetTagCheckboxes(null);
             }

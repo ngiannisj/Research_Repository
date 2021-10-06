@@ -1,100 +1,127 @@
 ﻿$(document).ready(function () {
     //Add team modal
     $("#open-add-team-modal-button").click(function () {
-        $("#addTeamModal").show();
+        $("#add-team-submit-button").show();
+        $("#edit-team-submit-button").hide();
+        $("#teamModal").show();
+        $("#selected-team-name-input").val("");
+        $("#selected-team-contact-input").val("");
+
+        event.preventDefault();
+    });
+
+    //Save edited team
+    $("#edit-team-submit-button").click(function () {
+        $(".team--selected .team-name-text").html($("#selected-team-name-input").val());
+
+        $(".team--selected .team-name-input").val($("#selected-team-name-input").val());
+        $(".team--selected .team-contact-input").val($("#selected-team-contact-input").val());
+
+        $("#selected-team-name-input").val("");
+        $("#selected-team-contact-input").val("");
+        $(".team--selected").removeClass("team--selected");
+        $("#teamModal").hide();
         event.preventDefault();
     });
 
     //On modal close
     $("#close-add-team-modal-button, .teamModalClose").click(function () {
-        $("#addTeamModal").hide();
-        $("#add-team-input").val("");
+        $("#teamModal").hide();
+        $("#selected-team-name-input").val("");
+        $("#selected-team-contact-input").val("");
+        $(".team--selected").removeClass("team--selected");
         event.preventDefault();
     });
 
     //If user clicks outside the modal
     $(document).mouseup(function (e) {
-        const modal = $("#addTeamModal");
+        const modal = $("#TeamModal");
         if (modal.is(":visible")) {
             // if the target of the click isn't the container nor a descendant of the container
             if (modal.is(e.target) && modal.has(e.target).length === 0) {
                 modal.hide();
-                $("#add-team-input").val("");
+                $("#selected-team-name-input").val("");
+                $("#selected-team-contact-input").val("");
+                $(".team--selected").removeClass("team--selected");
             }
         }
     });
 
     //===================================================================================
 
-    //Add theme modal
-    $("#open-add-theme-modal-button").click(function () {
-        $("#addThemeModal").show();
-        event.preventDefault();
-    });
+    $(document).ready(function () {
+        //Add theme modal
+        $("#open-add-theme-modal-button").click(function () {
+            $("#add-theme-submit-button").show();
+            $("#edit-theme-submit-button").hide();
+            $("#themeModal").show();
+            $("#selected-theme-name-input").val("");
+            $("#selected-theme-description-input").val("");
 
-    //On close theme modal
-    $("#close-add-theme-modal-button, .themeModalClose").click(function () {
-        $("#addThemeModal").hide();
-        $("#add-theme-input").val("");
-        event.preventDefault();
-    });
+            event.preventDefault();
+        });
 
-    ////If user clicks outside the modal
-    $(document).mouseup(function (e) {
-        const modal = $("#addThemeModal");
-        if (modal.is(":visible")) {
-            // if the target of the click isn't the container nor a descendant of the container
-            if (modal.is(e.target) && modal.has(e.target).length === 0) {
-                modal.hide();
-                $("#add-theme-input").val("");
+        //Save edited theme
+        $("#edit-theme-submit-button").click(function () {
+            $(".theme--selected .theme-name-text").html($("#selected-theme-name-input").val());
+
+            $(".theme--selected .theme-name-input").val($("#selected-theme-name-input").val());
+            $(".theme--selected .theme-description-input").val($("#selected-theme-description-input").val());
+
+            $("#selected-theme-name-input").val("");
+            $("#selected-theme-description-input").val("");
+            $(".theme--selected").removeClass("theme--selected");
+            $("#themeModal").hide();
+            event.preventDefault();
+        });
+
+        //On modal close
+        $("#close-add-theme-modal-button, .themeModalClose").click(function () {
+            $("#themeModal").hide();
+            $("#selected-theme-name-input").val("");
+            $("#selected-theme-description-input").val("");
+            $(".theme--selected").removeClass("theme--selected");
+            event.preventDefault();
+        });
+
+        //If user clicks outside the modal
+        $(document).mouseup(function (e) {
+            const modal = $("#ThemeModal");
+            if (modal.is(":visible")) {
+                // if the target of the click isn't the container nor a descendant of the container
+                if (modal.is(e.target) && modal.has(e.target).length === 0) {
+                    modal.hide();
+                    $("#selected-theme-name-input").val("");
+                    $("#selected-theme-description-input").val("");
+                    $(".theme--selected").removeClass("theme--selected");
+                }
             }
-        }
+        });
+
     });
+});
+//============================================================================================
 
-})
-
-//Edits name of teams and themes
-function editName(thisbtn, type) {
+//Team
+//Edit team modal
+function openEditTeamModal($this) {
     event.preventDefault();
-    //Show
-    $(thisbtn).siblings(`.${type}-name-input`).show();
-    $(thisbtn).siblings(`.apply-${type}-name-btn`).show();
-    if (type == "team") {
-        $(thisbtn).siblings(`.${type}-contact-input`).show();
-        $(thisbtn).siblings(`.apply-${type}-contact-btn`).show();
-    }
+    $($this).closest(".team").addClass("team--selected");
+    $("#add-team-submit-button").hide();
+    $("#edit-team-submit-button").show();
+    $("#selected-team-name-input").val($($this).closest(".team").find(".team-name-input").val());
+    $("#selected-team-contact-input").val($($this).closest(".team").find(".team-contact-input").val());
+    $("#teamModal").show();
+    };
 
-    //Hide
-    $(thisbtn).siblings(`.${type}-name-text`).hide();
-    if (type == "team") {
-        $(thisbtn).siblings(`.${type}-contact-text`).hide();
-    }
-    $(thisbtn).hide();
-};
-
-//Apply name of new team and theme
-function applyName(thisbtn, type) {
-    event.preventDefault();
-    //Change text value
-    let newName = $(thisbtn).siblings(`.${type}-name-input`).val();
-    $(thisbtn).siblings(`.${type}-name-text`).html(newName);
-    if (type == "team") {
-        let newTeamContact = $(thisbtn).siblings(`.${type}-contact-input`).val();
-        $(thisbtn).siblings(`.${type}-contact-text`).html(newTeamContact);
-    }
-
-    //Show
-    $(thisbtn).siblings(`.${type}-name-text`).show();
-    $(thisbtn).siblings(`.edit-${type}-name-btn`).show();
-    if (type == "team") {
-        $(thisbtn).siblings(`.${type}-contact-text`).show();
-        $(thisbtn).siblings(`.edit-${type}-contact-btn`).show();
-    }
-
-    //Hide
-    $(thisbtn).siblings(`.${type}-name-input`).hide();
-    if (type == "team") {
-        $(thisbtn).siblings(`.${type}-contact-input`).hide();
-    }
-    $(thisbtn).hide();
-};
+    //Theme
+    //Edit theme modal
+    function openEditThemeModal($this) {
+        event.preventDefault();
+        $($this).closest(".theme").addClass("theme--selected");
+        $("#add-theme-submit-button").hide();
+        $("#edit-theme-submit-button").show();
+        $("#selected-theme-name-input").val($($this).closest(".theme").find(".theme-name-input").val());
+        $("#selected-theme-description-input").val($($this).closest(".theme").find(".theme-description-input").val());
+        $("#themeModal").show();
+    };

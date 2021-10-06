@@ -53,10 +53,8 @@
                                 <td width="50%">
                                     <div class="team-name-text">@Model.Teams[y].Name</div>
                                     <input class="form-control team-name-input" asp-for="@Model.Teams[y].Name" style="display:none;" />
-                                    <div class="team-contact-text">@Model.Teams[y].Contact</div>
                                     <input class="form-control team-contact-input" asp-for="@Model.Teams[y].Contact" style="display:none;" />
-                                    <button class="edit-team-name-btn" onclick="editName(this, 'team')">Edit</button>
-                                    <button class="apply-team-name-btn" style="display:none;" onclick="applyName(this, 'team')">Save</button>
+                                    <button onclick="openEditTeamModal(this)">Edit</button>
                                     <input asp-for="@Model.Teams[y].Id" class="team-id" hidden />
                                 </td>
                                 <td class="text-center">
@@ -98,18 +96,22 @@
         <button id="open-add-team-modal-button">Add team</button>
 
         <!-- Add team modal -->
-        <div id="addTeamModal" class="modal add-team-modal" style="display: none;">
+        <div id="teamModal" class="modal add-team-modal" style="display: none;">
             <div class="modal-content">
                 <span class="teamModalClose">&times;</span>
 
                 <!-- New team name input field -->
-                <input type="text" id="add-team-input" asp-for="NewTeamName" />
+                <input type="text" id="selected-team-name-input" asp-for="SelectedTeamName" />
+
+                <!-- New team contact input field -->
+                <input type="text" id="selected-team-contact-input" asp-for="SelectedTeamContact" />
 
                 <!-- Buttons -->
                 <div class="form-group row">
                     <div class="col-8 row">
                         <button id="close-add-team-modal-button">Cancel</button>
-                        <input type="submit" id="add-team-submit-button" class="btn btn-info w-100" name="add" value="Add" asp-action="AddTeam" />
+                        <input type="submit" id="add-team-submit-button" class="btn btn-info w-100" name="add" value="Add" asp-action="AddTeam" style="display:none;" />
+                        <input type="submit" id="edit-team-submit-button" class="btn btn-info w-100" name="edit" value="Save" style="display:none;" />
                     </div>
                 </div>
 

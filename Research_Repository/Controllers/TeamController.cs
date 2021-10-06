@@ -25,7 +25,7 @@ namespace Research_Repository.Controllers
         public IActionResult Index(bool redirect)
         {
             //Create a team view model to pass to the view
-            TeamVM teamVM = new TeamVM { Teams = null, NewTeamName = "" };
+            TeamVM teamVM = new TeamVM { Teams = null, SelectedTeamName = "", SelectedTeamContact = "" };
 
             //If the teams page is loading for the first time without making any changes
             if (redirect == false)
@@ -168,7 +168,7 @@ namespace Research_Repository.Controllers
                 teamVM.Teams = new List<Team>();
             }
             //Add the new team to the list of teams returned from the view
-            teamVM.Teams.Add(new Team { Id = newId, Name = teamVM.NewTeamName, Projects = new List<Project>() });
+            teamVM.Teams.Add(new Team { Id = newId, Name = teamVM.SelectedTeamName, Contact = teamVM.SelectedTeamContact, Projects = new List<Project>() });
 
             //Solves error where inputs in the view display the incorrect values
             ModelState.Clear();

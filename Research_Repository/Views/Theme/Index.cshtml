@@ -53,13 +53,12 @@
                         {
                             <tr class="theme">
 
-                                <td width="50%">
+                                <td width="50%" >
                                     <input asp-for="@Model.ThemeObjects[y].Theme.Id" class="theme-id" hidden />
                                     <div class="theme-name-text">@Model.ThemeObjects[y].Theme.Name</div>
-                                    <input asp-for="@Model.ThemeObjects[y].Theme.Name" class="form-control theme-name-input" style="display:none;" />
-                                    <button class="edit-theme-name-btn" onclick="editName(this, 'theme')">Edit</button>
-                                    <button class="apply-theme-name-btn" style="display:none;" onclick="applyName(this, 'theme')">Save</button>
-                                    <span asp-validation-for="@Model.ThemeObjects[y].Theme.Name" class="text-danger"></span>
+                                    <input class="form-control theme-name-input" asp-for="@Model.ThemeObjects[y].Theme.Name" style="display:none;" />
+                                    <textarea class="form-control theme-description-input" asp-for="@Model.ThemeObjects[y].Theme.Description" style="display:none;"></textarea>
+                                    <button onclick="openEditThemeModal(this)">Edit</button>
                                 </td>
                                 <td>
                                     @if (Model.ThemeObjects[y].TagCheckboxes != null)
@@ -103,18 +102,22 @@
         <input type="submit" class="btn btn-info w-100" id="myTagBtn" name="openModal" value="Add/Edit Tags" />
 
         <!-- Add theme modal -->
-        <div id="addThemeModal" class="modal add-team-modal" style="display: none;">
+        <div id="themeModal" class="modal add-theme-modal" style="display: none;">
             <div class="modal-content">
                 <span class="themeModalClose">&times;</span>
 
-                <!-- New theme name input field-->
-                <input type="text" id="add-theme-input" asp-for="NewThemeName" />
+                <!-- New team name input field -->
+                <input type="text" id="selected-theme-name-input" asp-for="SelectedThemeName" />
+
+                <!-- New team contact input field -->
+                <textarea type="text" id="selected-theme-description-input" asp-for="SelectedThemeDescription"></textarea>
 
                 <!-- Buttons -->
                 <div class="form-group row">
                     <div class="col-8 row">
                         <button id="close-add-theme-modal-button">Cancel</button>
-                        <input type="submit" id="add-team-submit-button" class="btn btn-info w-100" name="add" value="Add" asp-action="AddTheme" />
+                        <input type="submit" id="add-theme-submit-button" class="btn btn-info w-100" name="add" value="Add" asp-action="AddTheme" style="display:none;" />
+                        <input type="submit" id="edit-theme-submit-button" class="btn btn-info w-100" name="edit" value="Save" style="display:none;" />
                     </div>
                 </div>
 

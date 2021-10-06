@@ -32,6 +32,7 @@ function getTeams() {
 
         const teamId = $(element).find(".team-id").first().val();
         const teamName = $(element).find(".team-name-input").first().val();
+        const teamContact = $(element).find(".team-contact-input").first().val();
 
         $(element).find(".project").each(function (i, e) {
             const projectId = $(e).find(".project-id").first().val();
@@ -39,7 +40,7 @@ function getTeams() {
             const project = { Id: projectId, Name: projectName, TeamId: teamId }
             projectsList.push(project);
         })
-        const team = { Id: teamId, Name: teamName, Projects: projectsList }
+        const team = { Id: teamId, Name: teamName, Contact: teamContact, Projects: projectsList };
         teamsList.push(team);
     });
     return teamsList;
@@ -108,7 +109,6 @@ function openProjectModal(project) {
     const projectName = $(project).siblings(".project-name-input").first().val();
     const projectId = $(project).siblings(".project-id").first().val();
     const teamId = $(project).closest(".team").find(".team-id").first().val();
-    const oldTeamId = $(project).siblings("#project-oldTeamId-modal-input").first().val();
     $("#project-name-modal-input").attr("value", projectName);
     $("#project-id-modal-input").attr("value", projectId);
     $("#project-teamId-modal-input").val(teamId);

@@ -12,92 +12,95 @@
 </head>
 
 <body>
-        <!-- Header -->
-        <header class="grid">
-            <div class="header grid-column-main--full-width">
-                <div class="header__content">
-                    <div class="header__header-top">
-                        <a asp-area="" asp-controller="Home" asp-action="Index" class="header__logo-link">
-                            <div class="header__logo-image-container">
-                                <img class="header__logo-image"
-                                     src="~/images/pngs/aus-gov-logo.png"
-                                     alt="australian_government_logo" />
-                            </div>
-                            <div class="header__logo-text-container">
-                                <h1 class="header__logo-text-heading site-heading">
-                                    Research Repository
-                                </h1>
-                                <h2 class="header__logo-text-subheading site-subheading">
-                                    All your reserch in one place.
-                                </h2>
-                            </div>
+    <!-- Header -->
+    <header class="grid">
+        <div class="header grid-column-main--full-width">
+            <div class="header__content">
+                <div class="header__header-top">
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="header__logo-link">
+                        <div class="header__logo-image-container">
+                            <img class="header__logo-image"
+                                 src="~/images/pngs/aus-gov-logo.png"
+                                 alt="australian_government_logo" />
+                        </div>
+                        <div class="header__logo-text-container">
+                            <h1 class="header__logo-text-heading site-heading">
+                                Research Repository
+                            </h1>
+                            <h2 class="header__logo-text-subheading site-subheading">
+                                All your reserch in one place.
+                            </h2>
+                        </div>
+                    </a>
+                </div>
+                <div class="header__header-bottom">
+                    <nav class="header__navbar">
+                        <a id="home-nav-link" class="header__nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                            Home
                         </a>
-                    </div>
-                    <div class="header__header-bottom">
-                        <nav class="header__navbar">
-                            <a id="home-nav-link" class="header__nav-link" asp-area="" asp-controller="Home" asp-action="Index">
-                                Home
-                            </a>
-                            <a id="library-nav-link" class="header__nav-link" asp-area="" asp-controller="Item" asp-action="Index"> Library </a>
-                            <a id="contribute-nav-link" class="header__nav-link" asp-area="" asp-controller="Item" asp-action="Upsert"> Contribute </a>
-                            @if (!User.Identity.IsAuthenticated)
-                            {
-                                <a id="login-nav-link" class="header__nav-link" asp-area="Identity" asp-page="/Account/Login"> Login/Register </a>
-                            }
-                            else
-                            {
-                        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })">
-                            <button type="submit" id="logout-nav-link" class="header__nav-link"> Logout </button>
-                        </form>
- 
-                            }
+                        <a id="library-nav-link" class="header__nav-link" asp-area="" asp-controller="Item" asp-action="Index"> Library </a>
+                        <a id="contribute-nav-link" class="header__nav-link" asp-area="" asp-controller="Item" asp-action="Upsert"> Contribute </a>
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <a id="login-nav-link" class="header__nav-link" asp-area="Identity" asp-page="/Account/Login"> Login/Register </a>
+                        }
+                        else
+                        {
+                            <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })">
+                                <button type="submit" id="logout-nav-link" class="header__nav-link"> Logout </button>
+                            </form>
 
-                            @if (User.Identity.IsAuthenticated)
-                            {
-                                <div class="header__nav-link--align-right">
-                                    @if (User.IsInRole(WC.LibrarianRole))
-                                    {
-                                        <a id="librarian-nav-link" class="header__nav-link" asp-area="" asp-controller="ItemRequest" asp-action="Index"> Librarian Portal </a>
-                                    }
-                                    <a id="profile-nav-link" class="header__nav-link" asp-area="" asp-controller="Profile" asp-action="Index"> Profile </a>
-                                    <span id="item-notification-count" class="
+                        }
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="header__nav-link--align-right">
+                                @if (User.IsInRole(WC.LibrarianRole))
+                                {
+                                    <a id="librarian-nav-link" class="header__nav-link" asp-area="" asp-controller="ItemRequest" asp-action="Index"> Librarian Portal </a>
+                                }
+                                <a id="profile-nav-link" class="header__nav-link" asp-area="" asp-controller="Profile" asp-action="Index"> Profile </a>
+                                <span id="item-notification-count" class="
                     notification-bubble notification-bubble__header-notification notification-bubble--hidden
                   "></span>
-                                </div>
-                            }
-                        </nav>
-                    </div>
+                            </div>
+                        }
+                    </nav>
                 </div>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <!-- Main content -->
-        <main>
-            @RenderBody()
-        </main>
+    <!-- Main content -->
+    <main>
+        @RenderBody()
+    </main>
 
-        <!-- Footer -->
-        <footer class="grid grid--footer">
-            <div class="footer grid-column-main--full-width">
-                <div class="footer__content">
-                    <div class="footer__nav-links">
-                        <a class="footer__nav-link" href="#"> Privacy </a>
-                        <a class="footer__nav-link" href="#"> Need help? </a>
-                        <a class="footer__nav-link" href="#"> Accessibility </a>
-                        <a class="footer__nav-link" href="#"> Disclaimer </a>
-                    </div>
-                    <div class="footer__footer-bottom">
-                        <span class="footer__copyright-disclaimer">&copy; Commonwealth of Australia</span>
-                    </div>
+    <!-- Footer -->
+    <footer class="grid grid--footer">
+        <div class="footer grid-column-main--full-width">
+            <div class="footer__content">
+                <div class="footer__nav-links">
+                    <a class="footer__nav-link" href="#"> Privacy </a>
+                    <a class="footer__nav-link" href="#"> Need help? </a>
+                    <a class="footer__nav-link" href="#"> Accessibility </a>
+                    <a class="footer__nav-link" href="#"> Disclaimer </a>
+                </div>
+                <div class="footer__footer-bottom">
+                    <span class="footer__copyright-disclaimer">&copy; Commonwealth of Australia</span>
                 </div>
             </div>
-        </footer>
+        </div>
+    </footer>
 
     <!-- Javascript and CSS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
           rel="stylesheet" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Custom -->
     <script src="~/js/scripts.min.js" asp-append-version="true"></script>

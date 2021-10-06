@@ -6,7 +6,9 @@ namespace Research_Repository_Models.ViewModels
     {
         public IList<ThemeObjectVM> ThemeObjects { get; set; }
 
-        public string NewThemeName { get; set; }
+        public string SelectedThemeName { get; set; }
+
+        public string SelectedThemeDescription { get; set; }
     }
 
     public class ThemeObjectVM

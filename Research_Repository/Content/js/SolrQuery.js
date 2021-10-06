@@ -467,13 +467,9 @@ function clearFilters() {
 
     $("#filters label").show();
 
-    $("#start-date-search").val("0001-01-01");
+    $("#start-date-search").val("");
 
-    //Set end date as todays date
-    let date = new Date();
-    const offset = date.getTimezoneOffset();
-    date = new Date(date.getTime() - (offset * 60 * 1000));
-    $("#end-date-search").val(date.toISOString().split('T')[0]);
+    $("#end-date-search").val("");
 
     updateFilterParameters(0, "Published");
 }
