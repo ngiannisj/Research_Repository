@@ -150,9 +150,9 @@
 
         @*Project inputs*@
         <div class="field">
-            <label for="selected-team-contact"
+            <label for="selected-project-name"
                    class="field__label field__label--secondary text--pale-grey">Project:</label>
-            <input type="text" name="selected-team-contact" id="project-name-modal-input" asp-for="SelectedTeamContact" class="field__input field__input--secondary" />
+            <input type="text" name="selected-project-name" id="project-name-modal-input" class="field__input field__input--secondary" />
             <input id="project-id-modal-input" hidden />
             <input id="project-oldTeamId-modal-input" hidden />
         </div>
@@ -160,7 +160,7 @@
         @*Team select list*@
         <div class="field">
             <label class="field__label field__label--secondary text--pale-grey" for="team-accordion-select">Team:</label>
-            <div id="user-team-selector" class="accordion__container accordion__container--select-list">
+            <div id="team-selector" class="accordion__container accordion__container--select-list">
                 <input id="project-teamId-modal-input" class="select-list-input" name="team-accordion-select" value="" hidden />
                 <button class="
                   field__input field__input--secondary field__input--small
@@ -204,7 +204,7 @@
         <div class="modal__image-contianer">
             <img class="modal__image"
                  src="images/svgs/caution.svg"
-                 alt="celebration_image" />
+                 alt="caution_image" />
         </div>
 
         @*Description*@

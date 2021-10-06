@@ -2,7 +2,7 @@
 
     // When the user clicks the open button, open the modal 
     $("#myTagBtn").click(function () {
-        $("#tag-name-input").hide();
+        $("#tag-name-input-container").hide();
         $("#open-delete-tag-modal-btn").hide();
         $("#tag-submit-button").hide();
         $("#open-delete-tag-modal-btn").prop('disabled', true);
@@ -75,11 +75,13 @@
     //=====================================================
 
     // When the user clicks on close button, close the modal
-    $(".tagModalClose").click(function () {
+    $("#close-tag-modal-button").click(function () {
+        event.preventDefault();
         $("#myTagModal").hide();
         $("#tag-name-input").val("");
-        $("#tag-name-input").hide();
-        $("#tag-select-dropdown").val(0);
+        $("#tag-name-input-container").hide();
+        $("#tagId-modal-input").val("");
+        $("#tagId-modal-selectList").html("");
         $("#open-delete-tag-modal-btn").hide();
         $("#tag-submit-button").hide();
         $("#open-delete-tag-modal-btn").prop('disabled', true);
@@ -96,8 +98,9 @@
             if (modal.is(e.target) && modal.has(e.target).length === 0) {
                 modal.hide();
                 $("#tag-name-input").val("");
-                $("#tag-name-input").hide();
-                $("#tag-select-dropdown").val(0);
+                $("#tag-name-input-container").hide();
+                $("#tagId-modal-input").val("");
+                $("#tagId-modal-selectList").html("");
                 $("#open-delete-tag-modal-btn").hide();
                 $("#tag-submit-button").hide();
                 $("#open-delete-tag-modal-btn").prop('disabled', true);
@@ -109,11 +112,15 @@
 
     });
     //On tag select list dropdown change, set tag name field
-    $("#tag-select-dropdown").change(function () {
-        populateTagNameField($(this));
-        $("#check-all-status").prop("checked", false);
-        $("#check-all-status-container").show();
-        $("#tag-name-input-container").show();
+    $(".tag-id-option").click(function () {
+        console.log("thinggy");
+        if ($(this).data("value") != $("#tagId-modal-input").val()) {
+            populateTagNameField($(this));
+            $("#check-all-status").prop("checked", false);
+            $("#check-all-status-container").show();
+            $("#tag-name-input-container").show();
+            console.log("thing");
+        }
     });
 
     //On tag modal btn click, update tags
@@ -166,10 +173,11 @@ function saveTempThemes(themesList) {
 
 //Update tag name field based on tag selected from dropdown
 function populateTagNameField($this) {
-    let selectedTagId = parseInt($this.find(":selected").attr("value"));
+    let selectedTagId = $($this).data("value");
     if (selectedTagId == "newTag") {
         selectedTagId = null;
     }
+    console.log($($this));
     $.ajax({
         type: "GET",
         url: "/Tag/GetTagName",
@@ -189,7 +197,7 @@ function populateTagNameField($this) {
                 $("#open-delete-tag-modal-btn").show();
                 $("#open-delete-tag-modal-btn").prop('disabled', false);
             }
-            $("#tag-name-input").show();
+            $("#tag-name-input-container").show();
             $("#tag-submit-button").show();
             $("#tag-submit-button").prop('disabled', false);
         },
@@ -202,7 +210,7 @@ function populateTagNameField($this) {
 //Update tags
 function updateTags($this) {
 
-    let selectedTagId = $("#tag-select-dropdown").first().find(":selected").attr("value");
+    let selectedTagId = $("#tagId-modal-input").val();
 
     if (selectedTagId == "newTag") {
         selectedTagId = 0;
@@ -216,7 +224,8 @@ function updateTags($this) {
 
     let formAction = $this.val();
 
-    $("#tag-select-dropdown").val(0);
+    $("#tagId-modal-input").val("");
+    $("#tagId-modal-selectList").html("");
     $("#tag-name-input").val("");
 
     $.ajax({
@@ -226,16 +235,26 @@ function updateTags($this) {
         contentType: 'application/json; charset=utf-8',
         success: function (data) {
             //Reload tag dropdown list
-            var $el = $("#tag-select-dropdown");
-            $('#tag-select-dropdown option:gt(1)').remove(); // remove all options, but not the first two
-
+            let $el = $(".accordion__content--select-list").first();
+            $('#tagId-modal-input option:gt(1)').html(""); // remove all options, but not the first two
+            let options = "";
+            options += `<button onclick="selectListOptionClick(this)"
+                                    class="accordion__content-option"
+                                    data-value="newTag">New Tag
+                            </button>`
             for (let i = 0; i < data.length; i++) {
-                $el.append($("<option></option>").attr("value", data[i].id).text(data[i].name));
+                options += `<button onclick="selectListOptionClick(this)"
+                                    class="accordion__content-option"
+                                    data-value="${data[i].id}">${data[i].name}
+                            </button>`
             }
+
+            $($el).html(options);
 
             //Hide and uncheck 'checkAll' checkbox
             $("#check-all-status").prop("checked", false);
             $("#check-all-status-container").hide();
+            $("#check-all-status-container .field__label--checkbox").removeClass("field__label--checkbox-checked");
             $("#tag-name-input-container").hide();
         },
         error: function (error) {

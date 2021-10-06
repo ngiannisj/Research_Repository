@@ -3,12 +3,14 @@
     //On modal action button click e.g. delete, save
     $(".project-modal-btn").click(function () {
         updateProjects($(this));
+        event.preventDefault();
     });
 
     // On modal close hide modal
-    $(".projectModalClose").click(function () {
+    $("#close-add-project-modal-button").click(function () {
         $("#myProjectModal").hide();
         $("body").removeClass("no-scroll");
+        event.preventDefault();
     });
 
     $(document).mouseup(function (e) {

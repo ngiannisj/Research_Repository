@@ -71,6 +71,16 @@
 
 //Selectlist accordion functionality
 function selectListOptionClick($this) {
+    if ($("#tagId-modal-input").length) {
+        if ($($this).data("value") != $("#tagId-modal-input").val()) {
+            populateTagNameField($($this));
+            $("#check-all-status").prop("checked", false);
+            $("#check-all-status-container").show();
+            $("#tag-name-input-container").show();
+            console.log("thing");
+        }
+    }
+
     $($this)
         .closest(".accordion__container--select-list")
         .find(".accordion__button--select-list")
