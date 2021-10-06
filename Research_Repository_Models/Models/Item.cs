@@ -58,6 +58,7 @@ namespace Research_Repository_Models
         public ICollection<ItemTag> ItemTags { get; set; }
 
         //Research information
+        [Required]
         public string Title { get; set; }
 
         public string Abstract { get; set; }
