@@ -17,6 +17,18 @@
         event.stopPropagation();
     });
 
+    $(".accordion__button .button--icon").keydown(function () {
+        event.stopPropagation();
+    });
+
+    $(".accordion__button .button--icon").mouseover(function () {
+        $(this).closest(".accordion").addClass("no-hover");
+    });
+
+    $(".accordion__button .button--icon").mouseleave(function () {
+        $(this).closest(".accordion").removeClass("no-hover");
+    });
+
     //Basic accordion functionality
     $(".accordion").click(function () {
         $(this).toggleClass("accordion--active");
@@ -48,54 +60,8 @@
         $(this).closest(".accordion__container").removeClass("focus");
     });
 
-    //=========================================================================
-
-    //Modal
-
-    //Stop body scroll when modal is open
-
-
-    //Lock focus to modal when modal is open
-    $(document).ready(function () {
-        var findInsiders = function (elem) {
-            var tabbable = elem
-                .find("select, input, textarea, button, a")
-                .filter(":visible");
-
-            var firstTabbable = tabbable.first();
-            var lastTabbable = tabbable.last();
-            /*set focus on first input*/
-            firstTabbable.focus();
-
-            /*redirect last tab to first input*/
-            lastTabbable.on("keydown", function (e) {
-                if (e.which === 9 && !e.shiftKey) {
-                    e.preventDefault();
-                    firstTabbable.focus();
-                }
-            });
-
-            /*redirect first shift+tab to last input*/
-            firstTabbable.on("keydown", function (e) {
-                if (e.which === 9 && e.shiftKey) {
-                    e.preventDefault();
-                    lastTabbable.focus();
-                }
-            });
-
-            /* allow escape key to close insiders div */
-            elem.on("keyup", function (e) {
-                if (e.keyCode === 27) {
-                    elem.hide();
-                }
-            });
-        };
-
-        findInsiders($(".modal"));
-    });
-
-    //===========================================================
-
+    //===================================
+    //Back button to go back to previous page
     $(".link--back").click(function () {
         window.history.back();
     })
@@ -116,8 +82,7 @@ function selectListOptionClick($this) {
         .first()
         .html($($this).text());
 
-    $("#selected-team-id").val($($this).data("value"));
-    console.log($("#selected-team-id").val());
+    $($this).closest(".accordion__container").find(".select-list-input").first().val($($this).data("value"));
     event.preventDefault();
 }
 
@@ -171,4 +136,41 @@ function highlightSelectedSidebarNavLink() {
         $("#create-librarian-nav-link").addClass("sidebar-nav__nav-link--active");
         return
     }
+};
+
+//==============================================================================
+//Lock modal focus
+function findInsiders(elem) {
+    let tabbable = elem
+        .find("select, input, textarea, button, a")
+        .filter(":visible");
+
+    let firstTabbable = tabbable.first();
+    let lastTabbable = tabbable.last();
+
+    /*set focus on first input*/
+    firstTabbable.focus();
+
+    /*redirect last tab to first input*/
+    lastTabbable.on("keydown", function (e) {
+        if (e.which === 9 && !e.shiftKey) {
+            e.preventDefault();
+            firstTabbable.focus();
+        }
+    });
+
+    /*redirect first shift+tab to last input*/
+    firstTabbable.on("keydown", function (e) {
+        if (e.which === 9 && e.shiftKey) {
+            e.preventDefault();
+            lastTabbable.focus();
+        }
+    });
+
+    /* allow escape key to close insiders div */
+    elem.on("keyup", function (e) {
+        if (e.keyCode === 27) {
+            elem.hide();
+        }
+    });
 };

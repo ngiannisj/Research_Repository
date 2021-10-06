@@ -9,7 +9,8 @@
         $("#tag-submit-button").prop('disabled', true);
         $("#myTagModal").show();
         saveTempThemes(getThemes());
-
+        $("body").addClass("no-scroll");
+        findInsiders($("#myTagModal"));
         event.preventDefault();
     });
 
@@ -24,6 +25,7 @@
         $("#open-delete-tag-modal-btn").prop('disabled', true);
         $("#tag-submit-button").prop('disabled', true);
         updateThemeTags();
+        $("body").removeClass("no-scroll");
     })
 
     //If user clicks outside the modal
@@ -41,6 +43,7 @@
                 $("#open-delete-tag-modal-btn").prop('disabled', true);
                 $("#tag-submit-button").prop('disabled', true);
                 updateThemeTags();
+                $("body").removeClass("no-scroll");
             }
         }
 

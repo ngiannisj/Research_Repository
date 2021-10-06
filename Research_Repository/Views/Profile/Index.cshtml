@@ -55,7 +55,7 @@
 
             }
             <div id="user-team-selector" class="accordion__container accordion__container--select-list" style="display:none;">
-                <input id="selected-team-id" asp-for="User.TeamId" value="" hidden />
+                <input id="selected-team-id" class="select-list-input" asp-for="User.TeamId" value="" hidden />
                 <button class="
                   field__input field__input--secondary field__input--small
             accordion accordion__button accordion accordion__button--select-list" onclick="selectListButtonClick()" data-selected="@Model.User.Team.Name">@Model.User.Team.Name</button>

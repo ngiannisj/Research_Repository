@@ -142,9 +142,14 @@
     display: none;
     width: 100%;
     z-index: 1;
-
     li {
       padding-bottom: 1.2rem;
+
+      button:not(.button) {
+          background: none;
+          border: none;
+      }
+
       &:last-of-type {
         padding-bottom: 0;
       }
@@ -159,7 +164,7 @@
       padding: 0 8rem 2.6rem 8rem;
 
       ul {
-        padding:  0 0 3.4rem 0;
+        padding:  0;
       }
 
       li {

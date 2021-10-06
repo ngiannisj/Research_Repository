@@ -284,6 +284,7 @@ ul {
     color: $base-blue;
 }
 
+//Accordion
 .accordion {
     &__button {
         &:hover {
@@ -291,113 +292,132 @@ ul {
                 text-decoration: underline;
             }
         }
-    }
 
-    &__content {
-        &--minimal {
-            li a, li button {
-                text-decoration: underline;
-                background: none;
-                border: none;
-                font-weight: 400;
-                letter-spacing: 0rem;
-                line-height: 2.1rem;
-                color: $base-blue;
-                font-size: 1.6rem;
-
-                &:hover {
-                    font-weight: 600;
-                    cursor: pointer;
-                }
-
-                &:visited {
-                    color: $base-blue;
+        &.no-hover {
+            .accordion__title {
+                text-decoration: none !important;
                 }
             }
         }
 
-        &-option {
+        &__content {
+            &--minimal {
+                li a, li button {
+                    text-decoration: underline;
+                    background: none;
+                    border: none;
+                    font-weight: 400;
+                    letter-spacing: 0rem;
+                    line-height: 2.1rem;
+                    color: $base-blue;
+                    font-size: 1.6rem;
+
+                    &:hover {
+                        font-weight: 600;
+                        cursor: pointer;
+                    }
+
+                    &:visited {
+                        color: $base-blue;
+                    }
+                }
+            }
+
+            &-option {
+                font-size: 1.8rem;
+                line-height: 2.7rem;
+                color: $base-blue;
+            }
+        }
+    }
+    //Pagination
+    .pagination {
+        &__container {
+            ul {
+                list-style-type: none;
+            }
+        }
+
+        &__button {
             font-size: 1.8rem;
             line-height: 2.7rem;
+            font-weight: 400;
             color: $base-blue;
+
+            &:hover {
+                text-decoration: underline;
+                cursor: pointer;
+            }
+
+            &--active {
+                font-weight: 600;
+                text-decoration: underline;
+            }
         }
     }
-}
-
-//Pagination
-.pagination {
-    &__container {
-        ul {
-            list-style-type: none;
-        }
-    }
-
-    &__button {
-        font-size: 1.8rem;
-        line-height: 2.7rem;
-        font-weight: 400;
-        color: $base-blue;
-
-        &:hover {
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-        &--active {
+    //User details
+    .user-details {
+        &__title {
+            font-size: 4rem;
             font-weight: 600;
-            text-decoration: underline;
+            line-height: 6rem;
         }
     }
-}
+    //Text modifiers
+    .text {
+        //Colours
+        &--black {
+            color: $black;
+        }
 
-//User details
-.user-details {
-    &__title {
-        font-size: 4rem;
-        font-weight: 600;
-        line-height: 6rem;
-    }
-}
+        &--pale-grey {
+            color: $pale-grey;
+        }
 
-//Text modifiers
-.text {
-    //Colours
-    &--black {
-        color: $black;
-    }
+        &--transparent-50-base-blue {
+            color: $transparent-50-base-blue;
+        }
 
-    &--pale-grey {
-        color: $pale-grey;
-    }
+        &--transparent-70-base-blue {
+            color: $transparent-70-base-blue;
+        }
+        //Sizes
+        &--small {
+            font-size: 1.4rem;
+            line-height: 1.9rem;
+        }
 
-    &--transparent-50-base-blue {
-        color: $transparent-50-base-blue;
-    }
+        &--medium {
+            font-size: 1.6rem;
+            line-height: 2.1rem;
+        }
 
-    &--transparent-70-base-blue {
-        color: $transparent-70-base-blue;
-    }
-    //Sizes
-    &--small {
-        font-size: 1.4rem;
-        line-height: 1.9rem;
-    }
+        &--large {
+            font-size: 1.8rem;
+            line-height: 2.4rem;
+        }
+        //Weights
+        &--normal {
+            font-weight: 400;
+        }
 
-    &--medium {
-        font-size: 1.6rem;
-        line-height: 2.1rem;
+        &--semibold {
+            font-weight: 600;
+        }
     }
+    //Accordion
+    .accordion {
 
-    &--large {
-        font-size: 1.8rem;
-        line-height: 2.4rem;
+        &__content {
+            &--complex {
+                li {
+                    button:not(.button) {
+                        font-family: "Poppins", sans-serif;
+                        font-size: 1.8rem;
+                        font-weight: 400;
+                        letter-spacing: 0em;
+                    }
+                }
+            }
+        }
     }
-    //Weights
-    &--normal {
-        font-weight: 400;
-    }
-
-    &--semibold {
-        font-weight: 600;
-    }
-}

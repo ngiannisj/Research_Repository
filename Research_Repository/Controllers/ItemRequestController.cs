@@ -36,7 +36,7 @@ namespace Research_Repository.Controllers
         }
 
         //Delete all existing solr indexes and add all solr items
-        public IActionResult ReindexItems()
+        public bool ReindexItems()
         {
             //Get all items from database with navigational properties
             IList<Item> items = _itemRepo.GetAll(isTracking: false, include: source => source
@@ -55,9 +55,14 @@ namespace Research_Repository.Controllers
             }
 
             //Delete all existing solr indexes and add all solr items
-            _solr.Reindex(solrItemsList);
 
-            return RedirectToAction(nameof(Index));
+            if(_solr.Reindex(solrItemsList))
+                {
+                    return true;
+                } else
+                {
+                    return false;
+                }
 
         }
     }

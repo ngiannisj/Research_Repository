@@ -8,6 +8,7 @@
     // On modal close hide modal
     $(".projectModalClose").click(function () {
         $("#myProjectModal").hide();
+        $("body").removeClass("no-scroll");
     });
 
     $(document).mouseup(function (e) {
@@ -17,6 +18,7 @@
             if (modal.is(e.target) && modal.has(e.target).length === 0) {
                 modal.hide();
                 $("#project-name-input").val("");
+                $("body").removeClass("no-scroll");
             }
         }
     });
@@ -77,7 +79,7 @@ function saveTempTeams(teamsList, teamId) {
 //Update projects
 function updateProjects($this) {
     const projectId = $("#project-id-modal-input").first().val();
-    const teamId = $("#project-teamId-modal-input").find(":selected").attr("value");
+    const teamId = $("#project-teamId-modal-input").val();
     const oldTeamId = $("#project-oldTeamId-modal-input").val();
     const projectName = $("#project-name-modal-input").first().val();
     const formAction = $this.val();
@@ -109,17 +111,23 @@ function openProjectModal(project) {
     const projectName = $(project).siblings(".project-name-input").first().val();
     const projectId = $(project).siblings(".project-id").first().val();
     const teamId = $(project).closest(".team").find(".team-id").first().val();
+    const teamName = $(project).closest(".team").find(".team-name-input").first().val();
     $("#project-name-modal-input").attr("value", projectName);
     $("#project-id-modal-input").attr("value", projectId);
     $("#project-teamId-modal-input").val(teamId);
+    $("#project-teamId-modal-selectList").html(teamName);
     $("#project-oldTeamId-modal-input").val(teamId);
+    $("body").addClass("no-scroll");
+    $("#myProjectModal .modal__title").text("Edit a project");
     $("#myProjectModal").show();
+    findInsiders($("#myProjectModal"));
     saveTempTeams(getTeams(), teamId);
     event.preventDefault();
 }
 
 //On open project modal
 function openAddProjectModal(project) {
+    $("body").addClass("no-scroll");
     $("#project-delete-button").hide().prop('disabled', true);
     $("#project-submit-button").val("Add");
     const teamId = $(project).closest(".team").find(".team-id").first().val();
@@ -127,6 +135,9 @@ function openAddProjectModal(project) {
     $("#project-oldTeamId-modal-input").val(teamId);
     $("#project-id-modal-input").attr("value", 0);
     $("#project-name-modal-input").attr("value", "");
+    $("#myProjectModal .modal__title").text("Add a project");
     $("#myProjectModal").show();
+    findInsiders($("#myProjectModal"));
     saveTempTeams(getTeams(), teamId);
+    event.preventDefault();
 };

@@ -64,7 +64,6 @@ function setItemRequestValue() {
         type: "GET",
         dataType: 'json',
         success: function (data) {
-            console.log(data);
             if (data) {
                 $("#item-request-count").html(data);
                 $("#item-request-count").removeClass("notification-bubble--hidden");

@@ -71,7 +71,7 @@
     align-items: center;
     justify-content: center;
     width: fit-content;
-    padding: 1.3rem 4.5rem;
+    padding: 1rem 4.5rem;
     background-color: $base-blue;
     border: 0.3rem solid $base-blue;
     border-radius: 5rem;
@@ -86,7 +86,7 @@
 
     &:focus {
         & + .notification-bubble {
-            z-index: 99;
+            z-index: 98;
         }
     }
     //Sizes

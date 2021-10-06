@@ -10,7 +10,7 @@
     <form asp-route-returnUrl="@Model.ReturnUrl" class="form grid-column-main" method="post">
         @if (User.IsInRole(WC.LibrarianRole))
         {
-            <h1 class="margin-bottom--large">Register an admin account</h1>
+            <h1 class="margin-bottom--large">Register a new librarian</h1>
         }
         else
         {
@@ -50,7 +50,7 @@
                 <label asp-for="Input.TeamId"
                        class="field__label">Team</label>
                 <div id="user-team-input" class="accordion__container accordion__container--select-list">
-                    <input id="selected-team-id" asp-for="Input.TeamId" value="" hidden />
+                    <input id="selected-team-id" class="select-list-input" asp-for="Input.TeamId" value="" hidden />
                     <button class="
                   field__input
             accordion accordion__button accordion accordion__button--select-list" onclick="selectListButtonClick()" data-selected=""></button>

@@ -2,7 +2,7 @@
   &:focus {
     outline: 0.3rem solid $purple;
     position: relative !important;
-    z-index: 99 !important;
+    z-index: 98 !important;
   }
 
   &:disabled,
@@ -21,7 +21,7 @@ a:hover {
 .focus {
   outline: 0.3rem solid $purple !important;
   position: relative !important;
-  z-index: 99;
+  z-index: 98;
 }
 
 .align {
@@ -92,4 +92,20 @@ a:hover {
 .full-width {
     max-width: 100% !important;
     width: 100% !important;
+}
+
+.no-items {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    margin-top: 20rem;
+}
+
+.no-scroll {
+    margin: 0;
+    height: 100%;
+    overflow: hidden
 }

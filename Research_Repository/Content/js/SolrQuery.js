@@ -19,6 +19,27 @@ const numOfItemsPerPage = 10;
 
 $(document).ready(function () {
 
+    //Solr reindex
+    $("#reindex-solr-button").click(function () {
+        event.preventDefault();
+        $.ajax({
+            type: "GET",
+            url: "/ItemRequest/ReindexItems",
+            success: function (data) {
+
+                if (data) {
+                    alert("Reindex succeeded");
+                } else {
+                    alert("Reindex failed");
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
+    //On filter button click
     $("#filters .filter__button").click(function () {
         $(".filter__button").removeClass("button--active");
         $(this).addClass("button--active");
