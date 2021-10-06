@@ -163,7 +163,6 @@ function filterItemList(itemStatus, pageId) {
         url: "/Item/GetFilteredItems",
         data: { "itemQueryJson": stringifiedParameters },
         success: function (data) {
-            console.log(data);
             let itemListHtml = "";
 
             if (!data || data.items.length == 0) {

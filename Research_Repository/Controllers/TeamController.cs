@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Research_Repository_DataAccess.Repository.IRepository;
 using Research_Repository_Models;
 using Research_Repository_Models.ViewModels;
@@ -68,8 +69,10 @@ namespace Research_Repository.Controllers
         }
 
         //Save updated teams/projects to database
-        public IActionResult SaveTeams(IList<Team> teams)
+        public void SaveTeams(string teamsListString)
         {
+
+            IList<Team> teams = JsonConvert.DeserializeObject<IList<Team>>(teamsListString);
 
             //Get list of teams stored in database
             IList<Team> dbTeamList = _teamRepo.GetAll(isTracking: false, include: i => i.Include(a => a.Projects)).ToList();
@@ -149,57 +152,56 @@ namespace Research_Repository.Controllers
             _teamRepo.Save();
             //Solves error where inputs in the view display the incorrect values
             ModelState.Clear();
-            return RedirectToAction(nameof(Index));
         }
 
         //Add team to temp teams in session
-        public IActionResult AddTeam(TeamVM teamVM)
+        public void AddTeam(string teamsListString, string teamName, string teamContact)
         {
+
+            IList<Team> teamsList = JsonConvert.DeserializeObject<IList<Team>>(teamsListString);
+
             //Generate new unique id for the new team
             int newId = 1;
             //If teams exist in the teams list returned from the view, find the largest id number and add 1 to it to find the next unique id number
-            if (teamVM.Teams != null && teamVM.Teams.Count > 0)
+            if (teamsList != null && teamsList.Count > 0)
             {
-                newId = teamVM.Teams.Select(u => u.Id).ToList().Max() + 1;
+                newId = teamsList.Select(u => u.Id).ToList().Max() + 1;
             }
             //Instantiate an empty teams list if a list does not exist
-            if (teamVM.Teams == null)
+            if (teamsList == null)
             {
-                teamVM.Teams = new List<Team>();
+                teamsList = new List<Team>();
             }
             //Add the new team to the list of teams returned from the view
-            teamVM.Teams.Add(new Team { Id = newId, Name = teamVM.SelectedTeamName, Contact = teamVM.SelectedTeamContact, Projects = new List<Project>() });
+            teamsList.Add(new Team { Id = newId, Name = teamName, Contact = teamContact, Projects = new List<Project>() });
 
             //Solves error where inputs in the view display the incorrect values
             ModelState.Clear();
 
             //Save updated teams list to session and update the teams dropdown selectlist
-            SaveTeamsState(teamVM.Teams);
-
-            //Reload teams page with new teams list
-            return RedirectToAction(nameof(Index), new { redirect = true });
+            SaveTeamsState(teamsList);
         }
 
         //Delete team from temp teams in session
-        public IActionResult DeleteTeam(TeamVM teamVM, int deleteId)
+        public void DeleteTeam(string teamsListString, int deleteId)
         {
-            if (teamVM.Teams != null && teamVM.Teams.Count > 0)
+
+            IList<Team> teamsList = JsonConvert.DeserializeObject<IList<Team>>(teamsListString);
+
+            if (teamsList != null && teamsList.Count > 0)
             {
                 //Get item to be removed from items list
-                Team itemToRemove = teamVM.Teams.FirstOrDefault(u => u.Id == deleteId);
+                Team itemToRemove = teamsList.FirstOrDefault(u => u.Id == deleteId);
                 //Remove the item if it exists
                 if (itemToRemove != null)
                 {
-                    teamVM.Teams.Remove(itemToRemove);
+                    teamsList.Remove(itemToRemove);
                 }
                 //Solves error where inputs in the view display the incorrect values
                 ModelState.Clear();
                 //Update teams dropdown selectlist and temp teams stored in session
-                SaveTeamsState(teamVM.Teams);
+                SaveTeamsState(teamsList);
             }
-
-            //Reload teams page with new teams list
-            return RedirectToAction(nameof(Index), new { redirect = true });
         }
 
 

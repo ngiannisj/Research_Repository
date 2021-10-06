@@ -23,6 +23,71 @@
         }
     });
 
+    //======================================================================
+    //These ajax calls are here because there is too much data to pass through the url without compromising security
+
+        //Delete team from session teams
+    $("#delete-team-confirm-btn").click(function () {
+        event.preventDefault();
+        const teamId = $(this).val();
+        const teamsList = getTeams();
+        const jsonTeamsList = JSON.stringify(teamsList);
+        $.ajax({
+            type: "POST",
+            url: "/Team/DeleteTeam",
+            data: { "teamsListString": jsonTeamsList, "deleteId": teamId },
+            success: function (data) {
+              //Reload teams page with new teams list
+                window.location.replace('../team?redirect=True');
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
+        //Add team to session teams
+    $("#add-team-submit-button").click(function () {
+        console.log("hit")
+        event.preventDefault();
+        const name = $("#selected-team-name-input").val();
+        const contact = $("#selected-team-contact-input").val();
+        const teamsList = getTeams();
+        const jsonTeamsList = JSON.stringify(teamsList);
+        $.ajax({
+            type: "POST",
+            url: "/Team/AddTeam",
+            data: { "teamsListString": jsonTeamsList, "teamName": name, "teamContact": contact },
+            success: function (data) {
+                //Reload teams page with new teams list
+                window.location.replace('../team?redirect=True');
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
+    //Save teams to database
+    $("#save-teams-btn").click(function () {
+        event.preventDefault();
+        const teamsList = getTeams();
+        const jsonTeamsList = JSON.stringify(teamsList);
+        $.ajax({
+            type: "POST",
+            url: "/Team/SaveTeams",
+            data: { "teamsListString": jsonTeamsList },
+            success: function (data) {
+                //Reload teams page with new teams list
+                window.location.replace('../team');
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+    //=============================================================================
+
 });
 
 //Get list of teams from DOM
@@ -42,7 +107,7 @@ function getTeams() {
             const project = { Id: projectId, Name: projectName, TeamId: teamId }
             projectsList.push(project);
         })
-        const team = { Id: teamId, Name: teamName, Contact: teamContact, Projects: projectsList };
+        const team = { Id: teamId, Name: teamName, Contact: teamContact, Projects: projectsList, Users: [] };
         teamsList.push(team);
     });
     return teamsList;

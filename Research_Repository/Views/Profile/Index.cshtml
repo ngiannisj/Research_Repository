@@ -58,7 +58,7 @@
                 <input id="selected-team-id" class="select-list-input" asp-for="User.TeamId" value="" hidden />
                 <button class="
                   field__input field__input--secondary field__input--small
-            accordion accordion__button accordion accordion__button--select-list" onclick="selectListButtonClick()" data-selected="@Model.User.Team.Name">@Model.User.Team.Name</button>
+            accordion accordion__button accordion accordion__button--select-list" onclick="selectListButtonClick()" data-selected="@(Model.User.Team != null && Model.User.Team.Name != null ? Model.User.Team.Name : "")">@(Model.User.Team != null && Model.User.Team.Name != null ? Model.User.Team.Name : "")</button>
 
                 <div class="accordion__content accordion__content--select-list">
                     @foreach (SelectListItem selectListItem in teamSelectList)

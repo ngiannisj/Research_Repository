@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using Research_Repository_DataAccess.Repository.IRepository;
 using Research_Repository_Models;
 using Research_Repository_Models.ViewModels;
@@ -67,17 +68,19 @@ namespace Research_Repository.Controllers
         }
 
         //Save themes to database from temp themes in session
-        public IActionResult SaveThemes(ThemeVM themeVM)
+        public IActionResult SaveThemes(string themeVMString)
         {
+            IList<ThemeObjectVM> themeObjects = JsonConvert.DeserializeObject<IList<ThemeObjectVM>>(themeVMString);
+
             //Update tags in database
             _themeRepo.UpdateTagsDb(HttpContext.Session.Get<IList<Tag>>(WC.SessionTags));
 
             //Get a list of theme ids from themes returned from view
             IList<int> tempThemeIdList = new List<int>();
             //If the themes list returned from the view is not null or empty
-            if (themeVM.ThemeObjects != null && themeVM.ThemeObjects.Count > 0)
+            if (themeObjects != null && themeObjects.Count > 0)
             {
-                foreach (ThemeObjectVM theme in themeVM.ThemeObjects)
+                foreach (ThemeObjectVM theme in themeObjects)
                 {
                     //Get themes ids from themes returned from view
                     tempThemeIdList.Add(theme.Theme.Id);
@@ -100,7 +103,7 @@ namespace Research_Repository.Controllers
                 }
 
                 //Add/Update themes in database
-                foreach (ThemeObjectVM theme in themeVM.ThemeObjects)
+                foreach (ThemeObjectVM theme in themeObjects)
                 {
                     //If theme exists in database
                     if (dbThemeIdList.Contains(theme.Theme.Id))
@@ -136,56 +139,53 @@ namespace Research_Repository.Controllers
 
 
         //Delete theme from session
-        public IActionResult DeleteTheme(ThemeVM themeVM, int deleteId)
+        public void DeleteTheme(string themeVMString, int deleteId)
         {
+            IList<ThemeObjectVM> themeObjects = JsonConvert.DeserializeObject<IList<ThemeObjectVM>>(themeVMString);
             //Get theme from themes returned from view
             ThemeObjectVM themeToRemove = new ThemeObjectVM();
-            if (themeVM != null && themeVM.ThemeObjects != null && themeVM.ThemeObjects.Count > 0)
+            if (themeObjects != null && themeObjects.Count > 0)
             {
-                themeToRemove = themeVM.ThemeObjects.FirstOrDefault(u => u.Theme.Id == deleteId);
+                themeToRemove = themeObjects.FirstOrDefault(u => u.Theme.Id == deleteId);
 
                 //Remove theme from temp themes in session
-                themeVM.ThemeObjects.Remove(themeToRemove);
+                themeObjects.Remove(themeToRemove);
             }
 
             //Solves error where inputs in the view display the incorrect values
             ModelState.Clear();
 
             //Update theme session values
-            SaveThemesState(themeVM.ThemeObjects);
-
-            //Reload themes page with themes update with temp theme session values
-            return RedirectToAction(nameof(Index), new { redirect = true });
+            SaveThemesState(themeObjects);
         }
 
         //Add new theme to session themes
-        public IActionResult AddTheme(ThemeVM themeVM)
+        public void AddTheme(string themeVMString, string themeName, string themeDesc)
         {
+            IList<ThemeObjectVM> themeObjects = JsonConvert.DeserializeObject<IList<ThemeObjectVM>>(themeVMString);
+
             //Generate new unique id for the new team
             int newId = 1;
             //If teams exist in the teams list returned from the view, find the largest id number and add 1 to it to find the next unique id number
-            if (themeVM.ThemeObjects != null && themeVM.ThemeObjects.Count > 0)
+            if (themeObjects != null && themeObjects.Count > 0)
             {
-                newId = themeVM.ThemeObjects.Select(u => u.Theme.Id).ToList().Max() + 1;
+                newId = themeObjects.Select(u => u.Theme.Id).ToList().Max() + 1;
             }
 
             //Instantiate an empty themes list if a list does not exist
-            if (themeVM.ThemeObjects == null)
+            if (themeObjects == null)
             {
-                themeVM.ThemeObjects = new List<ThemeObjectVM>();
+                themeObjects = new List<ThemeObjectVM>();
             }
 
             //Add new theme to temp themes object
-            themeVM.ThemeObjects.Add(_themeRepo.CreateThemeVM(newId, themeVM.SelectedThemeName, themeVM.SelectedThemeDescription, null));
+            themeObjects.Add(_themeRepo.CreateThemeVM(newId, themeName, themeDesc, null));
 
             //Solves error where inputs in the view display the incorrect values
             ModelState.Clear();
 
             //Update session with updated tempThemes
-            SaveThemesState(themeVM.ThemeObjects);
-
-            //Reload themes page with themes update with temp theme session values
-            return RedirectToAction(nameof(Index), new { redirect = true });
+            SaveThemesState(themeObjects);
         }
 
         //Save theme/tag/tagSelectList state to session

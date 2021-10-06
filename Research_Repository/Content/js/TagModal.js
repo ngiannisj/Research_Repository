@@ -14,6 +14,66 @@
         event.preventDefault();
     });
 
+     //======================================================================
+    //These ajax calls are here because there is too much data to pass through the url without compromising security
+
+    //Delete theme from session
+    $("#delete-theme-confirm-btn").click(function () {
+        const themeId = $(this).val();
+        const themesList = getThemes();
+        const jsonThemesList = JSON.stringify(themesList);
+        $.ajax({
+            type: "POST",
+            url: "/Theme/DeleteTheme",
+            data: { "themeVMString": jsonThemesList, "deleteId": themeId },
+            success: function (data) {
+                window.location.replace('../theme?redirect=True');
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
+        //Add theme to session
+    $("#add-theme-submit-button").click(function () {
+        event.preventDefault();
+        const themesList = getThemes();
+        const jsonThemesList = JSON.stringify(themesList);
+        const name = $("#selected-theme-name-input").val();
+        const desc = $("#selected-theme-description-input").val();
+        $.ajax({
+            type: "POST",
+            url: "/Theme/AddTheme",
+            data: { "themeVMString": jsonThemesList, "themeName": name, "themeDesc": desc },
+            success: function (data) {
+                window.location.replace('../theme?redirect=True');
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
+    //Save themes to database
+    $("#save-themes-button").click(function () {
+        event.preventDefault();
+        const themesList = getThemes();
+        const jsonThemesList = JSON.stringify(themesList);
+        $.ajax({
+            type: "POST",
+            url: "/Theme/SaveThemes",
+            data: { "themeVMString": jsonThemesList },
+            success: function (data) {
+                window.location.replace('../theme');
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+    //=====================================================
+
     // When the user clicks on close button, close the modal
     $(".tagModalClose").click(function () {
         $("#myTagModal").hide();
