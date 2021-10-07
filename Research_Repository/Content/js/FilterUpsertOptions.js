@@ -13,49 +13,53 @@
 
     //Filter tags on page load
     if ($("#filters").length) {
-        filterTags($("#theme-selector"));
+        filterTags($("#theme-selector").val());
     }
 
     //Filter projects on page load
     if ($("#filters").length) {
-        filterProjects($("#team-selector"));
+        filterProjects($("#team-selector").val());
     }
 
     //Filter tags on theme change
-    $("#theme-selector").change(function () {
-        filterTags($(this));
+    $("#item-theme-selectList-container .accordion__content-option").click(function () {
+        filterTags($(this).data("value"));
     });
 
     //Filter projects on team change
-    $("#team-selector").change(function () {
-        filterProjects($(this));
+    $("#item-team-selectList-container .accordion__content-option").click(function () {
+        filterProjects($(this).data("value"));
     });
 
 });
 
 //Filter tags checklist based on theme selected
-function filterTags($this) {
-
-    let selectedThemeIds = [parseInt($this.find(":selected").attr("value"))];
-
-    if (!selectedThemeIds) {
+function filterTags(id) {
+    if (!id) {
         return
-    };
-
+    }
     $.ajax({
         type: "GET",
         url: "/Item/GetThemeTags",
-        data: { "ids": selectedThemeIds },
+        data: { "ids": id },
         dataType: "json",
         cache: false,
         traditional: true,
         success: function (data) {
             if (data) {
-                $("#checkboxes label").addClass("hidden");
-                for (var i = 0; i < data.length; i++) {
-                    $("#tag-input-id-" + data[i]).parent().removeClass("hidden");;
-                }
+                $(".field__list-item--checkbox").addClass("hidden");
+                $("#tag-selector label").addClass("disabled");
+                $("#tag-selector .field__input-checkbox").prop('disabled', true);
+            for (var i = 0; i < data.length; i++) {
+                $("#tag-input-id-" + data[i]).closest(".field__list-item").removeClass("hidden");
+                $("#tag-input-id-" + data[i]).prop('disabled', false);
+                $("#tag-input-id-" + data[i]).parent().removeClass("disabled");
             }
+        } else {
+                $("#tag-checkbox-filter").closest(".field__list-item").removeClass("hidden");
+                $("#tag-checkbox-filter label").removeClass("disabled");
+                $("#tag-selector .field__input-checkbox").prop('disabled', false);
+        }
         },
         error: function () {
             console.log(error);
@@ -64,27 +68,26 @@ function filterTags($this) {
 }
 
 //Filter projects select list based on team selected
-function filterProjects($this) {
-
-    let selectedTeamIds = [parseInt($this.find(":selected").attr("value"))];
-
-    if (!selectedTeamIds) {
+function filterProjects(id) {
+    if (!id) {
         return
-    };
-
+    }
     $.ajax({
         type: "GET",
         url: "/Item/GetTeamProjects",
-        data: { "ids": selectedTeamIds },
+        data: { "ids": id },
         dataType: "json",
         cache: false,
         traditional: true,
         success: function (data) {
             if (data) {
-                $("#project-selector option:not(:first)").addClass("hidden");
+                $("#project-selector-container .accordion__content-option").addClass("hidden");
                 for (var i = 0; i < data.length; i++) {
-                    $("#project-selector option[value=" + data[i] + "]").removeClass("hidden");;
+                    $("#project-button-" + data[i]).removeClass("hidden");
+                    console.log();
                 }
+            } else {
+                $("#project-selector-container .accordion__content-option").removeClass("hidden");
             }
 
         },
@@ -92,19 +95,4 @@ function filterProjects($this) {
             console.log(error);
         }
     });
-}
-
-//Create checkbox dropdown list
-var expanded = false;
-function showCheckboxes() {
-    if ($("#tag-selector select").prop('disabled') == false) {
-        var checkboxes = document.getElementById("checkboxes");
-        if (!expanded) {
-            checkboxes.style.display = "block";
-            expanded = true;
-        } else {
-            checkboxes.style.display = "none";
-            expanded = false;
-        }
-    }
 }

@@ -26,27 +26,26 @@
 
     //Disable tag dropdown list if no theme is selected
     if ($("#theme-selector").val() != null && $("#theme-selector").val() != 0) {
-        $("#tag-selector select").prop('disabled', false);
+        $("#tag-selector .field__input-checkbox").prop('disabled', false);
+        $("#tag-selector .field__label--checkbox").removeClass("disabled");
     }
 
     //Disable project dropdown list if no team is selected
     if ($("#team-selector").val()) {
-        $("#project-selector").prop('disabled', false);
+        $("#item-project-selectList").prop('disabled', false);
     }
 
     //Enable project dropdown list if a team is selected
-    $("#team-selector").change(function () {
-        if ($(this).val() != 0) {
-            $("#project-selector").prop("selectedIndex", 0);
-            $("#project-selector").prop('disabled', false);
-        }
+    $("#item-team-selectList-container .accordion__content-option").click(function () {
+        $("#project-selector").val("");
+        $("#item-project-selectList").prop('disabled', false);
+        $("#item-project-selectList").html("");
     });
 
     //Enable tag dropdown list if a theme is selected
-    $("#theme-selector").change(function () {
-        if ($(this).val() != 0) {
-            $("#tag-selector select").prop('disabled', false);
-        }
+    $("#item-theme-selectList-container .accordion__content-option").click(function () {
+        $("#tag-selector .field__input-checkbox").prop('disabled', false);
+        $("#tag-selector .field__label--checkbox").removeClass("disabled");
     });
 
     //If status of the item is set to rejected, show the comment textbox (To explain the reason for rejection)
@@ -81,22 +80,37 @@ function addKeyInsightField(buttonRef) {
 
 //Add a suggested tag field when add new tag field button is clicked
 function addSuggestedTagField(buttonRef) {
-    const numberOfSuggestedTags = $(buttonRef).parent().find(".suggested-tag-field").length;
-    const lastSuggestedTag = $(buttonRef).parent();
+    const numberOfSuggestedTags = $(".suggested-field").length;
+    const lastSuggestedTag = $("#suggested-tags");
     lastSuggestedTag.append(
-        `<div class="suggested-tag-field row">
-                                <div class="col-12">
-                                    <label for="SuggestedTagList_${numberOfSuggestedTags}_">SuggestedTagList[${numberOfSuggestedTags}]</label>
+        `<div class="field suggested-field">
+                            <label for="SuggestedTagList_${numberOfSuggestedTags}" class="field__label">Suggested tag</label>
+                            <input type="text"
+                                   class="field__input"
+                                    id="SuggestedTagList_${numberOfSuggestedTags}"
+                                   name="SuggestedTagList[${numberOfSuggestedTags}]"
+                                    value=""/>
+                            <div class="button-group">
+                                <div class="button-group__item">
+                                    <button class="link link--normal" onclick="removeField(this, 'suggestedTag')">
+                                        Remove<div class="link__icon">
+                                            <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M15.625 0.71875H1.375C0.719277 0.71875 0.1875 1.25053 0.1875 1.90625V3.09375C0.1875 3.74947 0.719277 4.28125 1.375 4.28125H15.625C16.2807 4.28125 16.8125 3.74947 16.8125 3.09375V1.90625C16.8125 1.25053 16.2807 0.71875 15.625 0.71875Z" fill="#253C78" />
+                                            </svg>
+                                        </div>
+                                    </button>
                                 </div>
-                                <div class="col-10" data-children-count="1">
-                                    <input class="form-control" type="text" id="SuggestedTagList_${numberOfSuggestedTags}_" name="SuggestedTagList[${numberOfSuggestedTags}]" value="">
-                                    <span class="text-danger field-validation-valid" data-valmsg-for="SuggestedTagList[${numberOfSuggestedTags}]" data-valmsg-replace="true"></span>
-                                </div>
-                                <div class="col-2"><button onclick="removeField(this, 'suggestedTag')">Delete</button></div>
-                            </div>`
+                            </div>
+                        </div>`
+
+
     );
     if (numberOfSuggestedTags == 0) {
-        buttonRef.innerHTML = "Suggest another tag";
+        buttonRef.innerHTML = `Suggest another tag <div class="link__icon">
+                            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
+                            </svg>
+                        </div>`;
     }
     event.preventDefault();
 }
@@ -118,11 +132,15 @@ function hideField(fieldId, addButton) {
 
 //Generic remove field function
 function removeField(buttonRef, field) {
-    $(buttonRef).parent().parent().remove();
+    $(buttonRef).closest(".suggested-field").remove();
     if (field == "suggestedTag") {
         const numberOfSuggestedTags = $(".suggested-tag-field").length;
         if (numberOfSuggestedTags == 0) {
-            $("#add-suggested-tag-button").html("Suggest a tag")
+            $("#add-suggested-tag-button").html(`Suggest a tag <div class="link__icon">
+                            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
+                            </svg>
+                        </div>`)
         }
     }
     event.preventDefault();

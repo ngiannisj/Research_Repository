@@ -26,7 +26,6 @@ $(document).ready(function () {
             type: "GET",
             url: "/ItemRequest/ReindexItems",
             success: function (data) {
-
                 if (data) {
                     alert("Reindex succeeded");
                 } else {
