@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     //When uploaders (not librarians) click the submit button on a 'Draft' item
     $("#submission-item-button").click(function () {
-        $("#itemSubmissionConfirmModal").show();
+        $("#itemSubmissionConfirmModal").removeClass("hidden");
         event.preventDefault();
     });
 
@@ -52,9 +52,9 @@
     //If status of the item is set to rejected, show the comment textbox (To explain the reason for rejection)
     $("#status-selector").change(function () {
         if ($(this).val() == "Rejected") {
-            $("#comment-input").show();
+            $("#comment-input").removeClass("hidden");
         } else {
-            $("#comment-input").hide();
+            $("#comment-input").addClass("hidden");
         }
     });
 
@@ -103,16 +103,16 @@ function addSuggestedTagField(buttonRef) {
 
 //Generic show field function
 function showField(button, fieldId) {
-    $("#" + fieldId).show();
-    $(button).hide();
+    $("#" + fieldId).removeClass("hidden");
+    $(button).addClass("hidden");
     event.preventDefault();
 }
 
 //Generic hide field function
 function hideField(fieldId, addButton) {
     $("#" + fieldId + " input").val('');
-    $("#" + fieldId).hide();
-    $("#" + addButton).show();
+    $("#" + fieldId).addClass("hidden");
+    $("#" + addButton).removeClass("hidden");
     event.preventDefault();
 }
 

@@ -48,13 +48,13 @@
                             <div class="accordion accordion__button accordion__button--complex"
                                  tabindex="0"
                                  role="button">
-                                <input class="form-control theme-name-input" asp-for="@Model.ThemeObjects[y].Theme.Name" style="display:none;" />
-                                <input class="form-control theme-description-input" asp-for="@Model.ThemeObjects[y].Theme.Description" style="display:none;" />
+                                <input class="form-control theme-name-input hidden" asp-for="@Model.ThemeObjects[y].Theme.Name" />
+                                <input class="form-control theme-description-input hidden" asp-for="@Model.ThemeObjects[y].Theme.Description" />
                                 <input asp-for="@Model.ThemeObjects[y].Theme.Id" class="theme-id" hidden />
                                 <button class="button--icon button--icon-delete open-delete-theme-modal-btn" value="@Model.ThemeObjects[y].Theme.Id">
                                     <img src="images/svgs/cross.svg" alt="delete_theme" />
                                 </button>
-                                <h4 class="accordion__title">@Model.ThemeObjects[y].Theme.Name</h4>
+                                <h4 class="accordion__title theme-name-text">@Model.ThemeObjects[y].Theme.Name</h4>
                                 <button class="button--icon button--icon-edit" onclick="openEditThemeModal(this)">
                                     <img src="images/svgs/pencil.svg" alt="edit_theme_name" />
                                 </button>
@@ -102,7 +102,7 @@
 
 
 @*Delete theme modal*@
-<div id="deleteThemeModal" class="modal-container delete-theme-modal" style="display: none;">
+<div id="deleteThemeModal" class="modal-container delete-theme-modal hidden">
     <div class="modal">
 
         @*Image*@
@@ -131,7 +131,7 @@
 </div>
 
 <!-- Upsert theme modal -->
-<div id="themeModal" class="add-theme-modal modal-container" style="display: none;">
+<div id="themeModal" class="add-theme-modal modal-container hidden">
     <div class="modal">
         <h4 class="modal__title">Theme</h4>
 
@@ -140,6 +140,7 @@
             <label for="selected-theme-name"
                    class="field__label field__label--secondary text--pale-grey">Theme name:</label>
             <input type="text" name="selected-theme-name" id="selected-theme-name-input" class="field__input field__input--secondary" asp-for="SelectedThemeName" />
+            <p id="selected-theme-name-error-text" class="field__error-text hidden">This field cannot be empty</p>
         </div>
 
         @*Theme descritpion input field*@
@@ -154,11 +155,11 @@
             <div class="button-group__item">
                 <button id="close-add-theme-modal-button" class="link">Cancel</button>
             </div>
-            <div class="button-group__item">
-                <input type="submit" id="add-theme-submit-button" class="button button--small" value="Add" style="display:none;" />
+            <div id="add-theme-submit-button-container" class="button-group__item hidden">
+                <input type="submit" id="add-theme-submit-button" class="button button--small" value="Add" />
             </div>
-            <div class="button-group__item">
-                <input type="submit" id="edit-theme-submit-button" class="button button--small" name="edit" value="Save" style="display:none;" />
+            <div id="edit-theme-submit-button-container" class="button-group__item hidden">
+                <input type="submit" id="edit-theme-submit-button" class="button button--small" name="edit" value="Save" />
             </div>
         </div>
 
@@ -167,7 +168,7 @@
 
 
 @*Tag modal*@
-<div id="myTagModal" class="modal-container tag-modal" style="display: none;">
+<div id="myTagModal" class="modal-container tag-modal hidden">
     <div class="modal">
         <h4 class="modal__title">Tag</h4>
 
@@ -197,47 +198,47 @@
                     }
                 </div>
             </div>
-            </div>
+        </div>
 
-            @*New tag name input field*@
-            <div class="field" id="tag-name-input-container">
-                <label for="selected-tag-name"
-                       class="field__label field__label--secondary text--pale-grey">Tag name:</label>
-                <input type="text" name="selected-tag-name" id="tag-name-input" class="field__input field__input--secondary" />
-            </div>
+        @*New tag name input field*@
+        <div class="field" id="tag-name-input-container">
+            <label for="selected-tag-name"
+                   class="field__label field__label--secondary text--pale-grey">Tag name:</label>
+            <input type="text" name="selected-tag-name" id="tag-name-input" class="field__input field__input--secondary" />
+            <p id="tag-name-error-text" class="field__error-text hidden">This field cannot be empty</p>
+        </div>
 
-            @*Check-all checkbox*@
-            <div class="field__list-item field__list-item--large" id="check-all-status-container" style="display: none;">
-                <label
-                       class="field__label field__label--toggle field__label--checkbox"
-                       tabindex="0"
-                       role="button">
-                    <input type="checkbox"
-                           class="field__input-toggle field__input-checkbox" name="check-all" id="check-all-status" />
-                    Check all
-                </label>
-            </div>
+        @*Check-all checkbox*@
+        <div class="field__list-item field__list-item--large hidden" id="check-all-status-container">
+            <label class="field__label field__label--toggle field__label--checkbox"
+                   tabindex="0"
+                   role="button">
+                <input type="checkbox"
+                       class="field__input-toggle field__input-checkbox" name="check-all" id="check-all-status" />
+                Check all
+            </label>
+        </div>
 
-            @*Buttons*@
-            <div class="button-group button-group--small align-right">
-                <div class="button-group__item">
-                    <button id="close-tag-modal-button" class="link">Cancel</button>
-                </div>
-                <div class="button-group__item">
-                    <button type="button" id="tag-submit-button" class="button button--small tag-modal-btn" value="Update">Update</button>
-                </div>
-                <div class="button-group__item">
-                    <button type="submit" id="open-delete-tag-modal-btn" class="button button--small button--red">
-                        Delete
-                    </button>
-                </div>
+        @*Buttons*@
+        <div class="button-group button-group--small align-right">
+            <div class="button-group__item">
+                <button id="close-tag-modal-button" class="link">Cancel</button>
             </div>
+            <div id="tag-submit-button-container" class="button-group__item hidden">
+                <button type="button" id="tag-submit-button" class="button button--small tag-modal-btn" value="Update">Update</button>
+            </div>
+            <div id="open-delete-tag-modal-btn-container" class="button-group__item hidden">
+                <button type="submit" id="open-delete-tag-modal-btn" class="button button--small button--red">
+                    Delete
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
 
 @*Delete tag modal*@
-<div id="deleteTagModal" class="modal-container delete-tag-modal" style="display: none;">
+<div id="deleteTagModal" class="modal-container delete-tag-modal hidden">
     <div class="modal">
 
         @*Image*@

@@ -46,7 +46,7 @@
                 <button onclick="showField(this, 'suggested-team-input')" id="add-team-button">Add team</button>
 
                 <!-- Collaborator -->
-                <div class="form-group row" style="display:none;" id="collaborator-input">
+                <div class="form-group row hidden" id="collaborator-input">
                     <div class="col-12">
                         <label asp-for="Item.Collaborator"></label>
                     </div>
@@ -58,7 +58,7 @@
                 </div>
 
                 <!-- Suggested Team -->
-                <div class="form-group row" style="display:none;" id="suggested-team-input">
+                <div class="form-group row hidden" id="suggested-team-input">
                     <div class="col-12">
                         <label asp-for="Item.SuggestedTeam"></label>
                     </div>
@@ -79,7 +79,7 @@
                 <button onclick="showField(this, 'suggested-project-input')" id="add-project-button">Add project</button>
 
                 <!-- Suggested Project -->
-                <div class="form-group row" style="display:none;" id="suggested-project-input">
+                <div class="form-group row hidden" id="suggested-project-input">
                     <div class="col-12">
                         <label asp-for="Item.SuggestedProject"></label>
                     </div>
@@ -100,7 +100,7 @@
                 <button onclick="showField(this, 'suggested-theme-input')" id="add-theme-button">Add theme</button>
 
                 <!-- Suggested Theme -->
-                <div class="form-group row" style="display:none;" id="suggested-theme-input">
+                <div class="form-group row hidden" id="suggested-theme-input">
                     <div class="col-12">
                         <label asp-for="Item.SuggestedTheme"></label>
                     </div>
@@ -279,7 +279,7 @@
                     </div>
 
                     <!-- Comment -->
-                    <div class="form-group row" id="comment-input" style="display:none;">
+                    <div class="form-group row hidden" id="comment-input">
                         <div class="col-12">
                             <label asp-for="Item.Comment"></label>
                         </div>
@@ -305,7 +305,7 @@
 </form>
 
 <!-- Submission confirmation modal -->
-<div id="itemSubmissionConfirmModal" class="modal" style="display: none;">
+<div id="itemSubmissionConfirmModal" class="modal hidden">
     <div class="modal-content">
         <span class="submissionConfirmModalClose">&times;</span>
 

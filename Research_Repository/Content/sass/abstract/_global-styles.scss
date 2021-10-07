@@ -24,6 +24,13 @@ a:hover {
   z-index: 98;
 }
 
+//Error state for field inputs
+.error {
+    outline: 0.3rem solid $red !important;
+    position: relative !important;
+    z-index: 98;
+}
+
 .align {
   &-right {
     margin-left: auto !important;
@@ -108,4 +115,8 @@ a:hover {
     margin: 0;
     height: 100%;
     overflow: hidden
+}
+
+.hidden {
+    display: none !important;
 }

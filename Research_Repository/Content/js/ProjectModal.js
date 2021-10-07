@@ -8,8 +8,11 @@
 
     // On modal close hide modal
     $("#close-add-project-modal-button").click(function () {
-        $("#myProjectModal").hide();
+        $("#project-name-modal-input").val("");
+        $("#myProjectModal").addClass("hidden");
         $("body").removeClass("no-scroll");
+        $("#selected-project-name-error-text").addClass("hidden");
+        $("#project-name-modal-input").removeClass("error");
         event.preventDefault();
     });
 
@@ -18,9 +21,11 @@
         if (modal.is(":visible")) {
             // if the target of the click isn't the container nor a descendant of the container
             if (modal.is(e.target) && modal.has(e.target).length === 0) {
-                modal.hide();
-                $("#project-name-input").val("");
+                $("#project-name-modal-input").val("");
+                modal.addClass("hidden");
                 $("body").removeClass("no-scroll");
+                $("#selected-project-name-error-text").addClass("hidden");
+                $("#project-name-modal-input").removeClass("error");
             }
         }
     });
@@ -48,9 +53,22 @@
         });
     });
 
+    $($("#selected-team-name-input")).on("input", function () {
+        if ($(this).hasClass("error")) {
+            $("#selected-team-name-error-text").addClass("hidden");
+            $("#selected-team-name-input").removeClass("error");
+        }
+    });
+
         //Add team to session teams
     $("#add-team-submit-button").click(function () {
-        console.log("hit")
+
+        if (!$("#selected-team-name-input").val()) {
+            $("#selected-team-name-error-text").removeClass("hidden");
+            $("#selected-team-name-input").addClass("error");
+            return
+        }
+
         event.preventDefault();
         const name = $("#selected-team-name-input").val();
         const contact = $("#selected-team-contact-input").val();
@@ -72,6 +90,12 @@
 
     //Save teams to database
     $("#save-teams-btn").click(function () {
+
+        if (!$("#selected-team-name-input").val()) {
+            $("#selected-team-name-error-text").removeClass("hidden");
+            $("#selected-team-name-input").addClass("error");
+            return
+        }
         event.preventDefault();
         const teamsList = getTeams();
         const jsonTeamsList = JSON.stringify(teamsList);
@@ -127,14 +151,19 @@ function saveTempTeams(teamsList, teamId) {
         dataType: 'json',
         success: function (data) {
             //Reload team dropdown list
-            var $el = $("#project-teamId-modal-input");
-            $('#project-teamId-modal-input option:gt(0)').remove(); // remove all options, but not the first
+            let $el = $(".accordion__content--select-list").first();
+            console.log(data);
+                $('#project-teamId-modal-input').html(""); // remove all options, but not the first two
+                let options = "";
 
-            for (let i = 0; i < data.length; i++) {
-                $el.append($("<option></option>").attr("value", data[i].value).text(data[i].text));
-            }
-
+                for (let i = 0; i < data.length; i++) {
+                    options += `<button onclick="selectListOptionClick(this)"
+                                    class="accordion__content-option"
+                                    data-value="${data[i].value}">${data[i].text}
+                            </button>`
+                }
             $("#project-teamId-modal-input").val(teamId);
+            $($el).html(options);
 
         },
         error: function (error) {
@@ -143,8 +172,22 @@ function saveTempTeams(teamsList, teamId) {
     });
 }
 
+$($("#project-name-modal-input")).on("input", function () {
+    if ($(this).hasClass("error")) {
+        $("#selected-project-name-error-text").addClass("hidden");
+        $("#project-name-modal-input").removeClass("error");
+    }
+});
+
 //Update projects
 function updateProjects($this) {
+
+    if (!$("#project-name-modal-input").val()) {
+        $("#selected-project-name-error-text").removeClass("hidden");
+        $("#project-name-modal-input").addClass("error");
+        return
+    }
+
     const projectId = $("#project-id-modal-input").first().val();
     const teamId = $("#project-teamId-modal-input").val();
     const oldTeamId = $("#project-oldTeamId-modal-input").val();
@@ -176,17 +219,18 @@ function openProjectModal(project) {
     $("#project-delete-button").show().prop('disabled', false);
     $("#project-submit-button").val("Update");
     const projectName = $(project).siblings(".project-name-input").first().val();
+    console.log(projectName);
     const projectId = $(project).siblings(".project-id").first().val();
     const teamId = $(project).closest(".team").find(".team-id").first().val();
     const teamName = $(project).closest(".team").find(".team-name-input").first().val();
-    $("#project-name-modal-input").attr("value", projectName);
+    $("#project-name-modal-input").val(projectName);
     $("#project-id-modal-input").attr("value", projectId);
     $("#project-teamId-modal-input").val(teamId);
     $("#project-teamId-modal-selectList").html(teamName);
     $("#project-oldTeamId-modal-input").val(teamId);
     $("body").addClass("no-scroll");
     $("#myProjectModal .modal__title").text("Edit a project");
-    $("#myProjectModal").show();
+    $("#myProjectModal").removeClass("hidden");
     findInsiders($("#myProjectModal"));
     saveTempTeams(getTeams(), teamId);
     event.preventDefault();
@@ -198,12 +242,14 @@ function openAddProjectModal(project) {
     $("#project-delete-button").hide().prop('disabled', true);
     $("#project-submit-button").val("Add");
     const teamId = $(project).closest(".team").find(".team-id").first().val();
+    const teamName = $(project).closest(".team").find(".team-name-input").first().val();
     $("#project-teamId-modal-input").val(teamId);
+    $("#project-teamId-modal-selectList").html(teamName);
     $("#project-oldTeamId-modal-input").val(teamId);
     $("#project-id-modal-input").attr("value", 0);
     $("#project-name-modal-input").attr("value", "");
     $("#myProjectModal .modal__title").text("Add a project");
-    $("#myProjectModal").show();
+    $("#myProjectModal").removeClass("hidden");
     findInsiders($("#myProjectModal"));
     saveTempTeams(getTeams(), teamId);
     event.preventDefault();

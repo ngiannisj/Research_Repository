@@ -28,7 +28,7 @@
             align-items: flex-start;
             justify-content: center;
 
-            :last-child{
+            :last-child {
                 margin-bottom: 0;
             }
 
@@ -94,6 +94,10 @@
     &__description {
         padding-bottom: 1.5rem;
         margin-top: -.8rem;
+    }
+
+    &__error-text {
+        padding-top: .8rem;
     }
 
     &__label {

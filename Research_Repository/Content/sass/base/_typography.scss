@@ -170,6 +170,10 @@ ul {
         }
     }
 
+    &__error-text {
+        color: $red;
+    }
+
     &__input {
         font-weight: 500;
         font-size: 1.8rem;

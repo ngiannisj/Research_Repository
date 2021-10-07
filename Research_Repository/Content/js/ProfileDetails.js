@@ -3,20 +3,20 @@
     $("#profile-edit-btn").click(function () {
 
         //Show inputs for user details
-        $("#profile-save-btn").show();
-        $("#user-role-input").show();
-        $("#user-firstName-input").show();
-        $("#user-lastName-input").show();
-        $("#user-email-input").show();
-        $("#user-team-selector").show();
+        $("#profile-save-btn").removeClass("hidden");
+        $("#user-role-input").removeClass("hidden");
+        $("#user-firstName-input").removeClass("hidden");
+        $("#user-lastName-input").removeClass("hidden");
+        $("#user-email-input").removeClass("hidden");
+        $("#user-team-selector").removeClass("hidden");
 
         //Hide display text for user details
-        $("#user-firstName-text").hide();
-        $("#user-lastName-text").hide();
-        $("#user-email-text").hide();
-        $("#user-team-text").hide();
-        $("#user-role-text").hide();
-        $(this).hide();
+        $("#user-firstName-text").addClass("hidden");
+        $("#user-lastName-text").addClass("hidden");
+        $("#user-email-text").addClass("hidden");
+        $("#user-team-text").addClass("hidden");
+        $("#user-role-text").addClass("hidden");
+        $(this).addClass("hidden");
 
         event.preventDefault();
     });

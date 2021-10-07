@@ -37,13 +37,13 @@
                             <div class="accordion accordion__button accordion__button--complex"
                                  tabindex="0"
                                  role="button">
-                                <input class="form-control team-name-input" asp-for="@Model.Teams[y].Name" style="display:none;" />
-                                <input class="form-control team-contact-input" asp-for="@Model.Teams[y].Contact" style="display:none;" />
+                                <input class="form-control team-name-input hidden" asp-for="@Model.Teams[y].Name" />
+                                <input class="form-control team-contact-input hidden" asp-for="@Model.Teams[y].Contact" />
                                 <input asp-for="@Model.Teams[y].Id" class="team-id" hidden />
                                 <button class="button--icon button--icon-delete open-delete-team-modal-btn" value="@Model.Teams[y].Id">
                                     <img src="images/svgs/cross.svg" alt="delete_team" />
                                 </button>
-                                <h4 class="accordion__title">@Model.Teams[y].Name</h4>
+                                <h4 class="accordion__title team-name-text">@Model.Teams[y].Name</h4>
                                 <button class="button--icon button--icon-edit" onclick="openEditTeamModal(this)">
                                     <img src="images/svgs/pencil.svg" alt="edit_team_name" />
                                 </button>
@@ -79,7 +79,7 @@
 </form>
 
 @*Delete team modal*@
-<div id="deleteTeamModal" class="modal-container delete-team-modal" style="display: none;">
+<div id="deleteTeamModal" class="modal-container delete-team-modal hidden">
     <div class="modal">
 
         @*Image*@
@@ -109,16 +109,17 @@
 
 
 @*Upsert team modal*@
-<div id="teamModal" class="add-team-modal modal-container" style="display: none;">
+<div id="teamModal" class="add-team-modal modal-container hidden">
     <div class="modal">
         <h4 class="modal__title">Team</h4>
 
         @*New team name input field*@
-        <div class="field">
-            <label for="selected-team-name"
-                   class="field__label field__label--secondary text--pale-grey">Team name:</label>
-            <input type="text" name="selected-team-name" id="selected-team-name-input" class="field__input field__input--secondary" asp-for="SelectedTeamName" />
-        </div>
+    <div class="field">
+        <label for="selected-team-name"
+               class="field__label field__label--secondary text--pale-grey">Team name:</label>
+        <input type="text" name="selected-team-name" id="selected-team-name-input" class="field__input field__input--secondary" asp-for="SelectedTeamName" />
+        <p id="selected-team-name-error-text" class="field__error-text hidden">This field cannot be empty</p>
+    </div>
 
         @*New team contact input field*@
         <div class="field">
@@ -132,11 +133,11 @@
             <div class="button-group__item">
                 <button id="close-add-team-modal-button" class="link">Cancel</button>
             </div>
-            <div class="button-group__item">
-                <input type="submit" id="add-team-submit-button" class="button button--small" name="add" value="Add" style="display:none;" />
+            <div class="button-group__item hidden" id="add-team-submit-button-container">
+                <input type="submit" id="add-team-submit-button" class="button button--small" name="add" value="Add" />
             </div>
-            <div class="button-group__item">
-                <input type="submit" id="edit-team-submit-button" class="button button--small" name="edit" value="Save" style="display:none;" />
+            <div class="button-group__item hidden" id="edit-team-submit-button-container">
+                <input type="submit" id="edit-team-submit-button" class="button button--small" name="edit" value="Save" />
             </div>
         </div>
 
@@ -144,18 +145,19 @@
 </div>
 
 <!-- Project modal -->
-<div id="myProjectModal" class="modal-container project-modal" style="display: none;">
+<div id="myProjectModal" class="modal-container project-modal hidden">
     <div class="modal">
         <h4 class="modal__title">Project</h4>
 
         @*Project inputs*@
-        <div class="field">
-            <label for="selected-project-name"
-                   class="field__label field__label--secondary text--pale-grey">Project:</label>
-            <input type="text" name="selected-project-name" id="project-name-modal-input" class="field__input field__input--secondary" />
-            <input id="project-id-modal-input" hidden />
-            <input id="project-oldTeamId-modal-input" hidden />
-        </div>
+    <div class="field">
+        <label for="selected-project-name"
+               class="field__label field__label--secondary text--pale-grey">Project:</label>
+        <input type="text" name="selected-project-name" id="project-name-modal-input" class="field__input field__input--secondary" />
+        <p id="selected-project-name-error-text" class="field__error-text hidden">This field cannot be empty</p>
+        <input id="project-id-modal-input" hidden />
+        <input id="project-oldTeamId-modal-input" hidden />
+    </div>
 
         @*Team select list*@
         <div class="field">
@@ -197,7 +199,7 @@
 </div>
 
 @*Delete team modal*@
-<div id="deleteProjectModal" class="modal-container delete-project-modal" style="display: none;">
+<div id="deleteProjectModal" class="modal-container delete-project-modal hidden">
     <div class="modal">
 
         @*Image*@

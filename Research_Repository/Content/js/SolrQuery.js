@@ -418,12 +418,12 @@ function filterTagsForItemsList() {
         traditional: true,
         success: function (data) {
             if (themeIds !== undefined && themeIds.length > 0) {
-                $("#tag-checkbox-filter label").hide();
+                $("#tag-checkbox-filter label").addClass("hidden");
                 for (var i = 0; i < data.length; i++) {
-                    $("#tag-input-id-" + data[i]).parent().show();
+                    $("#tag-input-id-" + data[i]).parent().removeClass("hidden");
                 }
             } else {
-                $("#tag-checkbox-filter label").show();
+                $("#tag-checkbox-filter label").removeClass("hidden");
             }
             updateFilterParameters(queryParameters.paginationStartItem, "Published");
         },
@@ -463,12 +463,12 @@ function filterProjectsForItemsList() {
         traditional: true,
         success: function (data) {
             if (teamIds !== undefined && teamIds.length > 0) {
-                $("#project-checkbox-filter label").hide();
+                $("#project-checkbox-filter label").addClass("hidden");
                 for (var i = 0; i < data.length; i++) {
-                    $("#project-input-id-" + data[i]).parent().show();
+                    $("#project-input-id-" + data[i]).parent().removeClass("hidden");
                 }
             } else {
-                $("#project-checkbox-filter label").show();
+                $("#project-checkbox-filter label").removeClass("hidden");
             }
             //Filter tag list from theme selection
             filterTagsForItemsList();
@@ -485,7 +485,7 @@ function clearFilters() {
     $("#filters input:checked").prop('checked', false);
     $(".field__label--checkbox").removeClass("field__label--checkbox-checked");
 
-    $("#filters label").show();
+    $("#filters label").removeClass("hidden");
 
     $("#start-date-search").val("");
 

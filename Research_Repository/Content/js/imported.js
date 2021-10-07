@@ -75,8 +75,9 @@ function selectListOptionClick($this) {
         if ($($this).data("value") != $("#tagId-modal-input").val()) {
             populateTagNameField($($this));
             $("#check-all-status").prop("checked", false);
-            $("#check-all-status-container").show();
-            $("#tag-name-input-container").show();
+            $("#check-all-status-container .field__label--checkbox").removeClass("field__label--checkbox-checked");
+            $("#check-all-status-container").removeClass("hidden");
+            $("#tag-name-input-container").removeClass("hidden");
             console.log("thing");
         }
     }
@@ -180,7 +181,7 @@ function findInsiders(elem) {
     /* allow escape key to close insiders div */
     elem.on("keyup", function (e) {
         if (e.keyCode === 27) {
-            elem.hide();
+            elem.addClass("hidden");
         }
     });
 };

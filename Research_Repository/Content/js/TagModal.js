@@ -2,12 +2,12 @@
 
     // When the user clicks the open button, open the modal 
     $("#myTagBtn").click(function () {
-        $("#tag-name-input-container").hide();
-        $("#open-delete-tag-modal-btn").hide();
-        $("#tag-submit-button").hide();
+        $("#tag-name-input-container").addClass("hidden");
+        $("#open-delete-tag-modal-btn-container").addClass("hidden");
+        $("#tag-submit-button-container").addClass("hidden");
         $("#open-delete-tag-modal-btn").prop('disabled', true);
         $("#tag-submit-button").prop('disabled', true);
-        $("#myTagModal").show();
+        $("#myTagModal").removeClass("hidden");
         saveTempThemes(getThemes());
         $("body").addClass("no-scroll");
         findInsiders($("#myTagModal"));
@@ -35,6 +35,12 @@
         });
     });
 
+    $($("#selected-theme-name-input")).on("input", function () {
+        if ($(this).hasClass("error")) {
+            $("#selected-theme-name-error-text").addClass("hidden");
+            $("#selected-theme-name-input").removeClass("error");
+        }
+    });
         //Add theme to session
     $("#add-theme-submit-button").click(function () {
         event.preventDefault();
@@ -42,6 +48,13 @@
         const jsonThemesList = JSON.stringify(themesList);
         const name = $("#selected-theme-name-input").val();
         const desc = $("#selected-theme-description-input").val();
+
+        if (!$("#selected-theme-name-input").val()) {
+            $("#selected-theme-name-error-text").removeClass("hidden");
+            $("#selected-theme-name-input").addClass("error");
+            return
+        }
+
         $.ajax({
             type: "POST",
             url: "/Theme/AddTheme",
@@ -77,15 +90,17 @@
     // When the user clicks on close button, close the modal
     $("#close-tag-modal-button").click(function () {
         event.preventDefault();
-        $("#myTagModal").hide();
+        $("#myTagModal").addClass("hidden");
         $("#tag-name-input").val("");
-        $("#tag-name-input-container").hide();
+        $("#tag-name-input-container").addClass("hidden");
         $("#tagId-modal-input").val("");
         $("#tagId-modal-selectList").html("");
-        $("#open-delete-tag-modal-btn").hide();
-        $("#tag-submit-button").hide();
+        $("#open-delete-tag-modal-btn-container").addClass("hidden");
+        $("#tag-submit-button-container").addClass("hidden");
         $("#open-delete-tag-modal-btn").prop('disabled', true);
         $("#tag-submit-button").prop('disabled', true);
+        $("#tag-name-error-text").addClass("hidden");
+        $("#tag-name-input").removeClass("error");
         updateThemeTags();
         $("body").removeClass("no-scroll");
     })
@@ -96,15 +111,17 @@
         if (modal.is(":visible")) {
             // if the target of the click isn't the container nor a descendant of the container
             if (modal.is(e.target) && modal.has(e.target).length === 0) {
-                modal.hide();
+                modal.addClass("hidden");
                 $("#tag-name-input").val("");
-                $("#tag-name-input-container").hide();
+                $("#tag-name-input-container").addClass("hidden");
                 $("#tagId-modal-input").val("");
                 $("#tagId-modal-selectList").html("");
-                $("#open-delete-tag-modal-btn").hide();
-                $("#tag-submit-button").hide();
+                $("#open-delete-tag-modal-btn-container").addClass("hidden");
+                $("#tag-submit-button-container").addClass("hidden");
                 $("#open-delete-tag-modal-btn").prop('disabled', true);
                 $("#tag-submit-button").prop('disabled', true);
+                $("#tag-name-error-text").addClass("hidden");
+                $("#tag-name-input").removeClass("error");
                 updateThemeTags();
                 $("body").removeClass("no-scroll");
             }
@@ -113,13 +130,11 @@
     });
     //On tag select list dropdown change, set tag name field
     $(".tag-id-option").click(function () {
-        console.log("thinggy");
         if ($(this).data("value") != $("#tagId-modal-input").val()) {
             populateTagNameField($(this));
             $("#check-all-status").prop("checked", false);
-            $("#check-all-status-container").show();
-            $("#tag-name-input-container").show();
-            console.log("thing");
+            $("#check-all-status-container").removeClass("hidden");
+            $("#tag-name-input-container").removeClass("hidden");
         }
     });
 
@@ -171,13 +186,20 @@ function saveTempThemes(themesList) {
     });
 }
 
+$($("#tag-name-input")).on("input", function () {
+    if ($(this).hasClass("error")) {
+        $("#tag-name-error-text").addClass("hidden");
+        $("#tag-name-input").removeClass("error");
+    }
+});
+
 //Update tag name field based on tag selected from dropdown
 function populateTagNameField($this) {
     let selectedTagId = $($this).data("value");
     if (selectedTagId == "newTag") {
         selectedTagId = null;
     }
-    console.log($($this));
+
     $.ajax({
         type: "GET",
         url: "/Tag/GetTagName",
@@ -189,16 +211,16 @@ function populateTagNameField($this) {
             if (data == "newTag") {
                 $("#tag-name-input").val("");
                 $("#tag-submit-button").val("Add");
-                $("#open-delete-tag-modal-btn").hide();
+                $("#open-delete-tag-modal-btn-container").addClass("hidden");
                 $("#open-delete-tag-modal-btn").prop('disabled', true);
             } else {
                 $("#tag-name-input").val(data);
                 $("#tag-submit-button").val("Update");
-                $("#open-delete-tag-modal-btn").show();
+                $("#open-delete-tag-modal-btn-container").removeClass("hidden");
                 $("#open-delete-tag-modal-btn").prop('disabled', false);
             }
-            $("#tag-name-input-container").show();
-            $("#tag-submit-button").show();
+            $("#tag-name-input-container").removeClass("hidden");
+            $("#tag-submit-button-container").removeClass("hidden");
             $("#tag-submit-button").prop('disabled', false);
         },
         error: function (error) {
@@ -209,6 +231,12 @@ function populateTagNameField($this) {
 
 //Update tags
 function updateTags($this) {
+
+    if (!$("#tag-name-input").val()) {
+        $("#tag-name-error-text").removeClass("hidden");
+        $("#tag-name-input").addClass("error");
+        return
+    }
 
     let selectedTagId = $("#tagId-modal-input").val();
 
@@ -236,7 +264,7 @@ function updateTags($this) {
         success: function (data) {
             //Reload tag dropdown list
             let $el = $(".accordion__content--select-list").first();
-            $('#tagId-modal-input option:gt(1)').html(""); // remove all options, but not the first two
+            $('#tagId-modal-input').html(""); // remove all options, but not the first two
             let options = "";
             options += `<button onclick="selectListOptionClick(this)"
                                     class="accordion__content-option"
@@ -253,9 +281,9 @@ function updateTags($this) {
 
             //Hide and uncheck 'checkAll' checkbox
             $("#check-all-status").prop("checked", false);
-            $("#check-all-status-container").hide();
+            $("#check-all-status-container").addClass("hidden");
             $("#check-all-status-container .field__label--checkbox").removeClass("field__label--checkbox-checked");
-            $("#tag-name-input-container").hide();
+            $("#tag-name-input-container").addClass("hidden");
         },
         error: function (error) {
             console.log(error);

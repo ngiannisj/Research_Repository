@@ -19,8 +19,8 @@
                     <label class="text--semibold" asp-for="User.FirstName">First Name</label>
                     <p id="user-firstName-text">@Model.User.FirstName</p>
                     <input type="text"
-                           class="field__input field__input--secondary user-details__input-field"
-                           value="@Model.User.FirstName" asp-for="User.FirstName" id="user-firstName-input" style="display:none;" />
+                           class="field__input field__input--secondary user-details__input-field hidden"
+                           value="@Model.User.FirstName" asp-for="User.FirstName" id="user-firstName-input" />
                 </div>
             </div>
 
@@ -29,8 +29,8 @@
                     <label class="text--semibold" asp-for="User.LastName">Last Name</label>
                     <p id="user-lastName-text">@Model.User.LastName</p>
                     <input type="text"
-                           class="field__input field__input--secondary user-details__input-field"
-                           value="@Model.User.LastName" asp-for="User.LastName" id="user-lastName-input" style="display:none;" />
+                           class="field__input field__input--secondary user-details__input-field hidden"
+                           value="@Model.User.LastName" asp-for="User.LastName" id="user-lastName-input"/>
                 </div>
             </div>
 
@@ -39,8 +39,8 @@
                     <label class="text--semibold" asp-for="User.Email">E-mail</label>
                     <p id="user-email-text">@Model.User.Email</p>
                     <input type="text"
-                           class="field__input field__input--secondary user-details__input-field"
-                           value="@Model.User.Email" asp-for="User.Email" id="user-email-input" style="display:none;" />
+                           class="field__input field__input--secondary user-details__input-field hidden"
+                           value="@Model.User.Email" asp-for="User.Email" id="user-email-input"/>
                 </div>
             </div>
 
@@ -54,7 +54,7 @@
                 <p id="user-team-text">@Model.User.Team.Name</p>
 
             }
-            <div id="user-team-selector" class="accordion__container accordion__container--select-list" style="display:none;">
+            <div id="user-team-selector" class="accordion__container accordion__container--select-list hidden">
                 <input id="selected-team-id" class="select-list-input" asp-for="User.TeamId" value="" hidden />
                 <button class="
                   field__input field__input--secondary field__input--small
@@ -80,13 +80,13 @@
                         <p id="user-role-text">@Model.User.Role</p>
                         <input type="text"
                                class="field__input field__input--secondary user-details__input-field"
-                               value="@Model.User.Role" asp-for="User.Role" id="user-role-input" style="display:none;" />
+                               value="@Model.User.Role" asp-for="User.Role" id="user-role-input hidden"/>
                     </div>
                 </div>
 
 
                 <button id="profile-edit-btn" class="button button--yellow button--small">Edit</button>
-                <input type="submit" id="profile-save-btn" class="button button--yellow button--small" name="save" value="Save" asp-action="SaveProfile" style="display:none;" />
+                <input type="submit" id="profile-save-btn" class="button button--yellow button--small hidden" name="save" value="Save" asp-action="SaveProfile" />
             </form>
     </div>
 

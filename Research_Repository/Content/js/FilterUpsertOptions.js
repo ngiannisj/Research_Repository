@@ -51,9 +51,9 @@ function filterTags($this) {
         traditional: true,
         success: function (data) {
             if (data) {
-                $("#checkboxes label").hide();
+                $("#checkboxes label").addClass("hidden");
                 for (var i = 0; i < data.length; i++) {
-                    $("#tag-input-id-" + data[i]).parent().show();
+                    $("#tag-input-id-" + data[i]).parent().removeClass("hidden");;
                 }
             }
         },
@@ -81,9 +81,9 @@ function filterProjects($this) {
         traditional: true,
         success: function (data) {
             if (data) {
-                $("#project-selector option:not(:first)").hide();
+                $("#project-selector option:not(:first)").addClass("hidden");
                 for (var i = 0; i < data.length; i++) {
-                    $("#project-selector option[value=" + data[i] + "]").show();
+                    $("#project-selector option[value=" + data[i] + "]").removeClass("hidden");;
                 }
             }
 

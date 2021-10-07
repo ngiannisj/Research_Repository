@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     //Delete team modal
     $(".open-delete-team-modal-btn").click(function () {
-        $("#deleteTeamModal").show();
+        $("#deleteTeamModal").removeClass("hidden");
         const teamId = $(this).val();
         $("#delete-team-confirm-btn").val(teamId);
         $("body").addClass("no-scroll");
@@ -10,7 +10,7 @@
     });
 
     $("#close-delete-team-modal-button, .teamModalClose").click(function () {
-        $("#deleteTeamModal").hide();
+        $("#deleteTeamModal").addClass("hidden");
         event.preventDefault();
         $("body").removeClass("no-scroll");
     });
@@ -21,7 +21,7 @@
         if (modal.is(":visible")) {
             // if the target of the click isn't the container nor a descendant of the container
             if (modal.is(e.target) && modal.has(e.target).length === 0) {
-                modal.hide();
+                modal.addClass("hidden");
                 $("body").removeClass("no-scroll");
             }
         }
@@ -31,16 +31,16 @@
 
     //Delete project modal
     $("#open-project-delete-modal-btn").click(function () {
-        $("#myProjectModal").hide();
-        $("#deleteProjectModal").show();
+        $("#myProjectModal").addClass("hidden");
+        $("#deleteProjectModal").removeClass("hidden");
         event.preventDefault();
         $("body").addClass("no-scroll");
         findInsiders($("#deleteProjectModal"));
     });
 
     $("#close-delete-project-modal-button, .projectModalClose").click(function () {
-        $("#deleteProjectModal").hide();
-        $("#myProjectModal").show();
+        $("#deleteProjectModal").addClass("hidden");
+        $("#myProjectModal").removeClass("hidden");
         event.preventDefault();
         $("body").removeClass("no-scroll");
     });
@@ -51,7 +51,7 @@
         if (modal.is(":visible")) {
             // if the target of the click isn't the container nor a descendant of the container
             if (modal.is(e.target) && modal.has(e.target).length === 0) {
-                modal.hide();
+                modal.addClass("hidden");
                 $("body").removeClass("no-scroll");
             }
         }
@@ -61,7 +61,7 @@
 
     //Delete theme modal
     $(".open-delete-theme-modal-btn").click(function () {
-        $("#deleteThemeModal").show();
+        $("#deleteThemeModal").removeClass("hidden");
         const themeId = $(this).val();
         $("#delete-theme-confirm-btn").val(themeId);
         event.preventDefault();
@@ -70,7 +70,7 @@
     });
 
     $("#close-delete-theme-modal-button, .themeModalClose").click(function () {
-        $("#deleteThemeModal").hide();
+        $("#deleteThemeModal").addClass("hidden");
         event.preventDefault();
         $("body").removeClass("no-scroll");
     });
@@ -81,7 +81,7 @@
         if (modal.is(":visible")) {
             // if the target of the click isn't the container nor a descendant of the container
             if (modal.is(e.target) && modal.has(e.target).length === 0) {
-                modal.hide();
+                modal.addClass("hidden");
                 $("body").removeClass("no-scroll");
             }
         }
@@ -91,15 +91,15 @@
 
     //Delete tag modal
     $("#open-delete-tag-modal-btn").click(function () {
-        $("#myTagModal").hide();
-        $("#deleteTagModal").show();
+        $("#myTagModal").addClass("hidden");
+        $("#deleteTagModal").removeClass("hidden");
         event.preventDefault();
         $("body").addClass("no-scroll");
     });
 
     $("#close-delete-tag-modal-button, .tagModalClose, #tag-delete-button").click(function () {
-        $("#deleteTagModal").hide();
-        $("#myTagModal").show();
+        $("#deleteTagModal").addClass("hidden");
+        $("#myTagModal").removeClass("hidden");
         event.preventDefault();
         $("body").removeClass("no-scroll");
         findInsiders($("#deleteTagModal"));
@@ -111,7 +111,7 @@
         if (modal.is(":visible")) {
             // if the target of the click isn't the container nor a descendant of the container
             if (modal.is(e.target) && modal.has(e.target).length === 0) {
-                modal.hide();
+                modal.addClass("hidden");
                 $("body").removeClass("no-scroll");
             }
         }
@@ -125,7 +125,7 @@
     });
 
     $("#close-delete-item-modal-button, .itemModalClose").click(function () {
-        $("#deleteItemModal").hide();
+        $("#deleteItemModal").addClass("hidden");
         event.preventDefault();
         $("body").removeClass("no-scroll");
     });
@@ -149,7 +149,7 @@
         if (modal.is(":visible")) {
             // if the target of the click isn't the container nor a descendant of the container
             if (modal.is(e.target) && modal.has(e.target).length === 0) {
-                modal.hide();
+                modal.addClass("hidden");
                 $("body").removeClass("no-scroll");
             }
         }
@@ -159,7 +159,7 @@
 
 //This function exists for item links loaded through solr. Because they are loaded after page load.
 function showItemDeleteModal($this) {
-    $("#deleteItemModal").show();
+    $("#deleteItemModal").removeClass("hidden");
     const itemId = $this.value;
     $("#delete-item-modal-button").val(itemId);
     event.preventDefault();
