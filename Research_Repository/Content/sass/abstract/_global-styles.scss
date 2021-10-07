@@ -25,7 +25,7 @@ a:hover {
 }
 
 //Error state for field inputs
-.error {
+.error, .input-validation-error {
     outline: 0.3rem solid $red !important;
     position: relative !important;
     z-index: 98;
