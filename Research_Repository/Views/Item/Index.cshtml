@@ -16,7 +16,7 @@
                   field__input
                   field__input-search--small
                 "
-                           value=""
+                           value="@(!String.IsNullOrEmpty(Model.SearchText) ? Model.SearchText : "")"
                            placeholder="Search the Library..." />
                 </div>
             </div>

@@ -1,4 +1,35 @@
 ﻿$(document).ready(function () {
+
+    $("#project-start-date.error").on("change", function () {
+        if ($("#project-start-date").val() < $("#project-end-date").val()) {
+            $("#project-start-date").removeClass("error");
+            $("#end-date-error-text").addClass("hidden");
+        }
+    });
+
+    $("#title-input-field.error").on("input", function () {
+        $("#title-input-field").removeClass("error");
+        $("#title-error-text").addClass("hidden");
+    });
+
+    $('#item-form').submit(function () {
+        if ($("#project-start-date").val() >= $("#project-end-date").val()) {
+            $("#project-end-date").addClass("error");
+            $("#end-date-error-text").removeClass("hidden");
+
+            if ($("#title-input-field").val() == null || $("#title-input-field").val() == "") {
+                $("#title-input-field").addClass("error");
+                $("#title-error-text").removeClass("hidden");
+            }
+            return false;
+        }
+        if ($("#title-input-field").val() == null || $("#title-input-field").val() == "") {
+            $("#title-input-field").addClass("error");
+            $("#title-error-text").removeClass("hidden");
+            return false;
+        }
+    });
+
     //When uploaders (not librarians) click the submit button on a 'Draft' item
     $("#submission-item-button").click(function () {
         $("#itemSubmissionConfirmModal").removeClass("hidden");
@@ -49,8 +80,8 @@
     });
 
     //If status of the item is set to rejected, show the comment textbox (To explain the reason for rejection)
-    $("#status-selector").change(function () {
-        if ($(this).val() == "Rejected") {
+    $("#status-selectList-container .accordion__content-option").click(function () {
+        if ($("#status-selector").val() == "Rejected") {
             $("#comment-input").removeClass("hidden");
         } else {
             $("#comment-input").addClass("hidden");
@@ -61,37 +92,48 @@
 
 //Add a key insight field when add new insight field button is clicked
 function addKeyInsightField(buttonRef) {
-    const numberOfKeyInsights = $(buttonRef).parent().find(".key-insight-field").length;
-    const lastKeyInsight = $(buttonRef).parent();
+    const numberOfKeyInsights = $(".key-insight-field").length;
+    const lastKeyInsight = $("#key-insights");
     lastKeyInsight.append(
-        `<div class="key-insight-field row">
-                        <div class="col-12">
-                            <label for="KeyInsightsList_${numberOfKeyInsights}_">KeyInsightsList[${numberOfKeyInsights}]</label>
-                        </div>
-                        <div class="col-10" data-children-count="1">
-                            <input class="form-control" type="text" id="KeyInsightsList_${numberOfKeyInsights}_" name="KeyInsightsList[${numberOfKeyInsights}]" value="">
-                            <span class="text-danger field-validation-valid" data-valmsg-for="KeyInsightsList[${numberOfKeyInsights}]" data-valmsg-replace="true"></span>
-                        </div>
-                        <div class="col-2"><button onclick="removeField(this, 'keyInsight')">Delete</button></div>
-                    </div>`
+        `<div class="field key-insight-field">
+    <label for="KeyInsightsList_${numberOfKeyInsights}_" class="field__label">Key insight</label>
+    <input type="text"
+id="KeyInsightsList_${numberOfKeyInsights}_"
+           name="KeyInsightsList[${numberOfKeyInsights}]"
+           class="field__input" />
+    <div class="button-group">
+        <div class="button-group__item field-modifier">
+            <button class="link link--normal" onclick="removeField(this, 'keyInsight')">
+                Remove<div class="link__icon">
+                    <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15.625 0.71875H1.375C0.719277 0.71875 0.1875 1.25053 0.1875 1.90625V3.09375C0.1875 3.74947 0.719277 4.28125 1.375 4.28125H15.625C16.2807 4.28125 16.8125 3.74947 16.8125 3.09375V1.90625C16.8125 1.25053 16.2807 0.71875 15.625 0.71875Z" fill="#253C78" />
+                    </svg>
+                </div>
+            </button>
+        </div>
+    </div>
+</div>`
+
+
+
     );
     event.preventDefault();
 }
 
 //Add a suggested tag field when add new tag field button is clicked
 function addSuggestedTagField(buttonRef) {
-    const numberOfSuggestedTags = $(".suggested-field").length;
+    const numberOfSuggestedTags = $(".suggested-tag-field").length;
     const lastSuggestedTag = $("#suggested-tags");
     lastSuggestedTag.append(
         `<div class="field suggested-field">
-                            <label for="SuggestedTagList_${numberOfSuggestedTags}" class="field__label">Suggested tag</label>
+                            <label for="SuggestedTagList_${numberOfSuggestedTags}_" class="field__label">Suggested tag</label>
                             <input type="text"
                                    class="field__input"
-                                    id="SuggestedTagList_${numberOfSuggestedTags}"
+                                    id="SuggestedTagList_${numberOfSuggestedTags}_"
                                    name="SuggestedTagList[${numberOfSuggestedTags}]"
                                     value=""/>
                             <div class="button-group">
-                                <div class="button-group__item">
+                                <div class="button-group__item field-modifier">
                                     <button class="link link--normal" onclick="removeField(this, 'suggestedTag')">
                                         Remove<div class="link__icon">
                                             <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -132,7 +174,9 @@ function hideField(fieldId, addButton) {
 
 //Generic remove field function
 function removeField(buttonRef, field) {
-    $(buttonRef).closest(".suggested-field").remove();
+    $(buttonRef).closest(".suggested-tag-field").remove();
+    $(buttonRef).closest(".key-insight-field").remove();
+
     if (field == "suggestedTag") {
         const numberOfSuggestedTags = $(".suggested-tag-field").length;
         if (numberOfSuggestedTags == 0) {
@@ -199,8 +243,17 @@ function handleFiles(fileUploadBox) {
                 let filesHtml = "";
                 for (let i = 0; i < newFileNames.length; i++) {
                     let downloadLink = "/Item/GetDownloadedFile/?filePath=\\files\\documents\\items\\temp\\" + newFileNames[i];
-                    filesHtml += `<div class="file"><a href="${downloadLink}"><h2>${newFileNames[i]}</h2></a><button onclick="removeFile(this)">Delete</button><br><br></div>`;
+                    filesHtml +=
+                        `<div class="field">
+                        <div class="field__input field__input-file">
+                            <a href="${downloadLink}" class="file-name link">${newFileNames[i]}</a>
+                            <button onclick="removeFile(this)" class="button--icon button--icon-delete align-right">
+                                <img src="../images/svgs/cross.svg" alt="remove_file">
+                            </button>
+                        </div>
+                    </div>`;
                 };
+
                 $("#files-list").append(filesHtml);
             }
         },
@@ -213,7 +266,8 @@ function handleFiles(fileUploadBox) {
 
 //Remove file from custom file list and delete from server
 function removeFile(buttonRef) {
-    const fileName = $(buttonRef).parent().find("h2").first().text();
+    event.stopPropagation();
+    const fileName = $(buttonRef).parent().find(".file-name").first().text();
     $.ajax({
         url: "/Item/DeleteFiles",
         contentType: "application/json; charset=utf-8",
@@ -228,7 +282,11 @@ function removeFile(buttonRef) {
             console.log(error);
         }
     });
-    $(buttonRef).parent().remove();
+    $(buttonRef).closest(".field").remove();
     event.preventDefault();
 }
 
+function clickFileUpload() {
+    $("#file-upload-box").click();
+    event.preventDefault();
+}

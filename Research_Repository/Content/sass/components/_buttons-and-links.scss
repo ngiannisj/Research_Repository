@@ -10,6 +10,14 @@
         right: 0;
         margin-left: 6.8rem;
 
+        &.field-modifier {
+            margin: .8rem .8rem 0 .8rem;
+
+            &:first-of-type {
+                margin: .8rem .8rem 0 .8rem;
+            }
+        }
+
         & + .hidden {
             margin-left: 0;
         }
@@ -26,6 +34,14 @@
 
             &:first-of-type {
                 margin-left: 0;
+            }
+
+            &.field-modifier {
+                margin: .8rem .8rem 0 .8rem;
+
+                &:first-of-type {
+                    margin: .8rem .8rem 0 .8rem;
+                }
             }
         }
     }
@@ -62,6 +78,7 @@
         }
     }
 }
+
     //Button
 .button {
     display: flex;
@@ -75,109 +92,109 @@
     box-shadow: 0 0.4rem 0.4rem 0 $shadow;
     transition: transform 0.3s ease 0s, background-color 0.3s ease 0s, box-shadow 0.3s ease 0s, outline 0s;
 
-    &:hover {
-        cursor: pointer;
-        box-shadow: 0 0.6rem 1rem 0 $shadow;
-        transform: translateY(-0.4rem);
-    }
-
-    &:focus {
-        & + .notification-bubble {
-            z-index: 98;
-        }
-    }
-    //Sizes
-    &--small {
-        padding: 0.8rem 2.2rem;
-    }
-    //Colours
-    &--yellow {
-        background-color: $base-yellow;
-        border-color: $base-yellow;
-    }
-
-    &--green {
-        background-color: $base-green;
-        border-color: $base-green;
-    }
-
-    &--red {
-        background-color: $base-red;
-        border-color: $base-red;
-    }
-    //Secondary
-    &--secondary {
-        background-color: $white;
-        box-shadow: none;
-
-        &:hover {
-            background-color: $base-blue;
-            box-shadow: none;
-            transform: none;
-        }
-        //Colours
-        &.button {
-            &:hover,
-            &.button--active {
-                background-color: $base-blue;
-            }
-
-            &--yellow {
-                &:hover,
-                &.button--active {
-                    background-color: $base-yellow;
-                }
-            }
-
-            &--green {
-                &:hover,
-                &.button--active {
-                    background-color: $base-green;
-                }
-            }
-
-            &--red {
-                &:hover,
-                &.button--active {
-                    background-color: $base-red;
-                }
-            }
-        }
-    }
-
-    &__icon {
-        width: 2.2rem;
-        height: 2.5rem;
-        margin-right: 1.2rem;
-    }
-    //Icon buttons
-    &--icon {
         &:hover {
             cursor: pointer;
+            box-shadow: 0 0.6rem 1rem 0 $shadow;
+            transform: translateY(-0.4rem);
         }
 
-        &-delete {
-            width: 1.9rem;
-            height: 1.9rem;
-            background: none;
-            border: none;
+        &:focus {
+            & + .notification-bubble {
+                z-index: 98;
+            }
+        }
+        //Sizes
+        &--small {
+            padding: 0.8rem 2.2rem;
+        }
+        //Colours
+        &--yellow {
+            background-color: $base-yellow;
+            border-color: $base-yellow;
         }
 
-        &-edit {
-            width: 1.9rem;
-            height: 1.9rem;
-            background: none;
-            border: none;
+        &--green {
+            background-color: $base-green;
+            border-color: $base-green;
         }
 
-        &-confirm {
-            width: 1.9rem;
-            height: 1.9rem;
-            background: none;
-            border: none;
+        &--red {
+            background-color: $base-red;
+            border-color: $base-red;
+        }
+        //Secondary
+        &--secondary {
+            background-color: $white;
+            box-shadow: none;
+
+            &:hover {
+                background-color: $base-blue;
+                box-shadow: none;
+                transform: none;
+            }
+            //Colours
+            &.button {
+                &:hover,
+                &.button--active {
+                    background-color: $base-blue;
+                }
+
+                &--yellow {
+                    &:hover,
+                    &.button--active {
+                        background-color: $base-yellow;
+                    }
+                }
+
+                &--green {
+                    &:hover,
+                    &.button--active {
+                        background-color: $base-green;
+                    }
+                }
+
+                &--red {
+                    &:hover,
+                    &.button--active {
+                        background-color: $base-red;
+                    }
+                }
+            }
+        }
+
+        &__icon {
+            width: 2.2rem;
+            height: 2.5rem;
+            margin-right: 1.2rem;
+        }
+        //Icon buttons
+        &--icon {
+            &:hover {
+                cursor: pointer;
+            }
+
+            &-delete {
+                width: 1.9rem;
+                height: 1.9rem;
+                background: none;
+                border: none;
+            }
+
+            &-edit {
+                width: 1.9rem;
+                height: 1.9rem;
+                background: none;
+                border: none;
+            }
+
+            &-confirm {
+                width: 1.9rem;
+                height: 1.9rem;
+                background: none;
+                border: none;
+            }
         }
     }
-}
     //Link
     .link {
         display: flex;

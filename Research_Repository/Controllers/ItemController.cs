@@ -67,7 +67,7 @@ namespace Research_Repository.Controllers
                 //Get item from db to include navigation fields
                 Item dbItem = _itemRepo.FirstOrDefault(u => u.Id == itemVM.Item.Id, isTracking: false, include: source => source
         .Include(a => a.Project)
-        .ThenInclude(a => a.Team)
+        .Include(a => a.Team)
         .Include(a => a.ItemTags)
         .ThenInclude(a => a.Tag)
         .Include(a => a.Theme)
@@ -83,12 +83,6 @@ namespace Research_Repository.Controllers
             }
             else
             {
-                //If updating an existing item
-                itemVM.Item = _itemRepo.FirstOrDefault(filter: i => i.Id == id, include: i => i.Include(a => a.Project));
-                if (itemVM.Item != null && itemVM.Item.Project != null)
-                {
-                    itemVM.TeamId = itemVM.Item.Project.TeamId;
-                }
 
                 if (itemVM.Item == null)
                 {
@@ -193,7 +187,7 @@ namespace Research_Repository.Controllers
                 //Get item from db to include navigation fields
                 Item dbItem = _itemRepo.FirstOrDefault(u => u.Id == itemVM.Item.Id, isTracking: false, include: source => source
         .Include(a => a.Project)
-        .ThenInclude(a => a.Team)
+        .Include(a => a.Team)
         .Include(a => a.ItemTags)
         .ThenInclude(a => a.Tag)
         .Include(a => a.Theme)
@@ -215,7 +209,7 @@ namespace Research_Repository.Controllers
             //Get item with navigation properties
             Item item = _itemRepo.FirstOrDefault(u => u.Id == id, include: source => source
         .Include(a => a.Project)
-        .ThenInclude(a => a.Team)
+        .Include(a => a.Team)
         .Include(a => a.ItemTags)
         .ThenInclude(a => a.Tag)
         .Include(a => a.Theme)
@@ -258,7 +252,7 @@ namespace Research_Repository.Controllers
             //Get item from db to include navigation fields
             Item dbItem = _itemRepo.FirstOrDefault(u => u.Id == id, isTracking: false, include: source => source
     .Include(a => a.Project)
-    .ThenInclude(a => a.Team)
+        .Include(a => a.Team)
     .Include(a => a.ItemTags)
     .ThenInclude(a => a.Tag)
     .Include(a => a.Theme)

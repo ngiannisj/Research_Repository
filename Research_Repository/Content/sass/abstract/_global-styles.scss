@@ -45,6 +45,11 @@ a:hover {
 
 //Margin
 .margin {
+    &-top {
+        &--medium {
+            margin-top: 3rem;
+        }
+    }
     &-bottom {
 
         &--extra-large {

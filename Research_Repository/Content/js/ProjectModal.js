@@ -91,11 +91,6 @@
     //Save teams to database
     $("#save-teams-btn").click(function () {
 
-        if (!$("#selected-team-name-input").val()) {
-            $("#selected-team-name-error-text").removeClass("hidden");
-            $("#selected-team-name-input").addClass("error");
-            return
-        }
         event.preventDefault();
         const teamsList = getTeams();
         const jsonTeamsList = JSON.stringify(teamsList);

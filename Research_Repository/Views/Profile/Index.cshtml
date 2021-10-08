@@ -46,7 +46,7 @@
 
             @if (teamSelectList != null && teamSelectList.Count() > 0)
             {
-        <div class="field">
+        <div class="user-details__item">
             <label asp-for="User.TeamId"
                    class="text--semibold">Team</label>
             @if (Model.User.Team != null)
@@ -79,8 +79,8 @@
                         <label class="text--semibold" asp-for="User.Role">Role</label>
                         <p id="user-role-text">@Model.User.Role</p>
                         <input type="text"
-                               class="field__input field__input--secondary user-details__input-field"
-                               value="@Model.User.Role" asp-for="User.Role" id="user-role-input hidden"/>
+                               class="field__input field__input--secondary user-details__input-field hidden"
+                               value="@Model.User.Role" asp-for="User.Role" id="user-role-input"/>
                     </div>
                 </div>
 

@@ -105,6 +105,9 @@ function updateFilterParameters(pageId, itemStatus) {
 
     //Set search parameter
     queryParameters.searchText = $("#text-search").val();
+    if (queryParameters.searchText) {
+        queryParameters.searchText = queryParameters.searchText.toLowerCase();
+    }
     $("#approval-checkbox-filter label:visible input:checked").each(function (index, element) {
         queryParameters.approvals.push($(this).data("name"));
     });
@@ -214,7 +217,9 @@ ${data.items[i].notifyUploader ? `<span class="notification-bubble notification-
                   ${data.items[i].abstract}
                 </p>
               </div>
+<div class="pills-list">
                 ${tagPillsHtml}
+</div>
               </div>
             </div>
           </a>`;
@@ -268,7 +273,9 @@ ${data.items[i].notifyUploader ? `<span class="notification-bubble notification-
                   ${data.items[i].abstract}
                 </p>
               </div>
+<div class="pills-list">
                 ${tagPillsHtml}
+</div>
               </div>
             </div>
           </a>`;

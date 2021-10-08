@@ -11,13 +11,13 @@
 
     &--vertical {
         grid-template-columns: repeat(auto-fill, 100%);
-        height: 100%;
     }
 }
 
 .card {
     align-self: flex-start;
     display: flex;
+    position: relative;
     align-items: center;
     justify-content: flex-start;
     width: 100%;

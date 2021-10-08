@@ -44,6 +44,12 @@ namespace Research_Repository.Data
                 .WithMany(a => a.Items)
                 .OnDelete(DeleteBehavior.SetNull);
 
+            //Disable cascade delete of items in the database under a team which has been deleted, the 'teamId' foreign key value is simply set to 'null'
+            modelBuilder.Entity<Item>()
+                .HasOne(b => b.Team)
+                .WithMany(a => a.Items)
+                .OnDelete(DeleteBehavior.SetNull);
+
             //Disable cascade delete of items in the database under a project which has been deleted, the 'projectId' foreign key value is simply set to 'null'
             modelBuilder.Entity<Item>()
                 .HasOne(b => b.Project)

@@ -1,8 +1,9 @@
 ﻿@using Research_Repository_Utility;
-@model Research_Repository_Models.ViewModels.ItemVM
+@using Research_Repository_Models.ViewModels;
+
+@model Research_Repository_Models.ViewModels.ItemVM;
 
 @{
-    var title = "Create Item";
 
     IList<string> fileNames = new List<string>();
     if (Model.Item.Files != null)
@@ -16,510 +17,629 @@
 
     string tempFilesFolderPath = $@"/Item/GetDownloadedFile/?filePath={WC.ItemFilePath}temp\";
 }
+<div class="grid">
+    <div class="grid-column-main">
+        <h1 class="margin-bottom--medium">Contribute your research</h1>
+        <form method="post" enctype="multipart/form-data" id="item-form" class="section__list">
+            @if (Model.Item.Id != 0)
+            {
+                <input asp-for="Item.Id" hidden />
+                <input asp-for="Item.UploaderId" hidden />
+                <input asp-for="Item.NotifyUploader" hidden />
+            }
+            <div class="section">
+                <div class="section__half">
+                    <h3>Project Information</h3>
+                </div>
+                <div class="section__half">
 
-<h1 class="margin-bottom--medium">Review</h1>
-<form method="post" enctype="multipart/form-data" class="section__list">
-    @if (Model.Item.Id != 0)
-    {
-        title = "Edit Item";
-        <input asp-for="Item.Id" hidden />
-        <input asp-for="Item.UploaderId" hidden />
-        <input asp-for="Item.NotifyUploader" hidden />
-    }
-    <div class="section">
-        <div class="section__half">
-            <h3>Project Information</h3>
-        </div>
-        <div class="section__half">
-
-            @*Team select list*@
-            <div class="field" id="item-team-selectList-container">
-                <label class="field__label" for="team-accordion-select">Team:</label>
-                <div class="accordion__container accordion__container--select-list">
-                    <input id="team-selector" class="select-list-input" name="team-accordion-select" value="@(Model.Item != null && Model.Item.Project != null && Model.Item.Project.TeamId != null ? Model.Item.Project.TeamId : "")" hidden />
-                    <button class="
+                    @*Team select list*@
+                    <div class="field" id="item-team-selectList-container">
+                        <label class="field__label" for="team-accordion-select">Team:</label>
+                        <div class="accordion__container accordion__container--select-list">
+                            <input id="team-selector" class="select-list-input" asp-for="Item.TeamId" hidden />
+                            <button class="
                   field__input
             accordion accordion__button accordion accordion__button--select-list" id="item-team-selectList" onclick="selectListButtonClick()" data-selected="">
-                        @(Model.Item != null && Model.Item.Project != null && Model.Item.Project.Team != null && Model.Item.Project.Team.Name != null ? Model.Item.Project.Team.Name : "")
-                    </button>
-
-                    <div class="accordion__content accordion__content--select-list">
-                        @foreach (SelectListItem selectListItem in Model.TeamSelectList)
-                        {
-                            <button onclick="selectListOptionClick(this)"
-                                    class="accordion__content-option"
-                                    data-value="@selectListItem.Value">
-                                @selectListItem.Text
+                                @(Model.Item != null && Model.Item.Team != null && Model.Item.Team.Name != null ? Model.Item.Team.Name : "")
                             </button>
-                        }
-                    </div>
-                </div>
-                <div class="button-group button-group--small">
-                    <div class="button-group__item">
-                        <button onclick="showField(this, 'collaborator-input')" id="add-collaborator-button" class="link link--normal">
-                            Add a collaborator
-                            <div class="link__icon">
-                                <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
-                                </svg>
+
+                            <div class="accordion__content accordion__content--select-list">
+                                @foreach (SelectListItem selectListItem in Model.TeamSelectList)
+                                {
+                                    <button onclick="selectListOptionClick(this)"
+                                            class="accordion__content-option"
+                                            data-value="@selectListItem.Value">
+                                        @selectListItem.Text
+                                    </button>
+                                }
                             </div>
-                        </button>
-                    </div>
-
-                    <div class="button-group__item">
-                        <button onclick="showField(this, 'suggested-team-input')" id="add-team-button" class="link link--normal">
-                            Suggest a team
-                            <div class="link__icon">
-                                <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
-                                </svg>
+                        </div>
+                        <div class="button-group button-group--small">
+                            <div class="button-group__item field-modifier">
+                                <button onclick="showField(this, 'collaborator-input')" id="add-collaborator-button" class="link link--normal @(!String.IsNullOrEmpty(Model.Item.Collaborator) ? "hidden" : "")">
+                                    Add a collaborator
+                                    <div class="link__icon">
+                                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
+                                        </svg>
+                                    </div>
+                                </button>
                             </div>
-                        </button>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Collaborator -->
-            <div class="field hidden" id="collaborator-input">
-                <label asp-for="Item.Collaborator" class="field__label">Collaborator</label>
-                <input type="text"
-                       asp-for="Item.Collaborator"
-                       class="field__input"
-                       value="" />
-                <div class="button-group">
-                    <div class="button-group__item">
-                        <button class="link link--normal" onclick="hideField('collaborator-input', 'add-collaborator-button')">
-                            Remove<div class="link__icon">
-                                <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15.625 0.71875H1.375C0.719277 0.71875 0.1875 1.25053 0.1875 1.90625V3.09375C0.1875 3.74947 0.719277 4.28125 1.375 4.28125H15.625C16.2807 4.28125 16.8125 3.74947 16.8125 3.09375V1.90625C16.8125 1.25053 16.2807 0.71875 15.625 0.71875Z" fill="#253C78" />
-                                </svg>
+                            <div class="button-group__item field-modifier">
+                                <button onclick="showField(this, 'suggested-team-input')" id="add-team-button" class="link link--normal @(!String.IsNullOrEmpty(Model.Item.SuggestedTeam) ? "hidden" : "")">
+                                    Suggest a team
+                                    <div class="link__icon">
+                                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
+                                        </svg>
+                                    </div>
+                                </button>
                             </div>
-                        </button>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Suggest a team -->
-            <div class="field hidden" id="suggested-team-input">
-                <label asp-for="Item.SuggestedTeam" class="field__label">Suggest a new team</label>
-                <input type="text"
-                       asp-for="Item.SuggestedTeam"
-                       class="field__input"
-                       value="" />
-                <div class="button-group">
-                    <div class="button-group__item">
-                        <button class="link link--normal" onclick="hideField('suggested-team-input', 'add-team-button')">
-                            Remove<div class="link__icon">
-                                <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15.625 0.71875H1.375C0.719277 0.71875 0.1875 1.25053 0.1875 1.90625V3.09375C0.1875 3.74947 0.719277 4.28125 1.375 4.28125H15.625C16.2807 4.28125 16.8125 3.74947 16.8125 3.09375V1.90625C16.8125 1.25053 16.2807 0.71875 15.625 0.71875Z" fill="#253C78" />
-                                </svg>
+                    <!-- Collaborator -->
+                    <div class="field @(!String.IsNullOrEmpty(Model.Item.Collaborator) ? "" : "hidden")" id="collaborator-input">
+                        <label asp-for="Item.Collaborator" class="field__label">Collaborator</label>
+                        <input type="text"
+                               asp-for="Item.Collaborator"
+                               class="field__input" />
+                        <div class="button-group">
+                            <div class="button-group__item field-modifier">
+                                <button class="link link--normal" onclick="hideField('collaborator-input', 'add-collaborator-button')">
+                                    Remove<div class="link__icon">
+                                        <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15.625 0.71875H1.375C0.719277 0.71875 0.1875 1.25053 0.1875 1.90625V3.09375C0.1875 3.74947 0.719277 4.28125 1.375 4.28125H15.625C16.2807 4.28125 16.8125 3.74947 16.8125 3.09375V1.90625C16.8125 1.25053 16.2807 0.71875 15.625 0.71875Z" fill="#253C78" />
+                                        </svg>
+                                    </div>
+                                </button>
                             </div>
-                        </button>
+                        </div>
                     </div>
-                </div>
-            </div>
+
+                    <!-- Suggest a team -->
+                    <div class="field @(!String.IsNullOrEmpty(Model.Item.SuggestedTeam) ? "" : "hidden")" id="suggested-team-input">
+                        <label asp-for="Item.SuggestedTeam" class="field__label">Suggest a new team</label>
+                        <input type="text"
+                               asp-for="Item.SuggestedTeam"
+                               class="field__input" />
+                        <div class="button-group">
+                            <div class="button-group__item field-modifier">
+                                <button class="link link--normal" onclick="hideField('suggested-team-input', 'add-team-button')">
+                                    Remove<div class="link__icon">
+                                        <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15.625 0.71875H1.375C0.719277 0.71875 0.1875 1.25053 0.1875 1.90625V3.09375C0.1875 3.74947 0.719277 4.28125 1.375 4.28125H15.625C16.2807 4.28125 16.8125 3.74947 16.8125 3.09375V1.90625C16.8125 1.25053 16.2807 0.71875 15.625 0.71875Z" fill="#253C78" />
+                                        </svg>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
 
-            @*Project select list*@
-            <div class="field" id="project-selector-container">
-                <label class="field__label" for="project-accordion-select">Project:</label>
-                <div class="accordion__container accordion__container--select-list">
-                    <input id="project-selector" class="select-list-input" name="team-accordion-select" asp-for="Item.ProjectId" hidden />
-                    <button class="
+                    @*Project select list*@
+                    <div class="field" id="project-selector-container">
+                        <label class="field__label" for="project-accordion-select">Project:</label>
+                        <p class="field__description text--black faded">
+                            Please select a team before selecting a project:
+                        </p>
+                        <div class="accordion__container accordion__container--select-list">
+                            <input id="project-selector" class="select-list-input" asp-for="Item.ProjectId" hidden />
+                            <button class="
                   field__input
             accordion accordion__button accordion accordion__button--select-list" id="item-project-selectList" onclick="selectListButtonClick()" data-selected="" disabled>
-                        @(Model.Item != null && Model.Item.Project != null && Model.Item.Project.Name != null ? Model.Item.Project.Name: "")
-                    </button>
-
-                    <div class="accordion__content accordion__content--select-list">
-                        @foreach (SelectListItem selectListItem in Model.ProjectSelectList)
-                        {
-                            <button onclick="selectListOptionClick(this)"
-                                    class="accordion__content-option"
-                                    data-value="@selectListItem.Value" id="project-button-@selectListItem.Value">
-                                @selectListItem.Text
+                                @(Model.Item != null && Model.Item.Project != null && Model.Item.Project.Name != null ? Model.Item.Project.Name: "")
                             </button>
-                        }
-                    </div>
-                </div>
-                <div class="button-group button-group--small">
-                    <div class="button-group__item">
-                        <button onclick="showField(this, 'suggested-project-input')" id="add-project-button" class="link link--normal">
-                            Suggest a project
-                            <div class="link__icon">
-                                <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
-                                </svg>
+
+                            <div class="accordion__content accordion__content--select-list">
+                                @foreach (SelectListItem selectListItem in Model.ProjectSelectList)
+                                {
+                                    <button onclick="selectListOptionClick(this)"
+                                            class="accordion__content-option"
+                                            data-value="@selectListItem.Value" id="project-button-@selectListItem.Value">
+                                        @selectListItem.Text
+                                    </button>
+                                }
                             </div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Suggest a project -->
-            <div class="field hidden" id="suggested-project-input">
-                <label asp-for="Item.SuggestedProject" class="field__label">Suggest a new project</label>
-                <input type="text"
-                       asp-for="Item.SuggestedProject"
-                       class="field__input"
-                       value="" />
-                <div class="button-group">
-                    <div class="button-group__item">
-                        <button id="project-selectlist-button" class="link link--normal" onclick="hideField('suggested-project-input', 'add-project-button')">
-                            Remove<div class="link__icon">
-                                <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15.625 0.71875H1.375C0.719277 0.71875 0.1875 1.25053 0.1875 1.90625V3.09375C0.1875 3.74947 0.719277 4.28125 1.375 4.28125H15.625C16.2807 4.28125 16.8125 3.74947 16.8125 3.09375V1.90625C16.8125 1.25053 16.2807 0.71875 15.625 0.71875Z" fill="#253C78" />
-                                </svg>
+                        </div>
+                        <div class="button-group button-group--small">
+                            <div class="button-group__item field-modifier">
+                                <button onclick="showField(this, 'suggested-project-input')" id="add-project-button" class="link link--normal @(!String.IsNullOrEmpty(Model.Item.SuggestedProject) ? "hidden" : "")">
+                                    Suggest a project
+                                    <div class="link__icon">
+                                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
+                                        </svg>
+                                    </div>
+                                </button>
                             </div>
-                        </button>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            @*//===============================================================================================================*@
 
-            @*Theme select list*@
-            <div class="field" id="item-theme-selectList-container">
-                <label class="field__label" for="theme-accordion-select">Theme:</label>
-                <div class="accordion__container accordion__container--select-list">
-                    <input id="theme-selector" asp-for="Item.ThemeId" class="select-list-input" name="theme-accordion-select" value="" hidden />
-                    <button class="
+                    <!-- Suggest a project -->
+                    <div class="field @(!String.IsNullOrEmpty(Model.Item.SuggestedProject) ? "" : "hidden")" id="suggested-project-input">
+                        <label asp-for="Item.SuggestedProject" class="field__label">Suggest a new project</label>
+                        <input type="text"
+                               asp-for="Item.SuggestedProject"
+                               class="field__input" />
+                        <div class="button-group">
+                            <div class="button-group__item field-modifier">
+                                <button id="project-selectlist-button" class="link link--normal" onclick="hideField('suggested-project-input', 'add-project-button')">
+                                    Remove<div class="link__icon">
+                                        <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15.625 0.71875H1.375C0.719277 0.71875 0.1875 1.25053 0.1875 1.90625V3.09375C0.1875 3.74947 0.719277 4.28125 1.375 4.28125H15.625C16.2807 4.28125 16.8125 3.74947 16.8125 3.09375V1.90625C16.8125 1.25053 16.2807 0.71875 15.625 0.71875Z" fill="#253C78" />
+                                        </svg>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*//===============================================================================================================*@
+
+                    @*Theme select list*@
+                    <div class="field" id="item-theme-selectList-container">
+                        <label class="field__label" for="theme-accordion-select">Theme:</label>
+                        <div class="accordion__container accordion__container--select-list">
+                            <input id="theme-selector" asp-for="Item.ThemeId" class="select-list-input" hidden />
+                            <button class="
                   field__input
             accordion accordion__button accordion accordion__button--select-list" id="item-theme-selectList" onclick="selectListButtonClick()" data-selected="">
-                        @(Model.Item != null && Model.Item.Theme != null && Model.Item.Theme.Name != null ? Model.Item.Theme.Name : "")
-                    </button>
-
-                    <div class="accordion__content accordion__content--select-list">
-                        @foreach (SelectListItem selectListItem in Model.ThemeSelectList)
-                        {
-                            <button onclick="selectListOptionClick(this)"
-                                    class="accordion__content-option"
-                                    data-value="@selectListItem.Value">
-                                @selectListItem.Text
+                                @(Model.Item != null && Model.Item.Theme != null && Model.Item.Theme.Name != null ? Model.Item.Theme.Name : "")
                             </button>
-                        }
-                    </div>
-                </div>
-                <div class="button-group button-group--small">
-                    <div class="button-group__item">
-                        <button onclick="showField(this, 'suggested-theme-input')" id="add-theme-button" class="link link--normal">
-                            Suggest a theme
-                            <div class="link__icon">
-                                <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
-                                </svg>
+
+                            <div class="accordion__content accordion__content--select-list">
+                                @foreach (SelectListItem selectListItem in Model.ThemeSelectList)
+                                {
+                                    <button onclick="selectListOptionClick(this)"
+                                            class="accordion__content-option"
+                                            data-value="@selectListItem.Value">
+                                        @selectListItem.Text
+                                    </button>
+                                }
                             </div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Suggest a theme -->
-            <div class="field hidden" id="suggested-theme-input">
-                <label asp-for="Item.SuggestedTheme" class="field__label">Suggest a new theme</label>
-                <input type="text"
-                       asp-for="Item.SuggestedTheme"
-                       class="field__input"
-                       value="" />
-                <div class="button-group">
-                    <div class="button-group__item">
-                        <button class="link link--normal" onclick="hideField('suggested-theme-input', 'add-theme-button')">
-                            Remove<div class="link__icon">
-                                <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15.625 0.71875H1.375C0.719277 0.71875 0.1875 1.25053 0.1875 1.90625V3.09375C0.1875 3.74947 0.719277 4.28125 1.375 4.28125H15.625C16.2807 4.28125 16.8125 3.74947 16.8125 3.09375V1.90625C16.8125 1.25053 16.2807 0.71875 15.625 0.71875Z" fill="#253C78" />
-                                </svg>
+                        </div>
+                        <div class="button-group button-group--small">
+                            <div class="button-group__item field-modifier">
+                                <button onclick="showField(this, 'suggested-theme-input')" id="add-theme-button" class="link link--normal @(!String.IsNullOrEmpty(Model.Item.SuggestedTheme) ? "" : "hidden")">
+                                    Suggest a theme
+                                    <div class="link__icon">
+                                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
+                                        </svg>
+                                    </div>
+                                </button>
                             </div>
-                        </button>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            @*//===============================================================================================================*@
 
-            @*Tags list*@
-            <div class="field__list-container" id="tag-selector">
-                @if (Model.TagList != null && Model.TagList.Count > 0)
-                {
-                    for (int i = 0; i < Model.TagList.Count; i++)
-                    {
-                        <div class="field__list-item field__list-item--checkbox">
+                    <!-- Suggest a theme -->
+                    <div class="field @(!String.IsNullOrEmpty(Model.Item.SuggestedTheme) ? "" : "hidden")" id="suggested-theme-input">
+                        <label asp-for="Item.SuggestedTheme" class="field__label">Suggest a new theme</label>
+                        <input type="text"
+                               asp-for="Item.SuggestedTheme"
+                               class="field__input" />
+                        <div class="button-group">
+                            <div class="button-group__item field-modifier">
+                                <button class="link link--normal" onclick="hideField('suggested-theme-input', 'add-theme-button')">
+                                    Remove<div class="link__icon">
+                                        <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15.625 0.71875H1.375C0.719277 0.71875 0.1875 1.25053 0.1875 1.90625V3.09375C0.1875 3.74947 0.719277 4.28125 1.375 4.28125H15.625C16.2807 4.28125 16.8125 3.74947 16.8125 3.09375V1.90625C16.8125 1.25053 16.2807 0.71875 15.625 0.71875Z" fill="#253C78" />
+                                        </svg>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-                            <label class="disabled
+                    @*//===============================================================================================================*@
+
+                    @*Tags list*@
+                    <div class="field">
+                        <label class="field__label">Tags</label>
+                        <p class="field__description text--black faded">
+                            Please select a theme before selecting tags:
+                        </p>
+                    </div>
+                    <div class="field__list-container margin-bottom--extra-small" id="tag-selector">
+                        @if (Model.TagList != null && Model.TagList.Count > 0)
+                        {
+                            for (int i = 0; i < Model.TagList.Count; i++)
+                            {
+                                <div class="field__list-item field__list-item--checkbox">
+
+                                    <label class="disabled
                         field__label
                         field__label--extra-small
                         field__label--toggle
                         field__label--checkbox
+                                           @(Model.TagList[i].CheckedState ? "field__label--checkbox-checked" : "")
                       "
-                                   tabindex="0"
-                                   role="button">
-                                <input asp-for="@Model.TagList[i].CheckedState" id="tag-input-id-@Model.TagList[i].Value" data-name="@Model.TagList[i].Name"
-                                       class="field__input-toggle field__input-checkbox" disabled />
-                                @Model.TagList[i].Name
-                            </label>
-                            <input asp-for="@Model.TagList[i].Value" id="tag-id-@Model.TagList[i].Value" hidden />
+                                           tabindex="0"
+                                           role="button">
+                                        <input asp-for="@Model.TagList[i].CheckedState" id="tag-input-id-@Model.TagList[i].Value" data-name="@Model.TagList[i].Name"
+                                               class="field__input-toggle field__input-checkbox" disabled />
+                                        @Model.TagList[i].Name
+                                    </label>
+                                    <input asp-for="@Model.TagList[i].Value" id="tag-id-@Model.TagList[i].Value" hidden />
+                                </div>
+                            }
+                        }
+                    </div>
+                    <div class="button-group margin-bottom--medium">
+                        <div class="button-group__item field-modifier">
+                            <button class="link link--normal" onclick="addSuggestedTagField(this)" id="add-suggested-tag-button">
+                                Suggest a tag
+                                <div class="link__icon">
+                                    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
+                                    </svg>
+                                </div>
+                            </button>
                         </div>
-                    }
-                }
+                    </div>
+
+                    <!-- Suggest a tag -->
+                    <div id="suggested-tags">
+                        @if (Model.SuggestedTagList != null && Model.SuggestedTagList.Count > 0)
+                        {
+                            @for (int i = 0; i < Model.SuggestedTagList.Count; i++)
+                            {
+                                <div class="field suggested-tag-field">
+                                    <label asp-for="SuggestedTagList[i]" class="field__label">Suggest a new theme</label>
+                                    <input type="text"
+                                           asp-for="SuggestedTagList[i]"
+                                           class="field__input" />
+                                    <div class="button-group">
+                                        <div class="button-group__item field-modifier">
+                                            <button class="link link--normal" onclick="removeField(this, 'suggestedTag')">
+                                                Remove<div class="link__icon">
+                                                    <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M15.625 0.71875H1.375C0.719277 0.71875 0.1875 1.25053 0.1875 1.90625V3.09375C0.1875 3.74947 0.719277 4.28125 1.375 4.28125H15.625C16.2807 4.28125 16.8125 3.74947 16.8125 3.09375V1.90625C16.8125 1.25053 16.2807 0.71875 15.625 0.71875Z" fill="#253C78" />
+                                                    </svg>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="field">
+                        <label class="field__label" asp-for="Item.StartDate">Start date</label>
+                        <input class="field__input" id="project-start-date" asp-for="Item.StartDate">
+                    </div>
+                    <!-- End Date -->
+                    <div class="field">
+                        <label class="field__label" asp-for="Item.EndDate">End date</label>
+                        <input class="field__input" id="project-end-date" asp-for="Item.EndDate">
+                        <p id="end-date-error-text" class="field__error-text hidden">The project end date must occur after the start date</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- Suggest a tag -->
-            <div id="suggested-tags">
-                @if (Model.SuggestedTagList != null && Model.SuggestedTagList.Count > 0)
-                {
-                    @for (int i = 0; i < Model.SuggestedTagList.Count(); i++)
-                    {
-                        <div class="field suggested-tag-field">
-                            <label asp-for="SuggestedTagList[i]" class="field__label">Suggest a new theme</label>
-                            <input type="text"
-                                   asp-for="SuggestedTagList[i]"
-                                   class="field__input"
-                                   value="" />
-                            <div class="button-group">
-                                <div class="button-group__item">
-                                    <button class="link link--normal" onclick="removeField(this, 'suggestedTag')">
-                                        Remove<div class="link__icon">
-                                            <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M15.625 0.71875H1.375C0.719277 0.71875 0.1875 1.25053 0.1875 1.90625V3.09375C0.1875 3.74947 0.719277 4.28125 1.375 4.28125H15.625C16.2807 4.28125 16.8125 3.74947 16.8125 3.09375V1.90625C16.8125 1.25053 16.2807 0.71875 15.625 0.71875Z" fill="#253C78" />
+            <div class="section">
+                <div class="section__half">
+                    <h3>Research Information</h3>
+                </div>
+                <div class="section__half">
+
+                    <!-- Title -->
+                    <div class="field" id="title-input">
+                        <label asp-for="Item.Title" class="field__label">Title</label>
+                        <input type="text"
+                               asp-for="Item.Title"
+                               id="title-input-field"
+                               class="field__input" />
+                        <p id="title-error-text" class="field__error-text hidden">The item must have a title</p>
+                    </div>
+
+                    <!-- Abstract -->
+                    <div class="field" id="abstract-input">
+                        <label asp-for="Item.Abstract" class="field__label">Abstract</label>
+                        <textarea type="text"
+                                  asp-for="Item.Abstract"
+                                  class="field__input field__input-text-area"></textarea>
+                    </div>
+
+                    <!-- Key insights -->
+                    <div id="key-insights">
+                        @if (Model.KeyInsightsList != null && Model.KeyInsightsList.Count > 0)
+                        {
+                            @for (int i = 0; i < Model.KeyInsightsList.Count; i++)
+                            {
+                                <div class="field key-insight-field">
+                                    <label asp-for="KeyInsightsList[i]" class="field__label">Key insight</label>
+                                    <input type="text"
+                                           asp-for="KeyInsightsList[i]"
+                                           class="field__input" />
+                                    @if (i != 0)
+                                    {
+                                        <div class="button-group">
+                                            <div class="button-group__item field-modifier">
+                                                <button class="link link--normal" onclick="removeField(this, 'keyInsight')">
+                                                    Remove<div class="link__icon">
+                                                        <svg width="17" height="5" viewBox="0 0 17 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M15.625 0.71875H1.375C0.719277 0.71875 0.1875 1.25053 0.1875 1.90625V3.09375C0.1875 3.74947 0.719277 4.28125 1.375 4.28125H15.625C16.2807 4.28125 16.8125 3.74947 16.8125 3.09375V1.90625C16.8125 1.25053 16.2807 0.71875 15.625 0.71875Z" fill="#253C78" />
+                                                        </svg>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    @if (i == 0)
+                                    {
+                                        <div class="button-group">
+                                            <div class="button-group__item field-modifier">
+                                                <button class="link link--normal" onclick="addKeyInsightField(this)" id="add-key-insight-button">
+                                                    Add key insight
+                                                    <div class="link__icon">
+                                                        <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
+                                                        </svg>
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="field key-insight-field">
+                                <label for="new-key-insight" class="field__label">Key insight</label>
+                                <input type="text"
+                                       name="new-key-insight"
+                                       class="field__input" value="" />
+                            </div>
+                            <div class="button-group margin-bottom--medium">
+                                <div class="button-group__item field-modifier">
+                                    <button class="link link--normal" onclick="addKeyInsightField(this)" id="add-key-insight-button">
+                                        Add key insight
+                                        <div class="link__icon">
+                                            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
                                             </svg>
                                         </div>
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                    }
-                }
-            </div>
-            <div class="button-group margin-bottom--medium">
-                <div class="button-group__item">
-                    <button class="link link--normal" onclick="addSuggestedTagField(this)" id="add-suggested-tag-button">
-                        Suggest a tag
-                        <div class="link__icon">
-                            <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M15.1268 6.4874H9.94315V1.30377C9.94315 0.667698 9.4273 0.151855 8.79123 0.151855H7.63931C7.00324 0.151855 6.4874 0.667698 6.4874 1.30377V6.4874H1.30377C0.667698 6.4874 0.151855 7.00324 0.151855 7.63931V8.79123C0.151855 9.4273 0.667698 9.94315 1.30377 9.94315H6.4874V15.1268C6.4874 15.7628 7.00324 16.2787 7.63931 16.2787H8.79123C9.4273 16.2787 9.94315 15.7628 9.94315 15.1268V9.94315H15.1268C15.7628 9.94315 16.2787 9.4273 16.2787 8.79123V7.63931C16.2787 7.00324 15.7628 6.4874 15.1268 6.4874Z" fill="#253C78"></path>
-                            </svg>
-                        </div>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Start Date -->
-            <div class="field">
-                <label class="field__label" asp-for="Item.StartDate">Start date</label>
-                <input class="field__input" id="project-start-date" asp-for="Item.StartDate">
-            </div>
-            <!-- End Date -->
-            <div class="field">
-                <label class="field__label" asp-for="Item.EndDate">End date</label>
-                <input class="field__input" id="project-end-date" asp-for="Item.EndDate">
-            </div>
-
-        </div>
-</form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<br />
-<br />
-
-<form method="post" enctype="multipart/form-data">
-
-    <div class="border p-3">
-        <div class="form-group row">
-            <h2 class="text-info pl-3">@title</h2>
-        </div>
-        <div class="row">
-            <div class="col-12">
-
-
-                <!-- Title -->
-                <div class="form-group row">
-                    <div class="col-12">
-                        <label asp-for="Item.Title"></label>
-                    </div>
-                    <div class="col-12">
-                        <input asp-for="Item.Title" class="form-control" />
-                    </div>
-                </div>
-
-                <!-- Abstract -->
-                <div class="form-group row">
-                    <div class="col-12">
-                        <label asp-for="Item.Abstract"></label>
-                    </div>
-                    <div class="col-12">
-                        <input asp-for="Item.Abstract" class="form-control" />
-                    </div>
-                </div>
-
-                <!-- Key Insights -->
-                <div class="form-group" id="key-insights">
-                    @if (Model.KeyInsightsList != null && Model.KeyInsightsList.Count > 0)
-                    {
-                        @for (int i = 0; i < Model.KeyInsightsList.Count(); i++)
-                        {
-                            <div class="key-insight-field row">
-                                <div class="col-12">
-                                    <label asp-for="KeyInsightsList[i]"></label>
-                                </div>
-                                <div class="col-10">
-                                    <input asp-for="KeyInsightsList[i]" class="form-control" />
-                                </div>
-                            </div>
-                            if (i != 0)
-                            {
-                                <div class="col-2"><button onclick="removeField(this, 'keyInsight')">Delete</button></div>
-                            }
                         }
-                    }
-                    <button onclick="addKeyInsightField(this)">Add a key insight</button>
+                    </div>
+
+
+                    <!-- Methodology -->
+                    <div class="field" id="methodology-input">
+                        <label asp-for="Item.Methodology" class="field__label">Methodology</label>
+                        <textarea type="text"
+                                  asp-for="Item.Methodology"
+                                  class="field__input field__input-text-area"></textarea>
+                    </div>
+
+
+                    <!-- Limitations -->
+                    <div class="field" id="limitations-input">
+                        <label asp-for="Item.Limitations" class="field__label">Limitations</label>
+                        <textarea type="text"
+                                  asp-for="Item.Limitations"
+                                  class="field__input field__input-text-area"></textarea>
+                    </div>
+
                 </div>
+            </div>
 
-                <!-- Key Methodology -->
-                <div class="form-group row">
-                    <div class="col-12">
-                        <label asp-for="Item.Methodology"></label>
+
+
+            <div class="section">
+                <div class="section__half">
+                    <h3>Security</h3>
+                </div>
+                <div class="section__half">
+
+                    <!-- Approved use -->
+                    <div class="field">
+                        <h4 class="margin-bottom--medium">Approved use</h4>
+                        <div class="field__list-container field__list-container--vertical">
+                            @if (Model.ApprovalRadioButtons != null && Model.ApprovalRadioButtons.Count() > 0)
+                            {
+                                foreach (RadioButtonVM radioButton in Model.ApprovalRadioButtons)
+                                {
+                                    <div class="field__list-item">
+
+                                        <label class="
+            field__label
+            field__label--small
+            field__label--toggle
+            field__label--radio
+                                               @(radioButton.Name == Model.Item.ApprovedUse ? "field__label--radio-checked" : "")
+                      "
+                                               tabindex="0"
+                                               role="button">
+                                            <input asp-for="Item.ApprovedUse" type="radio" id="approval-input-id-@radioButton.Value"
+                                                   class="field__input-toggle field__input-radio" value="@radioButton.Name" />
+                                            @radioButton.Name
+                                        </label>
+                                    </div>
+                                }
+                            }
+                        </div>
                     </div>
-                    <div class="col-12">
-                        <input asp-for="Item.Methodology" class="form-control" />
+
+                    <!-- Sensitivity -->
+                    <div class="field">
+                        <h4 class="margin-bottom--medium">Sensitivity</h4>
+                        <div class="field__list-container field__list-container--vertical">
+                            @if (Model.SensitivityRadioButtons != null && Model.SensitivityRadioButtons.Count() > 0)
+                            {
+                                foreach (RadioButtonVM radioButton in Model.SensitivityRadioButtons)
+                                {
+                                    <div class="field__list-item">
+
+                                        <label class="
+            field__label
+            field__label--small
+            field__label--toggle
+            field__label--radio
+                                               @(radioButton.Name == Model.Item.Sensitivity ? "field__label--radio-checked" : "")
+                      "
+                                               tabindex="0"
+                                               role="button">
+                                            <input asp-for="Item.Sensitivity" type="radio" id="sensitivity-input-id-@radioButton.Value"
+                                                   class="field__input-toggle field__input-radio" value="@radioButton.Name" />
+                                            @radioButton.Name
+                                        </label>
+                                    </div>
+                                }
+                            }
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Key Limitations -->
-                <div class="form-group row">
-                    <div class="col-12">
-                        <label asp-for="Item.Limitations"></label>
-                    </div>
-                    <div class="col-12">
-                        <input asp-for="Item.Limitations" class="form-control" />
-                    </div>
+            <div class="section">
+                <div class="section__half">
+                    <h3>Files</h3>
                 </div>
+                <div class="section__half">
+                    <!-- Hidden file names -->
+                    <input asp-for="Item.Files" id="file-names" hidden />
 
-                <!-- Approved Use -->
-                <div class="form-group">
-                    @foreach (var item in Model.ApprovalRadioButtons)
-                    {
-                        <input asp-for="Item.ApprovedUse" type="radio" value="@item.Name" /> @item.Name
-                    }
-                </div>
-
-                <div class="form-group">
-                    <!-- Sensitivity Use -->
-                    @foreach (var item in Model.SensitivityRadioButtons)
-                    {
-                        <input asp-for="Item.Sensitivity" type="radio" value="@item.Name" /> @item.Name
-                    }
-                </div>
-
-                <!-- Hidden file names -->
-                <input asp-for="Item.Files" id="file-names" hidden />
-
-                <!-- Files -->
-                <div class="form-group row">
-                    <div class="col-12">
-                        <label asp-for="Item.Files"></label>
-                    </div>
-                    <div class="col-12">
-                        <input type="file" name="Item.Files" id="file-upload-box" multiple asp-for="Item.Files" class="form-control" />
-                    </div>
-                    <div class="col-12" id="files-list">
+                    <div class="field__file-list" id="files-list">
                         @foreach (string fileName in fileNames)
                         {
                             string downloadLink = tempFilesFolderPath + fileName;
-                            <div class="file"><a href=@downloadLink><h2>@fileName</h2></a><button onclick="removeFile(this)">Delete</button><br><br></div>
+                            <div class="field">
+                                <div class="field__input field__input-file">
+                                    <a href=@downloadLink class="file-name link">@fileName</a>
+                                    <button class="button--icon button--icon-delete align-right" onclick="removeFile(this)">
+                                        <img src="/images/svgs/cross.svg" alt="remove_file">
+                                    </button>
+                                </div>
+                            </div>
                         }
                     </div>
+
+                    <!-- Files -->
+                    <div class="button-group button-group--small">
+                        <div class="button-group__item">
+                            <div class="field" id="methodology-input">
+                                <button onclick="clickFileUpload()" class="button button--yellow button--small button--secondary">
+                                    <div class="button__icon">
+                                        <svg width="23" height="25" viewBox="0 0 23 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M2.67411 22.7609C-0.178917 19.8171 -0.125743 15.0699 2.74179 12.1368L12.984 1.66018C15.1478 -0.553296 18.6652 -0.553491 20.8292 1.66018C22.9723 3.85227 22.9749 7.38914 20.8292 9.58381L11.9011 18.7074C10.4433 20.1985 8.06156 20.1777 6.6285 18.6587C5.24789 17.1953 5.29218 14.8759 6.6994 13.4364L13.7181 6.26672C14.02 5.95842 14.5146 5.95315 14.8229 6.25496L15.9391 7.34768C16.2475 7.64954 16.2527 8.14417 15.9509 8.45247L8.93295 15.6215C8.69213 15.8678 8.67728 16.2771 8.90131 16.5146C9.11478 16.7409 9.45038 16.7447 9.66732 16.5227L18.5955 7.3991C19.5532 6.41951 19.5532 4.82463 18.595 3.84451C17.658 2.88616 16.1557 2.88567 15.2183 3.84451L4.97606 14.3211C3.27865 16.0574 3.25248 18.8679 4.91791 20.5864C6.57855 22.2999 9.26288 22.302 10.9266 20.6003L19.328 12.0066C19.6296 11.6981 20.1242 11.6925 20.4328 11.9941L21.5498 13.0861C21.8583 13.3877 21.864 13.8823 21.5623 14.1909L13.1609 22.7845C10.2519 25.76 5.54652 25.7248 2.67411 22.7609Z" fill="#253C78"></path>
+                                        </svg>
+                                    </div>Upload
+                                </button>
+                            </div>
+                        </div>
+                        <div class="button-group__item">
+                            <p class="text--transparent-50-base-blue text--large">
+                                PDF, DOC, JPG, PNG, PPT
+                            </p>
+                        </div>
+
+                        <input type="file"
+                               class="button button--yellow button--small" id="file-upload-box" multiple asp-for="Item.Files" />
+                    </div>
                 </div>
+            </div>
 
-                @if (User.IsInRole(WC.LibrarianRole))
-                {
-                    <!-- Status -->
-                    <div class="form-group row">
-                        <div class="col-12">
-                            <select id="status-selector" asp-for="Item.Status" asp-items="@Model.StatusSelectList" class="form-control">
-                                <option disabled selected>-- Select Status --</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <!-- Comment -->
-                    <div class="form-group row hidden" id="comment-input">
-                        <div class="col-12">
-                            <label asp-for="Item.Comment"></label>
-                        </div>
-                        <div class="col-12">
-                            <input asp-for="Item.Comment" class="form-control" />
-                        </div>
-                    </div>
-                }
 
-                <!-- Buttons -->
-                <div class="form-group">
-                    <div class="col-8 offset-2 row">
-                        <input id="@(User.IsInRole(WC.UploaderRole) ? "submit-item-button" : "save-item-button")" type="submit" class="btn btn-info w-100" name="submit" value="@(User.IsInRole(WC.UploaderRole) ? "Submit" : "Save")" />
+
+
+
+
+            <div class="section">
+                <div class="section__half">
+                    <h3>Status</h3>
+                </div>
+                <div class="section__half">
+                    @if (User.IsInRole(WC.LibrarianRole))
+                    {
+                        @*Status select list*@
+                        <div class="field" id="status-selectList-container">
+                            <label class="field__label">Status:</label>
+                            <div class="accordion__container accordion__container--select-list">
+                                <input id="status-selector" class="select-list-input" asp-for="Item.Status" hidden />
+                                <button class="
+                  field__input
+            accordion accordion__button accordion accordion__button--select-list" id="status-selectList" onclick="selectListButtonClick()" data-selected="">
+                                    @Model.Item.Status
+                                </button>
+
+                                <div class="accordion__content accordion__content--select-list">
+                                    @foreach (SelectListItem selectListItem in Model.StatusSelectList)
+                                    {
+                                        <button onclick="selectListOptionClick(this)"
+                                                class="accordion__content-option"
+                                                data-value="@selectListItem.Value">
+                                            @selectListItem.Text
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Comment -->
+                        <div class="field hidden" id="comment-input">
+                            <label asp-for="Item.Comment" class="field__label">Comment</label>
+                            <textarea type="text"
+                                      asp-for="Item.Comment"
+                                      class="field__input field__input-text-area"></textarea>
+                        </div>
+                    }
+                    <div class="button-group margin-top--medium">
+                        <div class="button-group__item">
+                            <input id="@(User.IsInRole(WC.UploaderRole) ? "submit-item-button" : "save-item-button")" type="submit" class="button" name="submit" value="@(User.IsInRole(WC.UploaderRole) ? "Submit" : "Save")" />
+                        </div>
                         @if (User.IsInRole(WC.UploaderRole))
                         {
-                            <input type="submit" class="btn btn-primary w-100" name="save" value="Save draft" />
+                            <div class="button-group__item">
+                                <input type="submit" class="link" name="save" value="Save draft" />
+                            </div>
                         }
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
-</form>
+</div>
 
-<!-- Submission confirmation modal -->
-<div id="itemSubmissionConfirmModal" class="modal hidden">
-    <div class="modal-content">
-        <span class="submissionConfirmModalClose">&times;</span>
 
-        <!-- New team name input field -->
-        <p>Are you sure you want to delete this team. All projects under this team will be deleted. All items assigned this team or subsequent projects will be unnasigned.</p>
 
-        <!-- Buttons -->
-        <div class="form-group row">
-            <div class="col-8 row">
-                <button id="close-submission-confirm-modal-button">Ok</button>
+
+@*Congratulations modal*@
+<div id="itemSubmissionConfirmModal" class="modal-container hidden">
+    <div class="modal">
+
+        @*Image*@
+        <div class="modal__image-contianer">
+            <img class="modal__image"
+                 src="/images/pngs/celebration.png"
+                 alt="celebration_image" />
+        </div>
+
+        <h4 class="modal__title text--black align-text--center">Thank you for contributing!</h4>
+
+        @*Description*@
+    <p class="margin-bottom--medium">
+        Your research will be reviewed by the librarian and you will be
+        notified once it’s published on our library.
+    </p>
+
+        @*Buttons*@
+        <div class="button-group button-group--small align-right margin-top--medium">
+            <div class="button-group__item">
+                <button class="link" id="close-submission-confirm-modal-button">Ok</button>
             </div>
         </div>
 

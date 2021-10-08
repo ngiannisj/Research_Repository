@@ -4,7 +4,8 @@
 <h1>@ViewData["Title"]</h1>
 <!-- grid-column-main -->
 <div class="grid">
-    <form asp-route-returnUrl="@Model.ReturnUrl" class="form grid-column-main" method="post">
+    <div class="form grid-column-main">
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <h1 class="margin-bottom--large">Login</h1>
             <div class="field">
                 <label asp-for="Input.Email" class="field__label">Email address:</label>
@@ -17,8 +18,7 @@
 
             <div class="field">
                 <label asp-for="Input.Password" class="field__label">Password:</label>
-                <input 
-                       asp-for="Input.Password"
+                <input asp-for="Input.Password"
                        class="field__input"
                        value="" />
                 <span asp-validation-for="Input.Password" class="field__error-text"></span>
@@ -26,7 +26,7 @@
 
             <div class="button-group margin-bottom--medium">
                 <div class="field__list-item field__list-item--large">
-                    
+
                     <label asp-for="Input.RememberMe"
                            class="field__label field__label--toggle field__label--checkbox"
                            tabindex="0"
@@ -45,11 +45,12 @@
                 <button type="submit" class="button">Login</button>
             </div>
 
-            <div class="button-group button-group--vertical margin-bottom--medium">
-                <h4>Don't have an account?</h4>
+        </form>
+        <div class="button-group button-group--vertical margin-bottom--medium">
+            <h4>Don't have an account?</h4>
                 <a class="link link--green" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Create an account to contribute</a>
-            </div>
-    </form>
+        </div>
+    </div>
 </div>
 
 

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Research_Repository.Data;
 using Research_Repository_DataAccess.Repository.IRepository;
 using Research_Repository_Models;
-using Research_Repository_Models.Models.ViewModels;
 using Research_Repository_Models.ViewModels;
 using Research_Repository_Utility;
 using System.Collections.Generic;
@@ -45,7 +44,7 @@ namespace Research_Repository_DataAccess.Repository
                 }
 
                 //Populate item object with item from database
-                item = _db.Items.Find(id);
+                item = _db.Items.AsNoTracking().Include(i => i.Project).Include(i => i.Team).Include(i => i.Theme).FirstOrDefault(u => u.Id == id);
             }
 
             //Instantiate status option list with all available options

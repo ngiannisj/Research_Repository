@@ -49,6 +49,12 @@ namespace Research_Repository_Models
         [ForeignKey("ThemeId")]
         public virtual Theme Theme { get; set; }
 
+        [Display(Name = "Team Type")]
+        public int? TeamId { get; set; }
+
+        [ForeignKey("TeamId")]
+        public virtual Team Team { get; set; }
+
         [Display(Name = "Project Type")]
         public int? ProjectId { get; set; }
 

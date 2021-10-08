@@ -109,7 +109,7 @@ namespace Research_Repository_DataAccess.Repository.Solr
 
             if (!string.IsNullOrEmpty(itemQueryParams.SearchText))
             {
-                query = new SolrQuery($"indexed_text:{itemQueryParams.SearchText}");
+                query = new SolrQueryByField("indexed_text", itemQueryParams.SearchText);
             }
             else
             {
@@ -119,14 +119,13 @@ namespace Research_Repository_DataAccess.Repository.Solr
             //Convert string date to dateTime format
             DateTime startDate = DateTime.ParseExact("0001-01-01", WC.YearMonthDay, CultureInfo.InvariantCulture);
             DateTime endDate = DateTime.ParseExact(DateTime.Now.ToString("yyyy-MM-dd"), WC.YearMonthDay, CultureInfo.InvariantCulture);
-            if (!string.IsNullOrEmpty(itemQueryParams.StartDate) && DateHelper.CheckDate(itemQueryParams.StartDate))
+
+            if (DateHelper.CheckDateRange(itemQueryParams.StartDate, itemQueryParams.EndDate))
             {
-              startDate = DateTime.ParseExact(itemQueryParams.StartDate, WC.YearMonthDay, CultureInfo.InvariantCulture);
+                    startDate = DateTime.ParseExact(itemQueryParams.StartDate, WC.YearMonthDay, CultureInfo.InvariantCulture);
+                    endDate = DateTime.ParseExact(itemQueryParams.EndDate, WC.YearMonthDay, CultureInfo.InvariantCulture);
             }
-            if(!string.IsNullOrEmpty(itemQueryParams.EndDate) && DateHelper.CheckDate(itemQueryParams.EndDate))
-            {
-               endDate = DateTime.ParseExact(itemQueryParams.EndDate, WC.YearMonthDay, CultureInfo.InvariantCulture);
-            }
+
 
 
             SolrQueryResults<T> items = _solr.Query(query, new QueryOptions

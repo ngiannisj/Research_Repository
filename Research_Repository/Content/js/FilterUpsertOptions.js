@@ -11,13 +11,24 @@
         }
     });
 
+    $(":radio").change(function () {
+        $(this).closest(".field__list-container").find(".field__label--radio-checked").removeClass("field__label--radio-checked");
+        $(this).closest(".field__list-container").find(".field__input-radio").attr('checked', false);
+
+        if ($(this).is(':checked')) {
+            $(this).attr('checked', true);
+            $(this).parent().addClass("field__label--radio-checked");
+        }
+    });
+
+
     //Filter tags on page load
-    if ($("#filters").length) {
+    if ($("#item-form").length) {
         filterTags($("#theme-selector").val());
     }
 
     //Filter projects on page load
-    if ($("#filters").length) {
+    if ($("#item-form").length) {
         filterProjects($("#team-selector").val());
     }
 

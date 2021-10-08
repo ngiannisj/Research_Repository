@@ -1,4 +1,4 @@
-﻿namespace Research_Repository_Models.Models.ViewModels
+﻿namespace Research_Repository_Models.ViewModels
 {
     public class RadioButtonVM
     {
