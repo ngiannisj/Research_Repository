@@ -1,18 +1,24 @@
 ﻿$(document).ready(function () {
 
-    $("#project-start-date.error").on("change", function () {
-        if ($("#project-start-date").val() < $("#project-end-date").val()) {
-            $("#project-start-date").removeClass("error");
-            $("#end-date-error-text").addClass("hidden");
+    $("#project-end-date").on("change", function () {
+        if ($(this).hasClass("error")) {
+            if ($("#project-start-date").val() < $("#project-end-date").val()) {
+                $("#project-end-date").removeClass("error");
+                $("#end-date-error-text").addClass("hidden");
+            }
         }
     });
 
-    $("#title-input-field.error").on("input", function () {
+    $("#title-input-field").on("input", function () {
+        if ($(this).hasClass("error")) {
         $("#title-input-field").removeClass("error");
-        $("#title-error-text").addClass("hidden");
+            $("#title-error-text").addClass("hidden");
+        }
+
     });
 
     $('#item-form').submit(function () {
+
         if ($("#project-start-date").val() >= $("#project-end-date").val()) {
             $("#project-end-date").addClass("error");
             $("#end-date-error-text").removeClass("hidden");
@@ -21,11 +27,15 @@
                 $("#title-input-field").addClass("error");
                 $("#title-error-text").removeClass("hidden");
             }
+            event.preventDefault();
+            $("#project-start-date")[0].scrollIntoView();
             return false;
         }
         if ($("#title-input-field").val() == null || $("#title-input-field").val() == "") {
             $("#title-input-field").addClass("error");
             $("#title-error-text").removeClass("hidden");
+            event.preventDefault();
+            $("#title-input-field")[0].scrollIntoView();
             return false;
         }
     });
