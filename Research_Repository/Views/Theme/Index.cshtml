@@ -52,11 +52,11 @@
                                 <input class="form-control theme-description-input hidden" asp-for="@Model.ThemeObjects[y].Theme.Description" />
                                 <input asp-for="@Model.ThemeObjects[y].Theme.Id" class="theme-id" hidden />
                                 <button class="button--icon button--icon-delete open-delete-theme-modal-btn" value="@Model.ThemeObjects[y].Theme.Id">
-                                    <img src="images/svgs/cross.svg" alt="delete_theme" />
+                                    <img src="/images/svgs/cross.svg" alt="delete_theme" />
                                 </button>
                                 <h4 class="accordion__title theme-name-text">@Model.ThemeObjects[y].Theme.Name</h4>
                                 <button class="button--icon button--icon-edit" onclick="openEditThemeModal(this)">
-                                    <img src="images/svgs/pencil.svg" alt="edit_theme_name" />
+                                    <img src="/images/svgs/pencil.svg" alt="edit_theme_name" />
                                 </button>
                             </div>
                             <div class="accordion__content--complex accordion__content">
@@ -108,7 +108,7 @@
         @*Image*@
         <div class="modal__image-contianer">
             <img class="modal__image"
-                 src="images/svgs/caution.svg"
+                 src="/images/svgs/caution.svg"
                  alt="celebration_image" />
         </div>
 
@@ -244,7 +244,7 @@
         @*Image*@
         <div class="modal__image-contianer">
             <img class="modal__image"
-                 src="images/svgs/caution.svg"
+                 src="/images/svgs/caution.svg"
                  alt="caution_image" />
         </div>
 

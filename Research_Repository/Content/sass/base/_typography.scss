@@ -278,6 +278,7 @@ ul {
 //Pathway card
 .card {
     text-decoration: none;
+    
 
     &:visited {
         color: initial;
@@ -368,47 +369,55 @@ ul {
         }
     }
     //Text modifiers
-    .text {
-        //Colours
-        &--black {
-            color: $black;
-        }
-
-        &--pale-grey {
-            color: $pale-grey;
-        }
-
-        &--transparent-50-base-blue {
-            color: $transparent-50-base-blue;
-        }
-
-        &--transparent-70-base-blue {
-            color: $transparent-70-base-blue;
-        }
-        //Sizes
-        &--small {
-            font-size: 1.4rem;
-            line-height: 1.9rem;
-        }
-
-        &--medium {
-            font-size: 1.6rem;
-            line-height: 2.1rem;
-        }
-
-        &--large {
-            font-size: 1.8rem;
-            line-height: 2.4rem;
-        }
-        //Weights
-        &--normal {
-            font-weight: 400;
-        }
-
-        &--semibold {
-            font-weight: 600;
-        }
+.text {
+    //Colours
+    &--black {
+        color: $black;
     }
+
+    &--green {
+        color: $base-green;
+    }
+
+    &--red {
+        color: $base-red;
+    }
+
+    &--pale-grey {
+        color: $pale-grey;
+    }
+
+    &--transparent-50-base-blue {
+        color: $transparent-50-base-blue;
+    }
+
+    &--transparent-70-base-blue {
+        color: $transparent-70-base-blue;
+    }
+    //Sizes
+    &--small {
+        font-size: 1.4rem;
+        line-height: 1.9rem;
+    }
+
+    &--medium {
+        font-size: 1.6rem;
+        line-height: 2.1rem;
+    }
+
+    &--large {
+        font-size: 1.8rem;
+        line-height: 2.4rem;
+    }
+    //Weights
+    &--normal {
+        font-weight: 400;
+    }
+
+    &--semibold {
+        font-weight: 600;
+    }
+}
     //Accordion
     .accordion {
 

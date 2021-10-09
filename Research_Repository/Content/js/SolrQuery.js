@@ -194,7 +194,7 @@ function filterItemList(itemStatus, pageId) {
                 <div class="pill">
                   <img
                     class="pill__image"
-                    src="images/svgs/tag.svg"
+                    src="/images/svgs/tag.svg"
                     alt="tag_image"
                   />${data.items[i].tags[t]}
                 </div>`
@@ -234,9 +234,9 @@ ${data.items[i].notifyUploader ? `<span class="notification-bubble notification-
                 <h4 class="card__heading">${data.items[i].title ? `${data.items[i].title}` : "No title"}</h4>
               </div>
 
- <div class="margin-bottom--extra-small"><span class="text--black">Title: </span> <span class="faded">${data.items[i].title}</span></div>
- <div class="margin-bottom--extra-small"><span class="text--black">Contributer: </span> <span class="faded">${data.items[i].uploader}</span></div>
- <div class="margin-bottom--extra-small"><span class="text--black">Last updated: </span> <span class="faded">${data.items[i].lastUpdatedDate.split("T")[0]}</span></div>
+ <div class="margin-bottom--extra-small"><span class="text--black">Title: </span> <span class="text--black faded">${data.items[i].title}</span></div>
+ <div class="margin-bottom--extra-small"><span class="text--black">Contributer: </span> <span class="text--black faded">${data.items[i].uploader}</span></div>
+ <div class="margin-bottom--extra-small"><span class="text--black">Last updated: </span> <span class="text--black faded">${data.items[i].lastUpdatedDate.split("T")[0]}</span></div>
             </div>
           </a>`;
                     }
@@ -251,7 +251,7 @@ ${data.items[i].notifyUploader ? `<span class="notification-bubble notification-
                 <div class="pill">
                   <img
                     class="pill__image"
-                    src="images/svgs/tag.svg"
+                    src="/images/svgs/tag.svg"
                     alt="tag_image"
                   />${data.items[i].tags[t]}
                 </div>`

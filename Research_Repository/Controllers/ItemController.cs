@@ -237,18 +237,6 @@ namespace Research_Repository.Controllers
         [Authorize(Roles = WC.AllRoles)]
         public void Delete(int? id)
         {
-            var obj = _itemRepo.Find(id.GetValueOrDefault());
-            if (obj.Files != null)
-            {
-                string webRootPath = _webHostEnvironment.WebRootPath;
-                string fileLocation = WC.ItemFilePath + id + "\\";
-
-                FileHelper.DeleteFiles(null, webRootPath, fileLocation); //Delete files associated with this item
-            }
-            //Delete from database
-            _itemRepo.Remove(obj);
-            _itemRepo.Save();
-
             //Get item from db to include navigation fields
             Item dbItem = _itemRepo.FirstOrDefault(u => u.Id == id, isTracking: false, include: source => source
     .Include(a => a.Project)
@@ -259,6 +247,19 @@ namespace Research_Repository.Controllers
     .Include(a => a.Uploader));
 
             _solr.Delete(new ItemSolr(dbItem)); //Delete solr index
+
+            if (dbItem.Files != null)
+            {
+                string webRootPath = _webHostEnvironment.WebRootPath;
+                string fileLocation = WC.ItemFilePath + id + "\\";
+
+                FileHelper.DeleteFiles(null, webRootPath, fileLocation); //Delete files associated with this item
+            }
+            //Delete from database
+            _itemRepo.Remove(dbItem);
+            _itemRepo.Save();
+
+
         }
 
         //POST - POSTFILES (FROM AJAX CALL)

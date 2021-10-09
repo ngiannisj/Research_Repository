@@ -58,6 +58,8 @@
     border: none;
     background: none;
     border-bottom: 0.8rem solid $base-yellow;
+    display: flex;
+    align-items: flex-end;
 
         &:hover {
         cursor: pointer;

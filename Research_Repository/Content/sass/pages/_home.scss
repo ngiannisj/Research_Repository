@@ -9,12 +9,29 @@
   &-container {
     grid-column: center-start / center-end;
     width: 100%;
+
+            @media(max-width: 2105px) {
+                grid-column: col-start 4 / center-end;
+            }
+
+        @media(max-width: 1475px) {
+                grid-column: center-start / center-end;
+            }
   }
 
   &-curve {
       margin-top: -19rem;
       z-index: -1;
     position: relative;
+            
+            @media(max-width: 2105px) {
+            margin-top: -22rem;
+            }
+                @media(max-width: 1475px) {
+                      margin-top: 4rem;
+            }
+
+
     &::before {
       position: absolute;
       content: "";
@@ -23,6 +40,7 @@
       background: $pale-blue;
       z-index: -1;
       clip-path: ellipse(200rem 38rem at 126rem 61.2rem);
+
     }
   }
 

@@ -138,7 +138,7 @@
             data: { "id": itemId },
             contentType: 'application/json; charset=utf-8',
             success: function () {
-                window.location.href = '../profile';
+                window.location.href = '/profile';
             }
         });
     });

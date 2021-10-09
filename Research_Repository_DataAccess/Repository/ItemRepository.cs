@@ -31,20 +31,25 @@ namespace Research_Repository_DataAccess.Repository
             //If specific item is requested, populate item object, suggested tag list and key insights list
             if (id != null && id != 0)
             {
-                //Split suggested tag string from database and populate suggested tag list with it
-                if (_db.Items.FirstOrDefault(u => u.Id == id).SuggestedTags != null)
-                {
-                    suggestedTagsList = _db.Items.FirstOrDefault(u => u.Id == id).SuggestedTags.ToString().Split("~~");
-                }
+                Item dbItem = _db.Items.AsNoTracking().Include(i => i.Project).Include(i => i.Team).Include(i => i.Theme).FirstOrDefault(u => u.Id == id);
 
-                //Split key insights string from database and populate key insights list with it
-                if (_db.Items.FirstOrDefault(u => u.Id == id).KeyInsights != null)
+                if (dbItem != null)
                 {
-                    keyInsightsList = _db.Items.FirstOrDefault(u => u.Id == id).KeyInsights.ToString().Split("~~");
-                }
+                    //Split suggested tag string from database and populate suggested tag list with it
+                    if (dbItem.SuggestedTags != null)
+                    {
+                        suggestedTagsList = dbItem.SuggestedTags.ToString().Split("~~");
+                    }
 
-                //Populate item object with item from database
-                item = _db.Items.AsNoTracking().Include(i => i.Project).Include(i => i.Team).Include(i => i.Theme).FirstOrDefault(u => u.Id == id);
+                    //Split key insights string from database and populate key insights list with it
+                    if (dbItem.KeyInsights != null)
+                    {
+                        keyInsightsList = dbItem.KeyInsights.ToString().Split("~~");
+                    }
+
+                    //Populate item object with item from database
+                    item = dbItem;
+                }
             }
 
             //Instantiate status option list with all available options

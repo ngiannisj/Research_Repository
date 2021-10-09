@@ -6,8 +6,17 @@
     padding: 6rem 0;
     border-top: 0.2rem solid $transparent-50-base-blue;
 
+    @media(max-width: 1007px) {
+        flex-direction: column;
+    }
+
     &__half {
         width: 50%;
+
+        @media(max-width: 1007px) {
+            width: 100%;
+
+        }
     }
 
     &__full-width {
