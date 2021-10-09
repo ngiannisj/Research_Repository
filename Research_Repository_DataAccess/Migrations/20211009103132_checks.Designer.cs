@@ -10,8 +10,8 @@ using Research_Repository.Data;
 namespace Research_Repository_DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211008070831_UpdatedTeamCascadeDelete")]
-    partial class UpdatedTeamCascadeDelete
+    [Migration("20211009103132_checks")]
+    partial class checks
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

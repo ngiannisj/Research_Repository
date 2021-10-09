@@ -86,12 +86,6 @@ namespace Research_Repository.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if (!await _roleManager.RoleExistsAsync(WC.LibrarianRole))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(WC.LibrarianRole));
-                await _roleManager.CreateAsync(new IdentityRole(WC.UploaderRole));
-
-            }
 
             //Create dropdown selectlist from teams
             IEnumerable<SelectListItem> teamsSelectList = _teamRepo.GetTeamsList(null);

@@ -11,7 +11,7 @@ namespace Research_Repository_Models
 
         public string LastName { get; set; }
 
-        [Display(Name = "Type Type")]
+        [Display(Name = "Team")]
         public int? TeamId { get; set; }
 
         [ForeignKey("TeamId")]

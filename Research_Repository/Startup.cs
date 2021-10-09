@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Research_Repository.Data;
+using Research_Repository_DataAccess.Initialiser;
 using Research_Repository_DataAccess.Repository;
 using Research_Repository_DataAccess.Repository.IRepository;
 using Research_Repository_DataAccess.Repository.Solr;
@@ -58,6 +59,7 @@ namespace Research_Repository
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<IProfileRepository, ProfileRepository>();
             services.AddScoped<IItemRequestRepository, ItemRequestRepository>();
+            services.AddScoped<IDbInitialiser, DbInitialiser>();
 
             services.AddControllersWithViews();
 
@@ -72,7 +74,7 @@ namespace Research_Repository
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDbInitialiser dbInitialiser)
         {
             if (env.IsDevelopment())
             {
@@ -93,6 +95,7 @@ namespace Research_Repository
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            dbInitialiser.Initialise();
             app.UseSession();
             app.UseEndpoints(endpoints =>
             {
