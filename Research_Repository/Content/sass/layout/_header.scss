@@ -103,6 +103,9 @@
 
       &--has-notification {
     padding-right: 3.7rem;
+                        @media(max-width: 595px) {
+        padding-right: 1.6rem;
+        }
     }
 
     &--align-right {
