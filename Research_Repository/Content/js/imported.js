@@ -78,7 +78,6 @@ function selectListOptionClick($this) {
             $("#check-all-status-container .field__label--checkbox").removeClass("field__label--checkbox-checked");
             $("#check-all-status-container").removeClass("hidden");
             $("#tag-name-input-container").removeClass("hidden");
-            console.log("thing");
         }
     }
 

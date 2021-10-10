@@ -95,7 +95,6 @@ function filterProjects(id) {
                 $("#project-selector-container .accordion__content-option").addClass("hidden");
                 for (var i = 0; i < data.length; i++) {
                     $("#project-button-" + data[i]).removeClass("hidden");
-                    console.log();
                 }
             } else {
                 $("#project-selector-container .accordion__content-option").removeClass("hidden");

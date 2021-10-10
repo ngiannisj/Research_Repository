@@ -17,6 +17,14 @@
         @media(max-width: 1475px) {
                 grid-column: center-start / center-end;
             }
+
+                @media(max-width:  733px) {
+            margin-bottom: 3rem;
+            }
+
+            @media(max-width: 595px) {
+                text-align: center;
+    }
   }
 
   &-curve {
@@ -30,6 +38,11 @@
                 @media(max-width: 1475px) {
                       margin-top: 4rem;
             }
+        @media(max-width:  733px) {
+            display: none;
+            }
+
+       
 
 
     &::before {
@@ -93,5 +106,20 @@
 
     &__main-content {
         padding-top: 8rem;
+    }
+}
+
+#homepage-search-form {
+    @media(max-width: 595px) {
+        flex-direction: column;
+        .field {
+            margin: 0 0 1rem 0;
+        }
+    }
+}
+
+#contribute-button {
+    @media(max-width: 595px) {
+        margin: 0 auto;
     }
 }

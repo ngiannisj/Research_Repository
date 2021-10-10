@@ -147,7 +147,6 @@ function saveTempTeams(teamsList, teamId) {
         success: function (data) {
             //Reload team dropdown list
             let $el = $(".accordion__content--select-list").first();
-            console.log(data);
                 $('#project-teamId-modal-input').html(""); // remove all options, but not the first two
                 let options = "";
 
@@ -214,7 +213,6 @@ function openProjectModal(project) {
     $("#project-delete-button").show().prop('disabled', false);
     $("#project-submit-button").val("Update");
     const projectName = $(project).siblings(".project-name-input").first().val();
-    console.log(projectName);
     const projectId = $(project).siblings(".project-id").first().val();
     const teamId = $(project).closest(".team").find(".team-id").first().val();
     const teamName = $(project).closest(".team").find(".team-name-input").first().val();
