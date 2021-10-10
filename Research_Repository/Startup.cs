@@ -64,11 +64,11 @@ namespace Research_Repository
             services.AddControllersWithViews();
 
             //Pass solr context using dependency injection
-            services.AddSolrNet<ItemSolr>($"http://localhost:8983/solr/research_repository_items");
+            services.AddSolrNet<ItemSolr>($"http://research-repo-solr-server.azurewebsites.net/solr/research_repository_items");
             services.AddScoped<ISolrIndexService<ItemSolr>, SolrIndexService<ItemSolr, ISolrOperations<ItemSolr>>>();
 
             //Set up and pass solr admin context using dependency injection
-            const string solrUrl = "http://localhost:8983/solr";
+            const string solrUrl = "http://research-repo-solr-server.azurewebsites.net/solr";
             ISolrCoreAdmin solrCoreAdmin = new SolrCoreAdmin(new SolrConnection(solrUrl), new HeaderResponseParser<string>(), new SolrStatusResponseParser());
             services.AddSingleton(solrCoreAdmin);
         }
