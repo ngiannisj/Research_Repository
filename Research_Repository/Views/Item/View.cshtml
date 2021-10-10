@@ -55,31 +55,31 @@
                         @(Model.Title != null ? Model.Title : "Title undefined")
                     </h1>
                     <div class="key-value-grid">
-                        <p class="text--semibold">Team</p>
+                        <p class="key-value-grid__title text--semibold">Team</p>
                         <p>@(Model.Team != null && Model.Team.Name != null ? Model.Team.Name : "Team undefined")</p>
 
-                        <p class="text--semibold">Contact</p>
+                        <p class="key-value-grid__title text--semibold">Contact</p>
                         <p>@(Model.Team != null && Model.Team.Contact != null ? Model.Team.Contact : "Team contact undefined")</p>
 
                         @if (!string.IsNullOrEmpty(Model.Collaborator))
                         {
-                            <p class="text--semibold">Collaborator</p>
+                            <p class="key-value-grid__title text--semibold">Collaborator</p>
                             <p>@(Model.Team != null && Model.Team.Contact != null ? Model.Team.Contact : "Team contact undefined")</p>
                         }
 
                         @if (!string.IsNullOrEmpty(Model.StartDate.ToShortDateString()))
                         {
-                            <p class="text--semibold">Start date</p>
+                            <p class="key-value-grid__title text--semibold">Start date</p>
                             <p>@(Model.StartDate.ToShortDateString() != null && Model.StartDate.ToShortDateString() != null ? Model.StartDate.ToShortDateString() : "Start date undefined")</p>
                         }
 
                         @if (!string.IsNullOrEmpty(Model.EndDate.ToShortDateString()))
                         {
-                            <p class="text--semibold">End date</p>
+                            <p class="key-value-grid__title text--semibold">End date</p>
                             <p>@(Model.EndDate.ToShortDateString() != null && Model.EndDate.ToShortDateString() != null ? Model.EndDate.ToShortDateString() : "End date undefined")</p>
                         }
 
-                        <p class="text--semibold">Theme</p>
+                        <p class="key-value-grid__title text--semibold">Theme</p>
                         @if (Model.Theme != null && !String.IsNullOrEmpty(Model.Theme.Name))
                         {
                             <div class="pills-list">
@@ -97,7 +97,7 @@
 
                         @if (Model.ItemTags != null && Model.ItemTags.Count() > 0)
                         {
-                            <p class="text--semibold">Tags</p>
+                            <p class="key-value-grid__title text--semibold">Tags</p>
                             <div class="pills-list">
                                 @foreach (ItemTag itemTag in Model.ItemTags)
                                 {
@@ -114,7 +114,7 @@
                             </div>
                         }
 
-                        <p class="text--semibold">Use</p>
+                        <p class="key-value-grid__title text--semibold">Use</p>
                         @if (Model.ApprovedUse == WC.External)
                         {
                             <p>For <span class="text--semibold">@Model.ApprovedUse use</span></p>
@@ -128,7 +128,7 @@
                             <p>Approved use undefined</p>
                         }
 
-                        <p class="text--semibold">Classification</p>
+                        <p class="key-value-grid__title text--semibold">Classification</p>
                         @if (Model.Sensitivity == WC.Unclassified)
                         {
                             <p class="text--green text--semibold">@Model.Sensitivity</p>
