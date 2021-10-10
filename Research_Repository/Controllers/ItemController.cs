@@ -216,14 +216,18 @@ namespace Research_Repository.Controllers
         .Include(a => a.Uploader));
 
             //Update notification status to false if the current user is the user who created the item
-            if (item.NotifyUploader == true && item.UploaderId == _userManager.GetUserId(User))
+            if (User.Identity.IsAuthenticated)
             {
-                item.NotifyUploader = false;
-                _itemRepo.Update(item);
-                _itemRepo.Save();
+                if (item.NotifyUploader == true && item.UploaderId == _userManager.GetUserId(User))
+                {
+                    item.NotifyUploader = false;
+                    _itemRepo.Update(item);
+                    _itemRepo.Save();
 
-                _solr.AddUpdate(new ItemSolr(item));
+                    _solr.AddUpdate(new ItemSolr(item));
+                }
             }
+
 
             if (item == null)
             {

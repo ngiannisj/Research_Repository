@@ -82,6 +82,10 @@ namespace Research_Repository.Areas.Identity.Pages.Account
 
             [Display(Name = "Team")]
             public int? TeamId { get; set; }
+
+            [Required]
+            [Display(Name = "Role")]
+            public string Role { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -102,7 +106,7 @@ namespace Research_Repository.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, TeamId = Input.TeamId };
+                var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName, TeamId = Input.TeamId, Role = Input.Role };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {

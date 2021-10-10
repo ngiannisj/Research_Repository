@@ -24,7 +24,6 @@
                        asp-for="Input.FirstName"
                        class="field__input"
                        value="" />
-                <span asp-validation-for="Input.Email" class="field__error-text"></span>
             </div>
 
             <div class="field">
@@ -33,7 +32,6 @@
                        asp-for="Input.LastName"
                        class="field__input"
                        value="" />
-                <span asp-validation-for="Input.LastName" class="field__error-text"></span>
             </div>
 
             <div class="field">
@@ -72,9 +70,22 @@
                 </div>
             }
 
+            <div class="field">
+                <label asp-for="Input.Role" class="field__label">Role</label>
+                <input type="text"
+                       asp-for="Input.Role"
+                       class="field__input"
+                       value="" />
+            </div>
 
             <div class="field">
                 <label asp-for="Input.Password" class="field__label">Password</label>
+                <p class="field__description text--black faded">
+                    At least:
+                    one special character,
+                    one capital letter,
+                    minimum 6 characters
+                </p>
                 <input asp-for="Input.Password"
                        class="field__input"
                        value="" />
