@@ -8,7 +8,7 @@ let queryParameters = {
     sensitivity =[],
     approvals =[],
     status=["Published"],
-    userIds=[],
+    uploaderId=[],
     startDate = "yyyy-mm-dd",
     endDate = "yyyy-mm-dd",
     paginationStartItem = 0
@@ -69,22 +69,8 @@ $(document).ready(function () {
     //If profile page is displayed, query solr for items with a 'Draft' state and created by the user
     if ($('#filters.profile-filters').length) {
         $("#drafts-filter-btn").addClass("button--active");
-        //Get userId from session
-        $.ajax({
-            type: "GET",
-            url: "/Profile/GetUserId",
-            dataType: "text",
-            success: function (data) {
-                queryParameters.userId = [];
-                queryParameters.userId.push(data);
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-
         updateFilterParameters(queryParameters.paginationStartItem, "Draft");
-    }
+    };
 
     //If the clear filter button is clicked
     $("#clear-filters").click(function () {
@@ -152,8 +138,29 @@ function updateFilterParameters(pageId, itemStatus) {
         queryParameters.status.push(itemStatus);
     }
 
-    //Filter items list
-    filterItemList(itemStatus, pageId);
+    //If profile page is displayed, query solr for items with a 'Draft' state and created by the user
+    if ($('#filters.profile-filters').length) {
+        //Get userId from session
+        $.ajax({
+            type: "GET",
+            url: "/Profile/GetUserId",
+            dataType: "text",
+            success: function (data) {
+                queryParameters.uploaderId = [];
+                queryParameters.uploaderId.push(data);
+                //Filter items list
+                filterItemList(itemStatus, pageId);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    } else {
+        //Filter items list
+        filterItemList(itemStatus, pageId);
+    };
+
+
 };
 
 //Filter items list
