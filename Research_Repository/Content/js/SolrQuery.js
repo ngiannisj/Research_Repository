@@ -173,7 +173,6 @@ function filterItemList(itemStatus, pageId) {
         data: { "itemQueryJson": stringifiedParameters },
         success: function (data) {
             let itemListHtml = "";
-
             if (!data || data.items.length == 0) {
                 itemListHtml = `<div class="no-items"><p>No items to display<p></div>`;
             } else {
