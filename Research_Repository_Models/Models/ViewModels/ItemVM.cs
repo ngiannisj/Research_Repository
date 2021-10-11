@@ -5,6 +5,7 @@ namespace Research_Repository_Models.ViewModels
 {
     public class ItemVM
     {
+
         public Item Item { get; set; }
 
         public int? TeamId { get; set; }
@@ -26,6 +27,8 @@ namespace Research_Repository_Models.ViewModels
         public IEnumerable<RadioButtonVM> ApprovalRadioButtons { set; get; }
 
         public IEnumerable<RadioButtonVM> SensitivityRadioButtons { set; get; }
+
+        public bool ShowCelebrationModal { get; set; }
     }
 
 }

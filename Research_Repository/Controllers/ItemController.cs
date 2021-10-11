@@ -41,13 +41,18 @@ namespace Research_Repository.Controllers
 
         //GET - UPSERT
         [Authorize(Roles = WC.AllRoles)]
-        public IActionResult Upsert(int? id)
+        public IActionResult Upsert(int? id, bool redirect = false)
         {
 
             ItemVM itemVM = _itemRepo.GetItemVM(id);
 
+            if(redirect == true)
+            {
+                itemVM.ShowCelebrationModal = true;
+            }
+
             //Redirect to view page for item if the current user is an uploader not librarian
-            if (id != null && User.IsInRole(WC.UploaderRole) && (itemVM.Item.Status == WC.Submitted || itemVM.Item.Status == WC.Published))
+            if (id != null && User.IsInRole(WC.UploaderRole) && (itemVM.Item.Status == WC.Submitted && redirect != true|| itemVM.Item.Status == WC.Published))
             {
                 return RedirectToAction(nameof(View), id);
             }
@@ -104,7 +109,7 @@ namespace Research_Repository.Controllers
                 itemVM.Item.LastUpdatedDate = DateTime.Today;
 
                 //Update item status
-                if (User.IsInRole(WC.UploaderRole) && submit != WC.SubmitAction || itemVM.Item.Status == null || itemVM.Item.Status == "")
+                if (User.IsInRole(WC.UploaderRole) && submit != WC.SubmitAction || (User.IsInRole(WC.LibrarianRole) && itemVM.Item.Status == null) || (User.IsInRole(WC.LibrarianRole) && itemVM.Item.Status == ""))
                 {
                     itemVM.Item.Status = WC.Draft;
                 }
@@ -194,8 +199,14 @@ namespace Research_Repository.Controllers
         .Include(a => a.Uploader));
 
                 _solr.AddUpdate(new ItemSolr(dbItem)); //Update solr
+                if(submit == WC.SubmitAction)
+                {
+                    return RedirectToAction(nameof(Upsert), new { Redirect = true });
+                } else
+                {
+                    return RedirectToAction(nameof(Index), WC.ProfileName);
+                }
 
-                return RedirectToAction(nameof(Index), WC.ProfileName);
             }
             else
             {
@@ -215,6 +226,11 @@ namespace Research_Repository.Controllers
         .Include(a => a.Theme)
         .Include(a => a.Uploader));
 
+            if (item == null)
+            {
+                return NotFound();
+            }
+
             //Update notification status to false if the current user is the user who created the item
             if (User.Identity.IsAuthenticated)
             {
@@ -226,12 +242,6 @@ namespace Research_Repository.Controllers
 
                     _solr.AddUpdate(new ItemSolr(item));
                 }
-            }
-
-
-            if (item == null)
-            {
-                return NotFound();
             }
             return View(item);
         }

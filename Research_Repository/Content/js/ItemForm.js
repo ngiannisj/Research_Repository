@@ -40,12 +40,6 @@
         }
     });
 
-    //When uploaders (not librarians) click the submit button on a 'Draft' item
-    $("#submission-item-button").click(function () {
-        $("#itemSubmissionConfirmModal").removeClass("hidden");
-        event.preventDefault();
-    });
-
     //Open the 'profile' page when the item submission modal closes
     $("#close-submission-confirm-modal-button, submissionConfirmModalClose").click(function () {
         window.location.href = '/profile';

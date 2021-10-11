@@ -66,6 +66,10 @@ namespace Research_Repository_Models.Solr
             {
                 this.Status = model.Status;
             }
+            if (!string.IsNullOrEmpty(model.UploaderId))
+            {
+                this.UploaderId = model.UploaderId;
+            }
             if (model.Uploader != null)
             {
                 if (!string.IsNullOrEmpty(model.Uploader.FirstName) && !string.IsNullOrEmpty(model.Uploader.LastName))

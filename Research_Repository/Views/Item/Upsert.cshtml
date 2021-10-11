@@ -604,7 +604,7 @@
                         @if (User.IsInRole(WC.UploaderRole))
                         {
                             <div class="button-group__item">
-                                <input type="submit" class="link" name="save" value="Save draft" />
+                                <input type="submit" id="save-item-button" class="link" name="save" value="Save draft" />
                             </div>
                         }
                     </div>
@@ -618,7 +618,7 @@
 
 
 @*Congratulations modal*@
-<div id="itemSubmissionConfirmModal" class="modal-container hidden">
+<div id="itemSubmissionConfirmModal" class="modal-container @(!Model.ShowCelebrationModal ? "hidden" : "")">
     <div class="modal">
 
         @*Image*@
