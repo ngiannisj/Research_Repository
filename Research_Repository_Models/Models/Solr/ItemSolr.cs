@@ -32,11 +32,10 @@ namespace Research_Repository_Models.Solr
             if (model.Project != null)
             {
                 this.Project = model.Project.Name;
-
-                if (model.Project.Team != null)
-                {
-                    this.Team = model.Project.Team.Name;
-                }
+            }
+            if (model.Team != null)
+            {
+                this.Team = model.Team.Name;
             }
             if (model.ItemTags != null && model.ItemTags.Count > 0)
             {
