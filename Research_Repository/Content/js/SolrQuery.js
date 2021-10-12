@@ -430,12 +430,12 @@ function filterTagsForItemsList() {
         traditional: true,
         success: function (data) {
             if (themeIds !== undefined && themeIds.length > 0) {
-                $("#tag-checkbox-filter label").addClass("hidden");
+                $("#tag-checkbox-filter label").parent().addClass("hidden");
                 for (var i = 0; i < data.length; i++) {
-                    $("#tag-input-id-" + data[i]).parent().removeClass("hidden");
+                    $("#tag-input-id-" + data[i]).parent().parent().removeClass("hidden");
                 }
             } else {
-                $("#tag-checkbox-filter label").removeClass("hidden");
+                $("#tag-checkbox-filter label").parent().removeClass("hidden");
             }
             updateFilterParameters(queryParameters.paginationStartItem, "Published");
         },
@@ -475,12 +475,12 @@ function filterProjectsForItemsList() {
         traditional: true,
         success: function (data) {
             if (teamIds !== undefined && teamIds.length > 0) {
-                $("#project-checkbox-filter label").addClass("hidden");
+                $("#project-checkbox-filter label").parent().addClass("hidden");
                 for (var i = 0; i < data.length; i++) {
-                    $("#project-input-id-" + data[i]).parent().removeClass("hidden");
+                    $("#project-input-id-" + data[i]).parent().parent().removeClass("hidden");
                 }
             } else {
-                $("#project-checkbox-filter label").removeClass("hidden");
+                $("#project-checkbox-filter label").parent().removeClass("hidden");
             }
             //Filter tag list from theme selection
             filterTagsForItemsList();
