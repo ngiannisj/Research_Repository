@@ -63,7 +63,7 @@ namespace Research_Repository_DataAccess.Repository
             }
         }
 
-        public void UpdateTagsDb(IList<Tag> tempTags)
+        public IList<Tag> UpdateTagsDb(IList<Tag> tempTags)
         {
             //Get list of tags from database
             IList<Tag> dbTagList = _db.Tags.AsNoTracking().ToList();
@@ -90,6 +90,7 @@ namespace Research_Repository_DataAccess.Repository
 
                         //Update new tag with new ID
                         tempTag.Id = newTag.Id;
+
                     }
 
                     //If temp tag already exists in database, update it
@@ -134,6 +135,9 @@ namespace Research_Repository_DataAccess.Repository
                         _db.Tags.Remove(dbTag);
                 }
             }
+
+            //Return updated 'tempTags'
+            return tempTags;
         }
 
 

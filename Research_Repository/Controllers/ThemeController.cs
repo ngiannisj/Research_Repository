@@ -16,10 +16,12 @@ namespace Research_Repository.Controllers
     {
 
         private readonly IThemeRepository _themeRepo;
+        private readonly ITagRepository _tagRepo;
 
-        public ThemeController(IThemeRepository themeRepo)
+        public ThemeController(IThemeRepository themeRepo, ITagRepository tagRepo)
         {
             _themeRepo = themeRepo;
+            _tagRepo = tagRepo;
         }
 
         public IActionResult Index(bool redirect)
@@ -73,7 +75,13 @@ namespace Research_Repository.Controllers
             IList<ThemeObjectVM> themeObjects = JsonConvert.DeserializeObject<IList<ThemeObjectVM>>(themeVMString);
 
             //Update tags in database
-            _themeRepo.UpdateTagsDb(HttpContext.Session.Get<IList<Tag>>(WC.SessionTags));
+            IList<Tag>updatedTags = _themeRepo.UpdateTagsDb(HttpContext.Session.Get<IList<Tag>>(WC.SessionTags));
+
+            HttpContext.Session.Set(WC.SessionTags, updatedTags);
+
+            //Update tempdata with the an updated tag select dropdown list
+            IEnumerable<SelectListItem> tagSelectList = _tagRepo.GetTagList(updatedTags, false);
+            TempData.Put(WC.TempDataTagSelectList, tagSelectList);
 
             //Get a list of theme ids from themes returned from view
             IList<int> tempThemeIdList = new List<int>();

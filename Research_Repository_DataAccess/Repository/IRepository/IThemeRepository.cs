@@ -17,7 +17,7 @@ namespace Research_Repository_DataAccess.Repository.IRepository
 
         void UpdateThemeTagsList(ThemeObjectVM themeVM);
 
-        void UpdateTagsDb(IList<Tag> tempTags);
+        IList<Tag> UpdateTagsDb(IList<Tag> tempTags);
 
         IList<int> GetThemeIds(IEnumerable<Theme> themes);
 
