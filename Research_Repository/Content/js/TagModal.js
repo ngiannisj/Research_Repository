@@ -284,6 +284,15 @@ function updateTags($this) {
             $("#check-all-status-container").addClass("hidden");
             $("#check-all-status-container .field__label--checkbox").removeClass("field__label--checkbox-checked");
             $("#tag-name-input-container").addClass("hidden");
+
+            if (!$("#open-delete-tag-modal-btn-container").hasClass("hidden")) {
+                $("#open-delete-tag-modal-btn-container").addClass("hidden");
+            }
+            $("#tag-submit-button-container").addClass("hidden");
+            $("#tag-name-input").val("");
+            $("#tag-name-input-container").addClass("hidden");
+            $("#tagId-modal-input").val("");
+            $("#tagId-modal-selectList").html("");
         },
         error: function (error) {
             console.log(error);

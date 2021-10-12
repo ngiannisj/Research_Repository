@@ -232,7 +232,7 @@ function openProjectModal(project) {
 //On open project modal
 function openAddProjectModal(project) {
     $("body").addClass("no-scroll");
-    $("#project-delete-button").hide().prop('disabled', true);
+    $("#open-project-delete-modal-btn-container").addClass("hidden");
     $("#project-submit-button").val("Add");
     const teamId = $(project).closest(".team").find(".team-id").first().val();
     const teamName = $(project).closest(".team").find(".team-name-input").first().val();

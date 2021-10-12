@@ -125,6 +125,14 @@ namespace Research_Repository_DataAccess.Repository
                         }
                     }
                 }
+            } else
+            {
+                //If no temptags exist in session, delete all tags in database
+                foreach (Tag dbTag in dbTagList)
+                {
+                    //If database tag does not exist in tempTags, remove it from the database
+                        _db.Tags.Remove(dbTag);
+                }
             }
         }
 
