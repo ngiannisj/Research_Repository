@@ -98,8 +98,8 @@ namespace Research_Repository.Controllers
                     if (!tempThemeIdList.Contains(theme.Id))
                     {
                         _themeRepo.Remove(theme);
-                        _themeRepo.Save();
                     }
+                    _themeRepo.Save();
                 }
 
                 //Add/Update themes in database
@@ -128,6 +128,20 @@ namespace Research_Repository.Controllers
                         _themeRepo.UpdateThemeTagsList(theme);
                     }
                 }
+            } else
+            {
+                //Remove all themes from database
+                //Get themes from database
+                IEnumerable<Theme> dbThemeList = _themeRepo.GetAll(isTracking: false);
+                //Get a list of theme ids from themes in the database
+                IList<int> dbThemeIdList = _themeRepo.GetThemeIds(dbThemeList);
+
+                //Remove themes from database if they do not exist in the themes returned from the view
+                foreach (Theme theme in dbThemeList)
+                {
+                        _themeRepo.Remove(theme);
+                }
+                _themeRepo.Save();
             }
 
             _themeRepo.Save();
