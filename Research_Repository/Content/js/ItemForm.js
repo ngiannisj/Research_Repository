@@ -129,7 +129,7 @@ function addSuggestedTagField(buttonRef) {
     const numberOfSuggestedTags = $(".suggested-tag-field").length;
     const lastSuggestedTag = $("#suggested-tags");
     lastSuggestedTag.append(
-        `<div class="field suggested-field">
+        `<div class="field suggested-tag-field">
                             <label for="SuggestedTagList_${numberOfSuggestedTags}_" class="field__label">Suggested tag</label>
                             <input type="text"
                                    class="field__input"
