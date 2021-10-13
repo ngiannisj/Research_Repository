@@ -235,7 +235,7 @@ ${data.items[i].notifyUploader ? `<span class="notification-bubble notification-
                     //Librarian portal items
                     if ($('#filters.librarian-filters').length) {
                         itemListHtml +=
-                            `<a href="/Item/View/${data.items[i].id}" class="card card--pathway ${cardColour !== "blue" ? `card--${cardColour}` : ""}">
+                            `<a href="/Item/View/${data.items[i].id}" class="card card--pathway ${cardColour !== "blue" && cardColour !== "yellow" ? `card--${cardColour}` : ""}">
             <div class="card__content">
               <div class="card__heading-container">
                 <h4 class="card__heading">${data.items[i].title ? `${data.items[i].title}` : "No title"}</h4>
@@ -266,7 +266,7 @@ ${data.items[i].notifyUploader ? `<span class="notification-bubble notification-
                         }
 
                         itemListHtml +=
-                            `<a href="/Item/View/${data.items[i].id}" class="card card--pathway ${cardColour !== "blue" ? `card--${cardColour}` : ""}">
+                            `<a href="/Item/View/${data.items[i].id}" class="card card--pathway">
             <div class="card__content">
               <div class="card__heading-container">
                  <h4 class="card__heading">${data.items[i].title ? `${data.items[i].title}` : "No title"}</h4>
