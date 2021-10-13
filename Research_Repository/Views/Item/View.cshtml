@@ -64,7 +64,7 @@
                         @if (!string.IsNullOrEmpty(Model.Collaborator))
                         {
                             <p class="key-value-grid__title text--semibold">Collaborator</p>
-                            <p>@(Model.Team != null && Model.Team.Contact != null ? Model.Team.Contact : "Team contact undefined")</p>
+                            <p>@(Model.Collaborator != null ? Model.Collaborator : "Collaborator undefined")</p>
                         }
 
                         @if (!string.IsNullOrEmpty(Model.StartDate.ToShortDateString()))
