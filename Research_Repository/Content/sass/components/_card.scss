@@ -103,6 +103,11 @@
         }
     }
 
+    &__description-container {
+        display: -webkit-box;
+        max-width: 100%;
+    }
+
     &__arrow-icon-container {
         width: 3.1rem;
         height: 3.1rem;
