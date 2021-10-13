@@ -178,25 +178,23 @@ function filterItemList(itemStatus, pageId) {
             } else {
 
                 for (let i = 0; i < data.items.length; i++) {
+                    //Get card colour
+                    let cardColour = "";
+                    if (data.items[i].status == "Submitted") {
+                        cardColour = "yellow";
+                    } else if (data.items[i].status == "Published") {
+                        cardColour = "green";
+                    } else if (data.items[i].status == "Rejected") {
+                        cardColour = "red";
+                    } else {
+                        cardColour = "blue";
+                    }
 
-                    //Profile items
-                    if ($('#filters.profile-filters').length) {
-                        //Get card colour
-                        let cardColour = "";
-                        if (data.items[i].status == "Submitted") {
-                            cardColour = "yellow";
-                        } else if (data.items[i].status == "Published") {
-                            cardColour = "green";
-                        } else if (data.items[i].status == "Rejected") {
-                            cardColour = "red";
-                        } else {
-                            cardColour = "blue";
-                        }
-                        //Get html for tags
-                        let tagPillsHtml = "";
-                        if (data.items[i].tags) {
-                            for (let t = 0; t < data.items[i].tags.length; t++) {
-                                tagPillsHtml += `
+                    //Get html for tags
+                    let tagPillsHtml = "";
+                    if (data.items[i].tags) {
+                        for (let t = 0; t < data.items[i].tags.length; t++) {
+                            tagPillsHtml += `
                 <div class="pill">
                   <img
                     class="pill__image"
@@ -204,8 +202,11 @@ function filterItemList(itemStatus, pageId) {
                     alt="tag_image"
                   />${data.items[i].tags[t]}
                 </div>`
-                            }
                         }
+                    }
+
+                    //Profile items
+                    if ($('#filters.profile-filters').length) {
 
                         itemListHtml +=
                             `<a href="/Item/View/${data.items[i].id}" class="card card--pathway ${cardColour !== "blue" ? `card--${cardColour}` : ""}">
@@ -234,7 +235,7 @@ ${data.items[i].notifyUploader ? `<span class="notification-bubble notification-
                     //Librarian portal items
                     if ($('#filters.librarian-filters').length) {
                         itemListHtml +=
-          `<a href="/Item/View/${data.items[i].id}" class="card card--pathway">
+                            `<a href="/Item/View/${data.items[i].id}" class="card card--pathway ${cardColour !== "blue" ? `card--${cardColour}` : ""}">
             <div class="card__content">
               <div class="card__heading-container">
                 <h4 class="card__heading">${data.items[i].title ? `${data.items[i].title}` : "No title"}</h4>
@@ -265,7 +266,7 @@ ${data.items[i].notifyUploader ? `<span class="notification-bubble notification-
                         }
 
                         itemListHtml +=
-                            `<a href="/Item/View/${data.items[i].id}" class="card card--pathway">
+                            `<a href="/Item/View/${data.items[i].id}" class="card card--pathway ${cardColour !== "blue" ? `card--${cardColour}` : ""}">
             <div class="card__content">
               <div class="card__heading-container">
                  <h4 class="card__heading">${data.items[i].title ? `${data.items[i].title}` : "No title"}</h4>
