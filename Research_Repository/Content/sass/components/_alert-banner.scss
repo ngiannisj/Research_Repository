@@ -1,6 +1,32 @@
 .alert-banner {
-    top: 0;
-    width: 100%;
-    background: $purple;
-    padding: 2rem;
+    &__container {
+        width: 100%;
+        border: 0.3rem solid $base-red;
+        border-radius: 0.4rem;
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        justify-content: flex-start;
+        background: $white;
+        margin-top: 3rem;
+    }
+
+    &__image {
+        width: 2.4rem;
+        height: 2.4rem;
+
+        &-container {
+            background: $base-red;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 4rem;
+        }
+    }
+
+    &__text {
+        &-container {
+            padding: 1rem;
+        }
+    }
 }
