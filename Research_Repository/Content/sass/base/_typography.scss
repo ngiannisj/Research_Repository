@@ -444,7 +444,9 @@ ul {
 
     //Alert banner
 .alert-banner {
-    color: $black;
+    &__text {
+        color: $black;
+    }
 }
 
 .align-text {
