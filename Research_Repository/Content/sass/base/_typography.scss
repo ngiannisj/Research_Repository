@@ -278,7 +278,7 @@ ul {
 //Pathway card
 .card {
     text-decoration: none;
-    
+
 
     &:visited {
         color: initial;
@@ -288,6 +288,14 @@ ul {
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
         overflow: hidden;
+    }
+
+    &--hero {
+        .card__description-container {
+            -webkit-line-clamp: initial;
+            -webkit-box-orient: initial;
+            overflow: visible;
+        }
     }
 }
 
